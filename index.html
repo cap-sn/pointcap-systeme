@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Le système de fonctionnement</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Mise en page : une colonne de saisie, une barre d'avancement fixe en haut, une question par bloc.
+   Identité : ardoise froide et vert profond, sans fond crème. */
+:root{--bg:#F5F7F8;--surface:#FFFFFF;--ink:#17232C;--muted:#5B6B77;--line:#D9E0E5;--brand-blue:#1E2B37;--brand-green:#3B5B4C;--accent:#1F5F5B;--accent-ink:#FFFFFF;--accent-soft:#E3F0EE;--warn:#9A5B12;--warn-soft:#FBF0DD;--bad:#A23A3A;--bad-soft:#FBE9E9;--good:#2E6B3F;
+--display:'Fraunces',Georgia,serif;--body:'Public Sans',system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1A21;--surface:#16252E;--ink:#E7EEF2;--muted:#9BADB8;--line:#2A3D49;--brand-blue:#A9C4DD;--brand-green:#8CC5A6;--accent:#6CC0B8;--accent-ink:#0B1A1E;--accent-soft:#183A3A;--warn:#E3B067;--warn-soft:#3A2D14;--bad:#EE9A9A;--bad-soft:#3C1E1E;--good:#8CD0A0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1A21;--surface:#16252E;--ink:#E7EEF2;--muted:#9BADB8;--line:#2A3D49;--brand-blue:#A9C4DD;--brand-green:#8CC5A6;--accent:#6CC0B8;--accent-ink:#0B1A1E;--accent-soft:#183A3A;--warn:#E3B067;--warn-soft:#3A2D14;--bad:#EE9A9A;--bad-soft:#3C1E1E;--good:#8CD0A0;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;padding-block:0 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:10}
+main,.bar-in{max-width:720px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.25;text-wrap:balance;margin:0}
+h1{font-size:30px}h2{font-size:23px;margin-bottom:6px}h3{font-size:18px}
+p{margin:0 0 12px}.muted{color:var(--muted)}.small{font-size:14px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;background:var(--surface);border-bottom:1px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
+.tp{border-left:5px solid var(--tc);padding:2px 0 2px 14px;margin:34px 0 14px}.tp .tn{display:block;font-size:12.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--tc)}.tp h2{margin:2px 0 4px}.tp p{margin:0}
+.t1{--tc:#2E7D74}.t2{--tc:#3C78B5}.t3{--tc:#8A62B8}.t4{--tc:#C0772B}@media print{.bar,.noprint,.actions{display:none!important}body{background:#fff}.card{break-inside:avoid;box-shadow:none}}.t5{--tc:#B5475F}
+.tz{border-left:3px solid var(--tc);padding-left:12px;margin-left:2px}
+.barbtns{margin-left:auto;display:flex;gap:14px}.barbtns .link{font-size:13px;white-space:nowrap}
+.bar-in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bar .t{font-family:var(--display);font-weight:600;font-size:15px;flex:1;min-width:0}
+.sf{color:var(--brand-blue)}.nm{color:var(--brand-green)}
+.bar .meta{font-size:13px;color:var(--muted);white-space:nowrap}
+.prog{flex-basis:100%;height:4px;background:var(--line);border-radius:2px;overflow:hidden}.prog i{display:block;height:100%;background:var(--accent)}
+main{padding-top:28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+.field{margin-bottom:18px}.field:last-child{margin-bottom:0}
+label.q{display:block;font-weight:600;margin-bottom:2px}
+.opt{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
+.ex{display:block;font-size:13.5px;color:var(--muted);margin-bottom:6px}
+input[type=text],select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+textarea{min-height:72px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.bad input,.bad select,.bad textarea,.bad .multi{border-color:var(--bad)}
+.msg{color:var(--bad);font-size:13.5px;margin-top:4px}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>*{flex:1 1 180px;min-width:0}
+.radios{display:flex;gap:18px;flex-wrap:wrap}.radios label{display:flex;align-items:center;gap:6px}
+.multi{border:1px solid var(--line);border-radius:8px;padding:8px 11px;background:var(--bg);display:flex;flex-wrap:wrap;gap:4px 16px}
+.multi label{display:flex;align-items:center;gap:6px;font-size:15px}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 14px}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button.link{border:0;background:none;color:var(--accent);padding:4px 2px;text-decoration:underline}
+button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-top:22px}
+.blockhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.blockhead h3{font-size:16px}.tools{display:flex;gap:4px}.tools button{padding:4px 9px;font-size:14px}
+.note{background:var(--accent-soft);border-radius:8px;padding:10px 13px;font-size:14.5px;margin-bottom:16px}
+.warn{background:var(--warn-soft);color:var(--ink);border-left:3px solid var(--warn);border-radius:6px;padding:10px 13px;font-size:14.5px;margin-bottom:12px}
+.err{background:var(--bad-soft);border-left:3px solid var(--bad);border-radius:6px;padding:10px 13px;font-size:14.5px;margin-bottom:12px}
+.seance{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.seance h3{margin-bottom:2px}.pill{font-size:12.5px;border-radius:99px;padding:2px 10px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+.pill.done{background:var(--accent);color:var(--accent-ink)}
+.sum dt{font-weight:600;margin-top:10px}.sum dd{margin:2px 0 0;color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+.saved{font-size:12.5px;color:var(--muted)}
+.login{max-width:400px;margin:12vh auto 0}
+button.chip{border-radius:99px;padding:7px 14px;display:inline-flex;gap:8px;align-items:center;margin:0 6px 8px 0}button.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}button.chip b{background:var(--accent);color:var(--accent-ink);border-radius:99px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:13px}
+details.multi-d summary{cursor:pointer;color:var(--accent);font-size:14.5px}
+table.t{width:100%;border-collapse:collapse;font-size:14.5px;display:block;overflow-x:auto}table.t td,table.t th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+@media (prefers-reduced-motion:no-preference){.prog i{transition:width .3s}}
+</style>
+<div id="app"></div>
+<script>
+'use strict';
+/* ---------- configuration ---------- */
+var CFG={API_URL:'',NOM_AFFICHE:'Atelier Mercier'}; // vide = mode démonstration (données dans le navigateur)
+/* ---------- utilitaires ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function uid(p){return p+'_'+Math.random().toString(36).slice(2,9)}
+function titre(nom){return '<span class="sf">Le système de fonctionnement</span> <span class="nm">'+esc(nom==null?S.nom:nom)+'</span>'}
+var $app=document.getElementById('app');
+var S={code:'',token:'',nom:'',O:{},view:'login',seance:null,step:0,sub:0,role:'dirigeant',pole:null,lastAct:Date.now(),secs:{},saving:0};
+var mem={};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return mem[k]||null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}
+/* ---------- API (réel ou démonstration) ---------- */
+var DEMO_SEED=function(){var o={};function add(t,i,f){f.type=t;f.id=i;f.origine='diagnostic';f.etat='a_confirmer';o[i]=f}
+ add('pole','po1',{nom:'Commercial',ordre:1});add('pole','po2',{nom:'Livraison',ordre:2});add('pole','po3',{nom:'Administration',ordre:3});
+ add('poste','pt1',{intitule:'Responsable commercial',pole:'po1',ordre:1});add('poste','pt2',{intitule:'Chargé d\'affaires',pole:'po1',ordre:2});
+ add('poste','pt3',{intitule:'Responsable livraison',pole:'po2',ordre:3});add('poste','pt4',{intitule:'Chef de projet',pole:'po2',ordre:4});add('poste','pt5',{intitule:'Concepteur',pole:'po2',ordre:5});
+ add('poste','pt6',{intitule:'Gestionnaire administratif',pole:'po3',ordre:6});return o};
+function mock(action,p){
+ var key='sfo_demo';var db=null;var raw=lsGet(key);try{db=JSON.parse(raw||'null')}catch(e){if(raw)lsSet('sfo_demo_corrompu',raw)}
+ if(!db){db={nom:'Atelier Mercier',O:DEMO_SEED()}}
+ function persist(){lsSet(key,JSON.stringify(db))}
+ if(action==='login'){var R={'DEMO':{role:'dirigeant'},'DEMO-COM':{role:'responsable',pole:'po1'},'DEMO-LIV':{role:'responsable',pole:'po2'},'DEMO-ADM':{role:'responsable',pole:'po3'}};var ro=R[String(p.code).toUpperCase()];if(ro&&p.pwd==='demo'){persist();return {ok:true,nom:db.nom,token:'demo',objets:db.O,role:ro.role,pole:ro.pole||null}}return {ok:false,erreur:'Code ou mot de passe incorrect.'}}
+ if(action==='save'){db.O[p.objet.id]=p.objet;persist();return {ok:true}}
+ if(action==='remove'){delete db.O[p.id];persist();return {ok:true}}
+ if(action==='rappel'){return {ok:true,demo:true}}
+ if(action==='reset'){lsSet(key,'');return {ok:true}}
+ return {ok:false,erreur:'Action inconnue.'}}
+function api(action,payload){payload=payload||{};payload.token=S.token;payload.code=S.code;
+ if(!CFG.API_URL)return Promise.resolve(mock(action,payload));
+ var body=JSON.stringify(Object.assign({action:action},payload));
+ return fetch(CFG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body}).then(function(r){return r.json()}).catch(function(){return {ok:false,erreur:'Connexion impossible. Vos réponses ne sont pas perdues : réessayez dans un instant.'}})}
+/* ---------- enregistrement ---------- */
+var timers={};
+function flushAll(){Object.keys(timers).forEach(function(k){clearTimeout(timers[k]);delete timers[k];if(S.O[k])save(k,true)})}
+function stepIdx(sc,k){var st=STEPS[sc]||[];for(var i=0;i<st.length;i++)if(st[i].k===k)return i;return 0}
+function subDe(sc,idx,t){var st=(STEPS[sc]||[])[idx];if(!st||!st.each)return 0;var its=[];try{its=st.each()}catch(e){}var m=String(t).match(/« ([^»]+) »/);if(!m)return 0;var nm=m[1].trim();for(var i=0;i<its.length;i++)if((its[i].nom||its[i].intitule)===nm)return i;return 0}
+function ptsHtml(pts,ctx){if(!pts||!pts.length)return '';ctx=ctx||{};
+ return '<div class="warn"><strong>Points à préciser plus tard</strong> (rien d\'obligatoire pour continuer) :<ul style="margin:6px 0 0 18px;padding:0">'+pts.map(function(t){var li='<li style="margin-bottom:4px">'+esc(t);
+  if(ctx.s&&ctx.rules){var k=null;for(var i=0;i<ctx.rules.length;i++)if(ctx.rules[i][0].test(t)){k=ctx.rules[i][1];break}
+   if(k){var ix=stepIdx(ctx.s,k);li+=' <button type="button" class="link" data-act="goto" data-s="'+ctx.s+'" data-pole="'+(ctx.pole||'')+'" data-step="'+ix+'" data-sub="'+subDe(ctx.s,ix,t)+'">Aller à cet écran</button>'}}
+  return li+'</li>'}).join('')+'</ul></div>'}
+function barBtns(){if(S.view==='login')return '';return (CFG.API_URL?'':'<button type="button" class="link" data-act="sauv">Sauvegarde</button>')+(S.view==='step'||S.view==='recap'?'<button type="button" class="link" data-act="quit">Enregistrer et quitter</button>':'')+'<button type="button" class="link" data-act="logout">Se déconnecter</button>'}
+function stamp(o){o.maj=new Date().toISOString();return o}
+function save(id,now){var o=S.O[id];if(!o)return;stamp(o);clearTimeout(timers[id]);
+ var go=function(){S.saving++;showSaved('Enregistrement…');api('save',{objet:o}).then(function(r){S.saving--;showSaved(r&&r.ok?'Enregistré':(r&&r.erreur)||'Non enregistré')})};
+ if(now)go();else timers[id]=setTimeout(go,500)}
+function showSaved(t){var e=document.getElementById('saved');if(e)e.textContent=t}
+function put(type,fields){var id=uid(type.slice(0,2));var o=Object.assign({type:type,id:id,origine:'declare',etat:'a_confirmer',ordre:nextOrdre(type)},fields||{});S.O[id]=o;save(id,true);return o}
+function nextOrdre(type){var m=0;list(type,true).forEach(function(o){m=Math.max(m,o.ordre||0)});return m+1}
+function del(id){delete S.O[id];api('remove',{id:id})}
+function list(type,all){return Object.keys(S.O).map(function(k){return S.O[k]}).filter(function(o){return o.type===type&&(all||!o.retire)}).sort(function(a,b){return (a.ordre||0)-(b.ordre||0)})}
+function single(id,type){if(!S.O[id]){S.O[id]={type:type,id:id,origine:'declare',etat:'a_confirmer'}}return S.O[id]}
+/* ---------- champs ---------- */
+var ENT={};
+function lab(l,req,ex){return '<label class="q">'+esc(l)+(req?'':'<span class="opt">facultatif</span>')+'</label>'+(ex?'<span class="ex">'+esc(ex)+'</span>':'')}
+function fTxt(o,f,l,o2){o2=o2||{};var v=o[f]||'';var inp=o2.area?'<textarea data-o="'+o.id+'" data-f="'+f+'" '+(o2.req?'data-req="1"':'')+'>'+esc(v)+'</textarea>':'<input type="text" data-o="'+o.id+'" data-f="'+f+'" '+(o2.req?'data-req="1"':'')+' value="'+esc(v)+'" autocomplete="off">';
+ return '<div class="field">'+lab(l,o2.req,o2.ex)+inp+'</div>'}
+function fSel(o,f,l,opts,o2){o2=o2||{};var v=o[f]||'';var h='<option value="">Choisir…</option>'+opts.map(function(x){return '<option value="'+esc(x[0])+'"'+(x[0]===v?' selected':'')+'>'+esc(x[1])+'</option>'}).join('');
+ return '<div class="field">'+lab(l,o2.req,o2.ex)+'<select data-o="'+o.id+'" data-f="'+f+'" '+(o2.req?'data-req="1"':'')+(o2.rr?' data-rr="1"':'')+'>'+h+'</select></div>'}
+function fMulti(o,f,l,opts,o2){o2=o2||{};var v=o[f]||[];
+ return '<div class="field">'+lab(l,o2.req,o2.ex)+'<div class="multi" data-multi="1" data-o="'+o.id+'" data-f="'+f+'" '+(o2.req?'data-req="1"':'')+(o2.rr?' data-rr="1"':'')+'>'+opts.map(function(x){return '<label><input type="checkbox" value="'+esc(x[0])+'"'+(v.indexOf(x[0])>-1?' checked':'')+'> '+esc(x[1])+'</label>'}).join('')+'</div></div>'}
+function fRadio(o,f,l,opts,o2){o2=o2||{};var v=o[f]||'';
+ return '<div class="field">'+lab(l,o2.req,o2.ex)+'<div class="radios" data-radio="1" '+(o2.req?'data-req="1"':'')+' data-o="'+o.id+'" data-f="'+f+'">'+opts.map(function(x){return '<label><input type="radio" name="'+o.id+f+'" value="'+esc(x[0])+'" data-o="'+o.id+'" data-f="'+f+'"'+(x[0]===v?' checked':'')+(o2.rr?' data-rr="1"':'')+'> '+esc(x[1])+'</label>'}).join('')+'</div></div>'}
+/* ---------- listes de choix ---------- */
+var L_ECH=[['t','Ce trimestre'],['6m','D\'ici 6 mois'],['12m','D\'ici 12 mois'],['2-3a','D\'ici 2 à 3 ans']];
+var L_UNI=[['nombre','Nombre'],['eur','€'],['pct','%'],['jours','Jours'],['autre','Autre']];
+var L_FREQ=[['sem','Chaque semaine'],['mois','Chaque mois'],['trim','Chaque trimestre'],['an','Chaque année']];
+var L_PLACE=[['dev','À développer en priorité'],['cons','À conserver'],['evol','À faire évoluer'],['red','À réduire']];
+var L_CTR=[['budget','Budget'],['effectif','Effectif et disponibilité'],['regl','Réglementaire ou juridique'],['delai','Délai imposé'],['outils','Outils et données'],['client','Client ou partenaire clé'],['autre','Autre']];
+var L_NB=[['1','Une'],['2-3','Deux ou trois'],['3+','Plus de trois'],['0','Aucune aujourd\'hui']];
+function polesOpts(){return list('pole').map(function(p){return [p.id,p.nom||'Pôle sans nom']})}
+function objOpts(){return list('objectif').map(function(o,i){return [o.id,'Objectif '+(i+1)+' : '+(o.intitule||'sans intitulé')]})}
+function postesOpts(excl){return list('poste').filter(function(p){return p.id!==excl&&p.intitule}).map(function(p){return [p.id,p.intitule]})}
+function posteNom(id){if(id==='dirigeant')return 'Le dirigeant';if(id==='aucun')return 'Personne aujourd\'hui';var p=S.O[id];return p?p.intitule:'—'}
+function poleNom(id){return S.O[id]?S.O[id].nom:'—'}
+/* ---------- blocs répétables ---------- */
+function blockHead(title,o,tools){return '<div class="blockhead"><h3>'+esc(title)+'</h3><div class="tools">'+(tools||'')+'<button type="button" data-act="del" data-id="'+o.id+'" aria-label="Retirer">Retirer</button></div></div>'}
+function addBtn(type,label,extra){return '<button type="button" data-act="add" data-type="'+type+'" '+(extra||'')+'>'+esc(label)+'</button>'}
+/* ---------- étapes ---------- */
+var STEPS={};
+STEPS.s1=[
+ {k:'entreprise',t:'Votre entreprise',m:3,r:function(){var e=single('entreprise','entreprise');
+  return '<h2>Votre entreprise</h2><p class="muted">Quelques phrases suffisent. Tout reste modifiable plus tard.</p><div class="card">'+
+  fTxt(e,'vision','Ta vision : si tout se passe bien, à quoi ressemble ton entreprise dans quelques années ?',{req:1,area:1,ex:'Exemple : « D\'ici 5 ans, une équipe de vingt personnes, reconnue dans la région, référente dans le recrutement de techniciens pour l\'industrie. »'})+
+  fTxt(e,'mission','Ta mission : en une ou deux phrases, à quoi sert ton entreprise, et pour qui ?',{req:1,area:1,ex:'Exemple : « Nous aidons les PME industrielles à sécuriser leurs recrutements techniques, pour qu\'elles ne perdent plus de projets faute de profils. »'})+
+  fTxt(e,'valeur','Qu\'est-ce que tes clients obtiennent chez toi qu\'ils trouvent difficilement ailleurs ?',{req:1,area:1,ex:'Exemple : « Une réponse sous 24 heures et un seul responsable du dossier de bout en bout. »'})+'</div>'}},
+ {k:'clients',t:'Vos clients prioritaires',m:4,r:function(){var cs=list('client');if(!cs.length){cs=[put('client')]}
+  return '<h2>Vos clients prioritaires</h2><p class="muted">Ajoute un bloc par type de client à servir en priorité.</p>'+cs.map(function(c,i){return '<div class="card">'+blockHead('Type de client '+(i+1),c)+
+  fTxt(c,'type_client','Quels clients veux-tu servir en priorité ?',{req:1,ex:'Exemple : « Cabinets d\'expertise comptable de 10 à 50 personnes »'})+
+  fTxt(c,'cherche','Qu\'est-ce qu\'il vient chercher ?',{req:1,ex:'Exemple : « Un interlocuteur unique qui livre sans relance »'})+
+  fSel(c,'place','Quelle place a-t-il dans ta stratégie ?',L_PLACE,{req:1})+'</div>'}).join('')+addBtn('client','Ajouter un type de client')}},
+ {k:'objectifs',t:'Vos objectifs',m:8,r:function(){var os=list('objectif');if(!os.length){os=[put('objectif')]}var full=os.length>=6;
+  return '<h2>Vos objectifs</h2><p class="muted">Six objectifs au maximum, du plus important au moins important. Chaque objectif a son chiffre de suivi.</p>'+
+  os.map(function(o,i){var tools='<button type="button" data-act="up" data-id="'+o.id+'" aria-label="Monter" '+(i===0?'disabled':'')+'>↑</button><button type="button" data-act="down" data-id="'+o.id+'" aria-label="Descendre" '+(i===os.length-1?'disabled':'')+'>↓</button>';
+  return '<div class="card">'+blockHead('Objectif '+(i+1)+(i===0?' (le plus important)':''),o,tools)+
+  fTxt(o,'intitule','Quel résultat important veux-tu atteindre ?',{req:1,ex:'Exemple : « Passer de 3 à 6 clients récurrents. » Un résultat, pas une action.'})+
+  fSel(o,'horizon','À quelle échéance ?',L_ECH,{req:1})+
+  fTxt(o,'resultat','Comment saura-t-on, concrètement, que c\'est atteint ?',{req:1,ex:'Exemple : « Six contrats annuels signés et facturés. »'})+
+  '<div class="field">'+lab('Quel chiffre suit cet objectif ?',1,'Exemple : « Contrats annuels actifs », cible 6, valeur actuelle 3')+'<div class="row">'+
+  fTxt(o,'ind_nom','Nom du chiffre',{req:1})+fSel(o,'ind_unite','Unité',L_UNI,{req:0})+fTxt(o,'ind_cible','Cible',{req:1})+fTxt(o,'ind_actuelle','Valeur actuelle',{req:0})+'</div></div>'+
+  '<div class="row">'+fSel(o,'ind_freq','À quelle fréquence le suis-tu ?',L_FREQ,{req:0})+fTxt(o,'ind_source','Où le lit-on ?',{req:0,ex:'Exemple : « Tableur de facturation »'})+'</div>'+
+  (polesOpts().length?fMulti(o,'poles','Quels pôles sont surtout concernés ?',polesOpts(),{req:0}):'')+'</div>'}).join('')+
+  '<div id="capmsg"></div>'+addBtn('objectif','Ajouter un objectif',full?'data-full="1"':'')}},
+ {k:'cadre',t:'Contraintes et principes',m:6,r:function(){var cs=list('contrainte'),ps=list('principe'),is=list('indicateur');if(!ps.length)ps=[put('principe')];
+  return '<h2>Contraintes et principes</h2><p class="muted">Ce qui encadre la façon d\'atteindre les objectifs, et ce qui doit guider les décisions.</p>'+
+  '<h3 style="margin:18px 0 8px">Les contraintes</h3>'+(cs.length?'':'<p class="muted small">Aucune pour l\'instant. Ajoute-en une seulement si quelque chose limite réellement les choix de l\'entreprise.</p>')+
+  cs.map(function(c,i){return '<div class="card">'+blockHead('Contrainte '+(i+1),c)+fSel(c,'ctype','Qu\'est-ce qui limite ou encadre ta façon d\'atteindre ces objectifs ?',L_CTR,{req:1})+fTxt(c,'desc','Décris-la',{req:1,ex:'Exemple : « Pas de recrutement possible avant la fin de l\'année. »'})+fMulti(c,'objectifs','Quels objectifs touche-t-elle ?',objOpts(),{req:0})+'</div>'}).join('')+addBtn('contrainte','Ajouter une contrainte')+
+  '<h3 style="margin:26px 0 8px">Les principes de gestion</h3>'+
+  ps.map(function(p,i){return '<div class="card">'+blockHead('Principe '+(i+1),p)+fTxt(p,'texte','Quelles règles de conduite doivent guider les décisions, même sous pression ?',{req:1,ex:'Exemple : « On ne sacrifie jamais la qualité de livraison pour signer un client. »'})+fTxt(p,'situation','Dans quelle situation s\'applique-t-il surtout ?',{req:0,ex:'Exemple : « Quand un client demande un délai impossible. »'})+'</div>'}).join('')+addBtn('principe','Ajouter un principe')+
+  '<h3 style="margin:26px 0 8px">D\'autres chiffres de pilotage <span class="opt">facultatif</span></h3>'+
+  is.map(function(x,i){return '<div class="card">'+blockHead('Indicateur '+(i+1),x)+'<div class="row">'+fTxt(x,'nom','Quel chiffre suis-tu en continu ?',{req:1,ex:'Exemple : « Délai moyen de réponse à un client »'})+fTxt(x,'cible','Cible',{req:1})+'</div>'+fSel(x,'objectif','Quel objectif sert-il ?',objOpts(),{req:1})+'</div>'}).join('')+addBtn('indicateur','Ajouter un indicateur')}}
+];
+STEPS.s2=[
+ {k:'poles',t:'Vos pôles',m:5,r:function(){var ps=list('pole');if(!ps.length)ps=[put('pole')];
+  return '<h2>Vos pôles</h2><div class="note">Voici les pôles issus de l\'audit. Corrige-les, ajoute-en ou retire-en.</div>'+
+  ps.map(function(p,i){return '<div class="card">'+blockHead(p.nom||'Pôle '+(i+1),p)+
+  fTxt(p,'nom','Comment s\'appelle ce pôle ?',{req:1,ex:'Exemple : « Commercial », « Livraison », « Administration »'})+
+  (function(){if(!p.famille&&p.nom){p.famille=detectFamille(p.nom);save(p.id)}return fSel(p,'famille','Ce pôle ressemble le plus à :',FAMS,{req:1,ex:'Cela nous permet de te proposer des exemples adaptés à ton métier.'})})()+fRadio(p,'serv','Ce pôle est-il divisé en services ou en équipes ?',[['oui','Oui'],['non','Non']],{req:1,rr:1})+
+  (p.serv==='oui'?fTxt(p,'services','Leurs noms, séparés par des virgules',{req:1,ex:'Exemple : « Équipe projets, Équipe support »'}):'')+
+  fTxt(p,'releve','Qu\'est-ce qui relève de ce pôle ?',{req:1,area:1,ex:exm('releve',p.id)})+
+  fTxt(p,'hors','Qu\'est-ce qui n\'en relève pas, même si on pourrait le croire ?',{req:0,area:1,ex:exm('hors',p.id)})+'</div>'}).join('')+addBtn('pole','Ajouter un pôle')}},
+ {k:'postes',t:'Vos postes',m:5,r:function(){var h='<h2>Vos postes</h2><p class="muted">On parle de fonctions, jamais de personnes. Vérifie que la liste est complète pour chaque pôle.</p>';
+  list('pole').forEach(function(p){var ps=list('poste',true).filter(function(x){return x.pole===p.id});
+   h+='<div class="card"><h3 style="margin-bottom:12px">'+esc(p.nom)+' <span class="muted small">· effectif du pôle : '+effPole(p.id)+'</span></h3>'+ps.map(function(x){if(x.effectif===undefined&&!x.retire){x.effectif=1;save(x.id)}return '<div class="field">'+fTxt(x,'intitule','Intitulé du poste',{req:1,ex:'Exemple : « Chargé de projet »'})+(x.retire?'':fNum(x,'effectif','Combien de personnes tiennent ce poste ?',{req:1,ex:'Indique le nombre, sans noms. Mets 0 si personne ne le tient aujourd\'hui.'})+mergeWarn(x)+dirWarn(x))+
+    fSel(x,'pole','Dans quel pôle se trouve-t-il ?',polesOpts(),{req:1})+
+    (x.origine==='diagnostic'?(x.retire?'<div class="warn">Poste retiré. '+fSel(x,'raison','Pourquoi ?',[['plus','Il n\'existe plus'],['doublon','Doublon'],['fusion','Fusionné avec un autre'],['autre','Autre']],{req:1})+'<button type="button" class="link" data-act="restore" data-id="'+x.id+'">Remettre ce poste</button></div>':'<button type="button" class="link" data-act="retire" data-id="'+x.id+'">Retirer ce poste</button>'):'<button type="button" class="link" data-act="del" data-id="'+x.id+'">Retirer ce poste</button>')+'</div>'}).join('')+
+    (ps.length?'':'<p class="muted small">Aucun poste dans ce pôle.</p>')+addBtn('poste','Ajouter un poste à ce pôle','data-pole="'+p.id+'"')+'</div>'});return h}},
+ {k:'rattach',t:'Rattachements et remplaçants',m:7,r:function(){var ps=list('poste');var h='<h2>Rattachements et remplaçants</h2><p class="muted">Pour chaque poste : à qui rend-il compte, avec qui travaille-t-il, et qui le remplace en cas d\'absence.</p><div id="rmsg"></div>';
+  var e0=single('entreprise','entreprise');h+='<div class="card"><h3 style="margin-bottom:12px">Le dirigeant</h3>'+fSel(e0,'dir_rc','À qui le dirigeant rend-il compte ?',[['personne','À personne'],['comex','À un comité exécutif ou de direction'],['proprio','À un propriétaire ou à des actionnaires'],['autre','Autre']],{req:1,rr:1})+(e0.dir_rc==='autre'?fTxt(e0,'dir_rc_ext','Précise à qui :',{req:1,ex:'Exemple : « Le conseil d\'administration »'}):'')+'</div>';
+  ps.forEach(function(x){var o=postesOpts(x.id);h+='<div class="card"><h3 style="margin-bottom:12px">'+esc(x.intitule)+' <span class="muted small">· '+esc(poleNom(x.pole))+'</span></h3>'+
+   fSel(x,'rend_compte','À qui rend-il compte ?',[['dirigeant','Le dirigeant']].concat(o),{req:1})+
+   fSel(x,'remplacant','Qui le remplace en cas d\'absence ?',[['aucun','Personne aujourd\'hui']].concat((Number(x.effectif)||0)>=2?[['meme','Une autre personne du même poste (elles se remplacent entre elles)']]:[]).concat(o).concat([['autre','Autre']]),{req:1,rr:1})+(x.remplacant==='autre'?fTxt(x,'remplacant_ext','Précise qui le remplace :',{req:1,ex:'Exemple : « Un prestataire extérieur », « Le dirigeant et le responsable du pôle »'}):'')+((Number(x.effectif)||0)<2?'<p class="muted small" style="margin:-4px 0 12px">Si plusieurs personnes tiennent ce poste, indique le nombre dans l\'étape « Vos postes » : elles pourront alors se remplacer entre elles.</p>':'')+(x.remplacant==='meme'&&(Number(x.effectif)||0)>=3?fTxt(x,'ordre_rempl','Dans quel ordre se remplacent-elles ?',{req:1,area:1,ex:'Exemple : « La plus ancienne remplace en premier, puis la deuxième. »'}):'')+
+   '<details class="multi-d"><summary>Autres liens</summary><div style="padding-top:12px">'+fMulti(x,'liens','Avec quel poste travaille-t-il en lien direct, sans lui rendre compte ?',o,{req:0})+'</div></details></div>'});return h}},
+ {k:'resp',t:'Responsable de chaque pôle',m:2,r:function(){var h='<h2>Responsable de chaque pôle</h2><p class="muted">Choisis le poste qui porte la responsabilité du pôle. Le dirigeant peut l\'être lui-même.</p>';
+  list('pole').forEach(function(p){var ps=list('poste').filter(function(x){return x.pole===p.id}).map(function(x){return [x.id,x.intitule]});
+   h+='<div class="card">'+fSel(p,'resp','Qui est responsable du pôle « '+(p.nom||'')+' » ?',ps.concat([['dirigeant','Le dirigeant'],['aucun','Personne aujourd\'hui']]),{req:1})+'</div>'});return h}},
+ {k:'missions',t:'Mission de chaque pôle',m:4,r:function(){var h='<h2>Mission de chaque pôle</h2><p class="muted">À quoi sert chaque pôle pour l\'entreprise ? Le responsable du pôle peut aussi le renseigner.</p>';
+  list('pole').forEach(function(p){h+='<div class="card"><h3 style="margin-bottom:12px">'+esc(p.nom)+'</h3>'+
+   fSel(p,'mission_par','Qui renseigne la mission de ce pôle ?',[['dirigeant','Le dirigeant'],['resp','Le responsable du pôle']],{req:1,rr:1})+
+   (p.mission_par==='resp'?'<div class="note">Le responsable du pôle la renseignera à l\'étape « Décrire ».</div>':fTxt(p,'mission','À quoi sert ce pôle pour la mission de l\'entreprise ?',{req:1,area:1,ex:exm('mission',p.id)}))+
+   (list('objectif').length?fSel(p,'mission_obj','Quel objectif ce pôle sert-il le plus ?',objOpts(),{req:0}):'')+'</div>'});return h}}
+];
+/* ---------- règles à la saisie ---------- */
+function cycle(startId){var seen={};var cur=startId;while(cur&&cur!=='dirigeant'){if(seen[cur])return true;seen[cur]=1;var p=S.O[cur];cur=p?p.rend_compte:null}return false}
+function pointsAPreciser(){var pts=[];
+ list('pole').forEach(function(p){if(p.resp==='aucun')pts.push('Le pôle « '+p.nom+' » n\'a pas de responsable aujourd\'hui.')});
+ list('poste').forEach(function(x){if(x.remplacant==='aucun'&&((Number(x.effectif)||0)<=1))pts.push('Le poste « '+x.intitule+' » n\'a pas de remplaçant.');
+  if(x.remplacant&&x.remplacant!=='aucun'&&x.remplacant!=='meme'&&S.O[x.remplacant]&&S.O[x.remplacant].remplacant===x.id&&x.id<x.remplacant)pts.push('Les postes « '+x.intitule+' » et « '+posteNom(x.remplacant)+' » se remplacent mutuellement : qui prend le relais si les deux sont absents ?')});
+ list('objectif').forEach(function(o){if(!o.ind_cible)pts.push('L\'objectif « '+(o.intitule||'')+' » n\'a pas de cible chiffrée.')});
+ return pts}
+/* ---------- vues ---------- */
+function render(){
+ if(S.view==='login')return renderLogin();
+ var head='<div class="bar"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';
+ var body=S.role==='lecteur'?lecteurHtml():S.view==='home'?homeHtml():stepHtml();
+ $app.innerHTML=head+'<main>'+body+'</main>';updBar()}
+function renderLogin(){$app.innerHTML='<main><div class="login card"><h1 style="margin-bottom:6px">'+titre(CFG.NOM_AFFICHE)+'</h1><p class="muted">Saisis le code et le mot de passe reçus.</p><div id="lerr"></div>'+
+ '<div class="field"><label class="q" for="lc">Code entreprise</label><input type="text" id="lc" autocomplete="username"></div><div class="field"><label class="q" for="lp">Mot de passe</label><input type="password" id="lp" autocomplete="current-password" style="width:100%;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 11px"></div><button class="primary" id="lgo" type="button">Entrer</button>'+(CFG.API_URL?'':'<p class="muted small" style="margin-top:14px">Mode démonstration : mot de passe demo. Code DEMO (dirigeant), ou DEMO-COM, DEMO-LIV, DEMO-ADM (responsables de pôle).</p>')+'</div></main>';
+ var go=function(){var c=document.getElementById('lc').value.trim(),p=document.getElementById('lp').value;S.code=c;api('login',{code:c,pwd:p}).then(function(r){if(!r||!r.ok){document.getElementById('lerr').innerHTML='<div class="err">'+esc((r&&r.erreur)||'Connexion impossible.')+'</div>';return}S.token=r.token;S.nom=r.nom;S.O=r.objets||{};S.role=r.role||'dirigeant';S.pole=r.pole||null;S.view='home';render()})};
+ document.getElementById('lgo').onclick=go;document.getElementById('lp').onkeydown=function(e){if(e.key==='Enter')go()}}
+function skey(){return (S.seance==='d'||S.seance==='e'||S.seance==='r'||S.seance==='x'||S.seance==='t')?S.seance+'_'+S.pole:S.seance}
+function seanceInfo(id){var s=single('seance_'+id,'seance');return s}
+var SEANCES=[{id:'s1',n:1,t:'L\'entreprise et ses objectifs',d:''},{id:'s2',n:2,t:'Les pôles et les postes',d:''}];
+function tempsHead(n,nom,desc){return '<div class="tp t'+n+'"><span class="tn">Temps '+n+'</span><h2>'+nom+'</h2>'+(desc?'<p class="muted">'+desc+'</p>':'')+'</div>'}
+function homeHtml(){if(S.role==='responsable')return homeResp();var all=SEANCES.every(function(s){return seanceInfo(s.id).fini});
+ return tempsHead(1,'Cadrer le cap','Ce premier temps pose le cap de l\'entreprise : où elle va, et comment elle est organisée. Les réponses sont enregistrées au fur et à mesure : il est possible de s\'arrêter à tout moment.')+'<div class="tz t1">'+
+ SEANCES.map(function(s){var i=seanceInfo(s.id);return '<div class="card seance"><div><h3>'+esc(s.t)+'</h3></div><div style="display:flex;gap:10px;align-items:center">'+(i.fini?'<span class="pill done">Terminée</span>':i.step?'<span class="pill">En cours</span>':'')+'<button class="primary" data-act="open" data-s="'+s.id+'">'+(i.fini?'Revoir':i.step?'Reprendre':'Commencer')+'</button></div></div>'}).join('')+
+ (all?'<div class="note"><strong>« Cadrer le cap » est terminé.</strong> Chaque responsable de pôle reçoit maintenant son lien pour décrire le travail de son pôle.</div>':'')+'</div>'+
+ tempsHead(2,'Décrire','Chaque pôle décrit ses livrables et leur réalisation. Le responsable de pôle renseigne sa partie ; le dirigeant peut aussi la renseigner.')+'<div class="tz t2">'+suiviPoles()+'</div>'+
+ tempsHead(3,'Relier','Les liens entre les pôles, les rendez-vous réguliers et la communication de l\'entreprise.')+'<div class="tz t3">'+carteHtml()+arbHtml()+ritHome()+'</div>'+
+ tempsHead(4,'Décider','Qui décide quoi, jusqu\'où. Le dirigeant renseigne cette rubrique. Elle peut être ouverte au responsable d\'un pôle, qui peut proposer, et le dirigeant valide.')+'<div class="tz t4">'+decHome()+'</div>'+tempsHead(5,'Apaiser','Les procédures à suivre quand une tension apparaît, et la charte de fonctionnement qui réunit l\'ensemble. Le dirigeant renseigne cette rubrique ; elle suit l\'ouverture de « Décider » pour les responsables de pôle.')+'<div class="tz t5">'+tensHome()+charteHome()+ficheHome()+'</div>'+pubHome()+journalHtml()}
+function curSteps(){return STEPS[S.seance]}
+function stepHtml(){var st=curSteps()[S.step];var n=curSteps().length;var last=S.step===n-1;var body,items=null;
+ if(st.each){items=st.each();if(!items.length){return '<h2>'+esc(st.t)+'</h2><div class="note">'+esc(st.vide||'Rien à décrire ici pour le moment.')+'</div><div class="actions"><button type="button" data-act="prev">Précédent</button><button type="button" class="primary" data-act="skip">Continuer</button></div>'}
+  if(S.sub>=items.length)S.sub=items.length-1;body='<p class="muted small" style="margin:0 0 8px">'+esc(st.t)+' · '+(S.sub+1)+' sur '+items.length+'</p>'+st.r(items[S.sub])}
+ else body=st.r();
+ var more=items&&S.sub<items.length-1;
+ return body+'<div id="verr"></div><div class="actions"><button type="button" data-act="prev">'+((S.step||S.sub)?'Précédent':'Accueil')+'</button><button type="button" class="primary" data-act="next">'+(last&&!more?'Voir le récapitulatif':'Continuer')+'</button></div>'}
+function recapHtml(){var s=S.seance;if(s==='d')return recapD();if(s==='e')return recapE();if(s==='r')return recapR();if(s==='x')return recapX();if(s==='c')return recapC();if(s==='t')return recapT();if(s==='k')return recapK();var pts=pointsAPreciser();var h='';
+ if(s==='s1'){var e=S.O.entreprise||{};var os=list('objectif');
+  h='<h2>Récapitulatif : l\'entreprise et ses objectifs</h2><div class="card"><dl class="sum"><dt>Vision</dt><dd>'+esc(e.vision)+'</dd><dt>Mission</dt><dd>'+esc(e.mission)+'</dd><dt>Valeur pour les clients</dt><dd>'+esc(e.valeur)+'</dd><dt>Clients prioritaires</dt><dd>'+list('client').map(function(c){return esc(c.type_client)}).join(', ')+'</dd><dt>Objectifs classés</dt><dd><ol style="margin:4px 0 0 18px;padding:0">'+os.map(function(o){return '<li>'+esc(o.intitule)+' <span class="muted">· '+esc(o.ind_nom)+', cible '+esc(o.ind_cible)+'</span></li>'}).join('')+'</ol></dd></dl></div>'}
+ else{h='<h2>Récapitulatif : les pôles et les postes</h2><div class="card"><table class="t"><tr><th>Pôle</th><th>Responsable</th><th>Postes</th><th>Effectif</th></tr>'+list('pole').map(function(p){return '<tr><td>'+esc(p.nom)+'</td><td>'+esc(posteNom(p.resp))+'</td><td>'+list('poste').filter(function(x){return x.pole===p.id}).map(function(x){return esc(x.intitule)}).join(', ')+'</td><td>'+effPole(p.id)+'</td></tr>'}).join('')+'</table></div>'}
+ var mine=pts.filter(function(t){return s==='s1'?t.indexOf('objectif')>-1:t.indexOf('objectif')===-1});
+ if(mine.length)h+=ptsHtml(mine,{s:s,rules:s==='s1'?[[/./,'objectifs']]:[[/remplac|remplaç/,'rattach'],[/./,'resp']]});
+ return h+'<div class="actions"><button type="button" data-act="prev">Revenir</button><button type="button" class="primary" data-act="finish">Valider cette partie</button></div>'}
+function updBar(){injectLists();var r=document.getElementById('rest'),p=document.getElementById('progi');if(S.view==='step'||S.view==='recap'){var st=curSteps();var tot=0,rest=0;st.forEach(function(x,i){tot+=x.m;if(S.view==='step'&&i>=S.step)rest+=x.m});if(r)r.textContent='';if(p)p.style.width=Math.round(((S.view==='recap'?st.length:S.step)/st.length)*100)+'%'}}
+/* ---------- actions ---------- */
+function toast(t){var e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(function(){e.remove()},3200)}
+function validateStep(){var root=document.querySelector('main');var ok=true;root.querySelectorAll('.bad').forEach(function(x){x.classList.remove('bad')});root.querySelectorAll('.msg').forEach(function(x){x.remove()});
+ root.querySelectorAll('[data-req="1"]').forEach(function(el){var empty;if(el.dataset.multi||el.dataset.radio){var o=S.O[el.dataset.o];var v=o&&o[el.dataset.f];empty=!v||(Array.isArray(v)&&!v.length)}else empty=!String(el.value||'').trim();
+  if(empty){ok=false;var f=el.closest('.field');f.classList.add('bad');var m=document.createElement('div');m.className='msg';m.textContent='Cette réponse est nécessaire pour continuer.';f.appendChild(m)}});
+ return ok}
+function purgeEmpty(){var types={s1:['contrainte','principe','indicateur','client'],s2:[],r:['echange']};
+ (types[S.seance]||[]).forEach(function(t){var l=list(t);l.forEach(function(o,i){var vals=Object.keys(o).filter(function(k){return ['type','id','origine','etat','ordre','maj'].indexOf(k)<0}).filter(function(k){var v=o[k];return Array.isArray(v)?v.length:String(v||'').trim()});if(!vals.length&&(i>0||t!=='client'))del(o.id)})})}
+function persistPos(){var i=seanceInfo(skey());i.step=S.step+1;i.sub=S.sub;save(i.id,true)}
+function goStep(d){S.step+=d;persistPos();S.view='step';render();window.scrollTo(0,0)}
+document.addEventListener('click',function(ev){var b=ev.target.closest('[data-act]');if(!b)return;var a=b.dataset.act;
+ if(a==='open'){S.seance=b.dataset.s;if((S.seance==='d'||S.seance==='e'||S.seance==='r'||S.seance==='x'||S.seance==='t')&&b.dataset.pole)S.pole=b.dataset.pole;var i=seanceInfo(skey());S.step=Math.max(0,(i.step||1)-1);S.sub=i.sub||0;S.view='step';render();window.scrollTo(0,0)}
+ else if(a==='prev'){if(S.view==='recap'){S.view='step';render();return}if(S.sub>0){S.sub--;render();window.scrollTo(0,0);return}if(S.step===0){S.view='home';render()}else{S.step--;var ps=curSteps()[S.step];S.sub=ps.each?Math.max(0,ps.each().length-1):0;S.view='step';render();window.scrollTo(0,0)}}
+ else if(a==='next'){purgeEmpty();if(!validateStep()){toast('Il manque quelques réponses.');var f=document.querySelector('.bad');if(f)f.scrollIntoView({block:'center'});return}
+  var cs=curSteps()[S.step];var its=cs.each?cs.each():null;if(cs.check&&its){var cm=cs.check(its[S.sub]);if(cm){toast(cm);return}}if(its&&S.sub<its.length-1){S.sub++;persistPos();render();window.scrollTo(0,0)}else if(S.step===curSteps().length-1){S.view='recap';render();window.scrollTo(0,0)}else{S.sub=0;goStep(1)}}
+ else if(a==='skip'){if(S.step===curSteps().length-1){S.view='recap';render()}else{S.sub=0;goStep(1)}window.scrollTo(0,0)}
+ else if(a==='finish'){var i=seanceInfo(skey());i.fini=true;i.step=0;i.sub=0;save(i.id,true);S.view='home';render();window.scrollTo(0,0)}
+ else if(a==='add'){var t=b.dataset.type;if(t==='objectif'&&list('objectif').length>=6){document.getElementById('capmsg').innerHTML='<div class="err">Six objectifs au maximum. Regroupe-en deux, ou garde les plus importants.</div>';return}
+  var f=b.dataset.init?JSON.parse(b.dataset.init):{};if(t==='poste'){f.pole=b.dataset.pole;f.effectif=1}put(t,f);render()}
+ else if(a==='del'){var id=b.dataset.id;var o=S.O[id];if(o.type==='etape'){delCascade(id);render();return}if(o.type==='pole'&&list('poste').some(function(x){return x.pole===id})){toast('Ce pôle contient des postes : déplace-les ou retire-les d\'abord.');return}del(id);render()}
+ else if(a==='up'||a==='down'){var l=list('objectif');var i=l.findIndex(function(x){return x.id===b.dataset.id});var j=a==='up'?i-1:i+1;if(j<0||j>=l.length)return;var t1=l[i].ordre;l[i].ordre=l[j].ordre;l[j].ordre=t1;save(l[i].id,true);save(l[j].id,true);render()}
+ else if(a==='mv'){var o=S.O[b.dataset.id];var pf=b.dataset.pf;var sib=list(o.type).filter(function(x){return x[pf]===o[pf]});var k=sib.findIndex(function(x){return x.id===o.id});var j=b.dataset.dir==='up'?k-1:k+1;if(j<0||j>=sib.length)return;var t2=sib[k].ordre;sib[k].ordre=sib[j].ordre;sib[j].ordre=t2;save(sib[k].id,true);save(sib[j].id,true);render()}
+ else if(a==='togact'){var lid=b.dataset.lid,aid=b.dataset.aid;var l=S.O[lid];var ex=etapesDe(l).filter(function(x){return x.activite===aid})[0];if(ex){delCascade(ex.id)}else{if(etapesDe(l).length>=8){toast('Huit étapes au maximum.');return}var a2=S.O[aid];put('etape',{livrable:lid,nom:a2.intitule,activite:aid,responsable:(a2.postes||[])[0]||''})}render()}
+ else if(a==='goto'){S.seance=b.dataset.s;if(b.dataset.pole)S.pole=b.dataset.pole;S.step=Number(b.dataset.step)||0;S.sub=Number(b.dataset.sub)||0;S.view='step';render();window.scrollTo(0,0)}
+ else if(a==='arb'){arbRepondre(b.dataset.key,b.dataset.v);render()}
+ else if(a==='arb4'){var sl=document.querySelector('[data-arb4="'+b.dataset.key+'"]');if(!sl||!sl.value){toast('Choisir un poste.');return}arbRepondre(b.dataset.key,'qui',sl.value);render()}
+ else if(a==='arb5'){var s5=document.querySelector('[data-arb5="'+b.dataset.key+'"]');if(!s5||!s5.value){toast('Choisir une étape.');return}arbRepondre(b.dataset.key,'rac',s5.value);render()}
+ else if(a==='arbreset'){var ao=S.O[b.dataset.key];if(ao){ao.rep='';save(ao.id,true)}render()}
+ else if(a==='confirmtr'){var o=single(b.dataset.key,'transmission');o.c_de='oui';o.c_vers='oui';save(o.id,true);toast('Lien confirmé.');render()}
+ else if(a==='quit'){purgeEmpty();if(S.view==='step')persistPos();flushAll();S.view='home';render();window.scrollTo(0,0);toast('Tes réponses sont enregistrées. Tu peux reprendre plus tard.')}
+ else if(a==='logout'){purgeEmpty();flushAll();S.token=null;S.O={};S.role=null;S.pole=null;S.seance=null;S.view='login';render();window.scrollTo(0,0)}
+ else if(a==='tstat'){var r=S.O[b.dataset.id];r.statut=b.dataset.v;save(r.id,true);jlog((L_STAT[r.statut]||r.statut)+' : procédure « '+r.titre+' » du pôle '+poleNom(r.pole));render()}
+ else if(a==='recapt'){S.seance='t';S.pole=b.dataset.pole;S.view='recap';render();window.scrollTo(0,0)}
+ else if(a==='recapk'){S.seance='k';S.view='recap';render();window.scrollTo(0,0)}
+ else if(a==='fiche'){S.view='fiche';S.fiche=b.dataset.id;S.fVue='';render();window.scrollTo(0,0)}
+ else if(a==='fichehome'){S.view='home';render();window.scrollTo(0,0)}
+ else if(a==='fvue'){S.fVue=S.fVue==='titulaire'?'':'titulaire';render()}
+ else if(a==='fprint'){try{window.print()}catch(x){toast('Utiliser Ctrl+P (ou Cmd+P) pour exporter en PDF.')}}
+ else if(a==='fprop'){var tx=document.getElementById('fptxt').value.trim();if(!tx){toast('Écrire la proposition.');return}put('prop_fiche',{poste:S.fiche,section:document.getElementById('fpsec').value,txt:tx,statut:'propose'});jlog('Proposition de correction sur la fiche « '+posteNom(S.fiche)+' »');toast('Proposition envoyée.');S.fVue='';render()}
+ else if(a==='fpstat'){var px=S.O[b.dataset.id];px.statut=b.dataset.v;save(px.id,true);jlog((L_PST[px.statut]||px.statut)+' : proposition de correction sur la fiche « '+posteNom(px.poste)+' »');render()}
+ else if(a==='vstat'){var r=S.O[b.dataset.id];if(!r)return;r.statut=b.dataset.v;save(r.id,true);jlog((L_STAT[r.statut]||r.statut)+' : '+valNom(r));render()}
+ else if(a==='vall'){var ids=b.dataset.ids.split(',');ids.forEach(function(id){var r=S.O[id];if(r){r.statut='valide';save(r.id,true)}});jlog('Validé : '+ids.length+' éléments');render()}
+ else if(a==='recapx'){S.seance='x';S.pole=b.dataset.pole;S.view='recap';render();window.scrollTo(0,0)}
+ else if(a==='toggledec'){var di=decInfo(b.dataset.pole);di.ouvert=!di.ouvert;save(di.id,true);S.pole=b.dataset.pole;jlog('Le temps « Décider » du pôle '+poleNom(b.dataset.pole)+(di.ouvert?' est ouvert au responsable.':' est refermé au responsable.'));render()}
+ else if(a==='rstat'){var r=S.O[b.dataset.id];r.statut=b.dataset.v;save(r.id,true);var rl=S.O[r.cible]||S.O[r.livrable];jlog((L_STAT[r.statut]||r.statut)+' : '+(r.type==='chemin'?'circuit '+L_CTYPE_N[r.ctype]+' de « '+(rl?rl.nom:'')+' »':'règle de « '+(rl?rl.nom:'')+' »'));render()}
+ else if(a==='seuil'){var r2=S.O[b.dataset.id];r2.seuil_ok=true;save(r2.id,true);var rl2=S.O[r2.cible];jlog('Seuil confirmé : « '+(rl2?rl2.nom:'')+' », '+r2.limite);render()}
+ else if(a==='rappel'){var pid=b.dataset.pole;var ct=single('ct_'+pid,'contact');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(ct.email||''))){toast('Indique d\'abord l\'adresse e-mail du responsable.');return}
+  api('rappel',{pole:pid,restant:restantResp(pid),lien:location.href.split('#')[0]}).then(function(r){if(r&&r.ok){ct.rappel_date=new Date().toISOString();save(ct.id,true);S.pole=pid;jlog('Rappel envoyé au responsable du pôle '+poleNom(pid)+(r.demo?' (démo : aucun e-mail réellement envoyé).':'.'));toast(r.demo?'Rappel simulé (démonstration : aucun e-mail envoyé).':'Rappel envoyé.');render()}else toast((r&&r.erreur)||'Envoi impossible.')})}
+ else if(a==='togglec'){var f=flags();f.cOuvert=!f.cOuvert;save('flags',true);S.pole=null;jlog('Le temps « Rendez-vous réguliers et communication » est '+(f.cOuvert?'ouvert aux responsables de pôle.':'refermé aux responsables de pôle.'));render()}
+ else if(a==='sauv'){var ov=document.createElement('div');ov.id='sauvov';ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px';
+  var js=JSON.stringify({nom:S.nom,O:S.O});ov.innerHTML='<div class="card" style="max-width:560px;width:100%;max-height:90vh;overflow:auto;background:var(--bg)"><h3>Sauvegarde de tes réponses (mode démonstration)</h3><p class="muted small">Ce navigateur peut perdre les réponses saisies (données effacées, fenêtre privée, autre appareil). Copie ce texte et garde-le : il permet de tout restaurer.</p><textarea id="sauvtxt" style="width:100%;height:140px" readonly></textarea><div style="display:flex;gap:8px;margin:8px 0 16px;flex-wrap:wrap"><button type="button" class="primary" data-act="sauvcopy">Copier</button></div><h3>Restaurer</h3><p class="muted small">Colle ici une sauvegarde, puis restaure. Cela remplace les réponses actuelles.</p><textarea id="restxt" style="width:100%;height:100px"></textarea><div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button type="button" data-act="sauvrest">Restaurer</button><button type="button" data-act="sauvclose">Fermer</button></div><div id="sauvmsg" class="muted small" style="margin-top:8px"></div></div>';document.body.appendChild(ov);document.getElementById('sauvtxt').value=js}
+ else if(a==='sauvcopy'){var t=document.getElementById('sauvtxt');t.select();try{document.execCommand('copy');document.getElementById('sauvmsg').textContent='Copié.'}catch(e){document.getElementById('sauvmsg').textContent='Sélectionne le texte et copie-le à la main.'}}
+ else if(a==='sauvclose'){var o2=document.getElementById('sauvov');if(o2)o2.remove()}
+ else if(a==='sauvrest'){var v=document.getElementById('restxt').value.trim();try{var d=JSON.parse(v);if(!d||!d.O)throw 0;Object.keys(S.O).forEach(function(k){delete S.O[k]});Object.keys(d.O).forEach(function(k){S.O[k]=d.O[k]});Object.keys(S.O).forEach(function(k){api('save',{objet:S.O[k]})});var o3=document.getElementById('sauvov');if(o3)o3.remove();S.view='home';render();toast('Réponses restaurées.')}catch(e){document.getElementById('sauvmsg').textContent='Ce texte n\'est pas une sauvegarde valable.'}}
+ else if(a==='openb'){flags().bOuvert=true;save('flags',true);render()}
+ else if(a==='merge'){mergePostes(b.dataset.id,b.dataset.with);render()}
+ else if(a==='retire'){S.O[b.dataset.id].retire=true;save(b.dataset.id,true);render()}
+ else if(a==='restore'){S.O[b.dataset.id].retire=false;save(b.dataset.id,true);render()}});
+function setField(el){var o=S.O[el.dataset.o];if(!o)return;var f=el.dataset.f,v;
+ if(el.type==='checkbox'&&el.dataset.bool)v=el.checked;else if(el.type==='radio')v=el.value;else if(el.dataset.multi){v=[].slice.call(el.querySelectorAll('input:checked')).map(function(x){return x.value})}else v=(el.type==='number'?(el.value===''?'':Number(el.value)):el.value);
+ var old=o[f];o[f]=v;
+ var vr=valRacine(o);if(vr&&vr!==o&&vr.statut==='valide'||vr&&vr===o&&f!=='statut'&&vr.statut==='valide'){vr.statut='revoir';save(vr.id)}
+ if(o.type==='poste'&&f==='rend_compte'&&cycle(o.id)){o[f]=old;render();var m=document.getElementById('rmsg');if(m)m.innerHTML='<div class="err">Ce choix crée une boucle : un poste ne peut pas, directement ou non, rendre compte à un poste qui lui rend compte. Choisis un autre rattachement.</div>';return true}
+ if(o.type==='poste'&&f==='pole'){}
+ var m2=document.getElementById('rmsg');if(m2)m2.innerHTML='';
+ save(o.id)}
+document.addEventListener('input',function(ev){S.lastAct=Date.now();var el=ev.target;if(el.dataset&&el.dataset.o&&(el.tagName==='INPUT'&&(el.type==='text'||el.type==='number')||el.tagName==='TEXTAREA'))setField(el)});
+document.addEventListener('change',function(ev){S.lastAct=Date.now();var el=ev.target;if(el.dataset&&el.dataset.tool){var nm=String(el.value||'').trim();if(nm&&nm!==AUCUN&&!list('outil').some(function(x){return x.nom===nm}))put('outil',{nom:nm});return}if(el.dataset&&el.dataset.bool){setField(el);render();return}var h=el.closest('[data-multi]');if(h){setField(h);if(h.dataset.rr)render();return}if(!el.dataset||!el.dataset.o)return;if(el.tagName==='SELECT'||el.type==='radio'){if(setField(el))return;if(el.dataset.rr||el.dataset.f==='pole')render()}});
+document.addEventListener('keydown',function(){S.lastAct=Date.now()});document.addEventListener('pointerdown',function(){S.lastAct=Date.now()});
+/* ---------- temps passé (utilisateur actif seulement) ---------- */
+setInterval(function(){if(S.view==='step'&&document.visibilityState==='visible'&&Date.now()-S.lastAct<60000){var i=S.O['seance_'+skey()];if(i){i.secs=(i.secs||0)+5;if(i.secs%30===0)save(i.id,true)}}},5000);
+
+/* ---------- effectif, fusion de postes, destinataires ---------- */
+function fNum(o,f,l,o2){o2=o2||{};return '<div class="field">'+lab(l,o2.req,o2.ex)+'<input type="number" min="0" step="1" inputmode="numeric" style="max-width:140px" data-o="'+o.id+'" data-f="'+f+'" '+(o2.req?'data-req="1"':'')+' value="'+esc(o[f]===undefined?'':o[f])+'"></div>'}
+function baseNom(n){return String(n||'').replace(/\s*\(?\d+\)?\s*$/,'').trim()}
+function sib(x){var b=baseNom(x.intitule).toLowerCase();if(!b)return null;var n1=baseNom(x.intitule)!==String(x.intitule||'').trim();
+ return list('poste').filter(function(y){return y.id!==x.id&&y.pole===x.pole&&baseNom(y.intitule).toLowerCase()===b&&(n1||baseNom(y.intitule)!==String(y.intitule||'').trim())})[0]||null}
+function dirWarn(x){var t=String(x.intitule||'').toLowerCase();var ch=/(^|\s)(dirigeant|pdg|p-dg|gérant|gerant|directeur général|dg)(\s|$)/.test(t);var tick='<label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" data-bool="1" data-o="'+x.id+'" data-f="tenu_dir"'+(x.tenu_dir?' checked':'')+'> Le dirigeant tient aussi ce poste</label>';return (ch&&!x.tenu_dir?'<div class="warn">Le dirigeant n\'est pas un poste à saisir : il est proposé directement dans les listes (« Le dirigeant »). S\'il tient un poste de ce pôle, coche la case ci-dessous ; sinon retire cette ligne.</div>':'')+tick}
+function mergeWarn(x){var y=sib(x);if(!y)return '';return '<div class="warn">« '+esc(x.intitule)+' » et « '+esc(y.intitule)+' » semblent être le même poste tenu par plusieurs personnes. Indique plutôt le nombre de personnes qui le tiennent. <button type="button" class="link" data-act="merge" data-id="'+x.id+'" data-with="'+y.id+'">Fusionner en un seul poste</button></div>'}
+function mergePostes(aId,bId){var a=S.O[aId],b=S.O[bId];var keep=(a.ordre||0)<=(b.ordre||0)?a:b,gone=keep===a?b:a;keep.intitule=baseNom(keep.intitule);keep.effectif=(Number(keep.effectif)||1)+(Number(gone.effectif)||1);
+ Object.keys(S.O).forEach(function(k){var o=S.O[k],ch=false;if(o===gone)return;Object.keys(o).forEach(function(f){if(f==='id')return;if(o[f]===gone.id){o[f]=keep.id;ch=true}else if(Array.isArray(o[f])&&o[f].indexOf(gone.id)>-1){o[f]=o[f].map(function(v){return v===gone.id?keep.id:v});ch=true}});if(ch)save(o.id,true)});del(gone.id);save(keep.id,true)}
+function effPole(pid){return list('poste').filter(function(x){return x.pole===pid}).reduce(function(t,x){return t+(Number(x.effectif)||0)},0)}
+function defSuite(t){return t==='poste'||t==='pole'||t==='dir'}
+function destsDe(l){return list('destinataire').filter(function(d){return d.livrable===l.id})}
+function instTxt(){var e=single('entreprise','entreprise'),m={comex:'Le comité exécutif',proprio:'Le propriétaire ou les actionnaires'};return e.dir_rc==='autre'?(e.dir_rc_ext||'L\'instance de gouvernance'):(m[e.dir_rc]||'L\'instance de gouvernance')}
+function destTxt(d){if(d.genre==='poste')return posteNom(d.cible);if(d.genre==='pole')return poleNom(d.cible);if(d.genre==='dir')return 'Le dirigeant';if(d.genre==='inst')return instTxt();return d.ext||((L_BTYPE.filter(function(x){return x[0]===d.genre})[0]||[0,'Externe'])[1])}
+function destBlock(l){var ds=destsDe(l);if(!ds.length){ds=[put('destinataire',l.benef_type?{livrable:l.id,genre:l.benef_type,cible:l.benef,ext:l.benef_ext}:{livrable:l.id})]}
+ var ps=postesOpts();var ext=['client','prospect','part','presta','autre'];
+ return '<div class="field">'+lab('Qui le reçoit ?',1,'Plusieurs peuvent le recevoir : un poste, un pôle, le client, un prestataire…')+ds.map(function(d,i){var suite=d.suite===undefined?defSuite(d.genre):d.suite;
+  return '<div style="border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px"><div class="blockhead"><span class="muted small">Qui le reçoit, n° '+(i+1)+'</span>'+(ds.length>1?'<button type="button" data-act="del" data-id="'+d.id+'">Retirer</button>':'')+'</div>'+
+  fSel(d,'genre','Qui est-ce ?',L_BTYPE.filter(function(g){return g[0]!=='inst'||(single('entreprise','entreprise').dir_rc&&single('entreprise','entreprise').dir_rc!=='personne')}),{req:1,rr:1})+
+  (d.genre==='poste'?fSel(d,'cible','Lequel ?',ps,{req:1}):d.genre==='pole'?fSel(d,'cible','Lequel ?',polesOpts(),{req:1}):ext.indexOf(d.genre)>-1?fExt(d,'ext','Lequel ?',{req:1,ex:'Exemples : « Client en cours de projet », « Prospect qualifié »'}):'')+
+  (d.genre?'<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-bool="1" data-o="'+d.id+'" data-f="suite"'+(suite?' checked':'')+'> Il s\'en sert pour poursuivre le travail</label>':'')+'</div>'}).join('')+
+  '<p class="muted small" style="margin:0 0 8px">Coche « poursuivre le travail » pour celui qui s\'en sert ensuite : c\'est lui qui relie ce livrable à la suite du processus. Quelqu\'un qui reçoit simplement l\'information, comme le client qui reçoit le résultat final, n\'a pas besoin de la cocher.</p>'+addBtn('destinataire','Ajouter quelqu\'un qui le reçoit','data-init=\''+JSON.stringify({livrable:l.id})+'\'')+'</div>'}
+/* ---------- bibliothèque d'exemples par famille de pôle ---------- */
+var FAMS=[['commercial','Commercial et vente'],['marketing','Marketing et communication'],['creation','Création et design'],['realisation','Réalisation de projets ou de prestations'],['conseil','Conseil et expertise'],['support','Support et service client'],['admin','Administration, finance et RH'],['tech','Technique et informatique'],['autre','Autre']];
+var EXL={
+commercial:{actCle:'« Qualifier les demandes entrantes », « Relancer les prospects en attente »',actSec:'« Mettre à jour le suivi des opportunités »',res:'« Un devis chiffré signé par le client »',crit:'« Envoyé avant 17 h, sans erreur de montant, avec les conditions de paiement. »',conseq:'« Le client relance et la signature est repoussée. Si absent, on perd l\'affaire. »',finalite:'« Permettre au client de décider en connaissance de cause. »',declencheur:'« Réception d\'une demande qualifiée »',besoin:'« Compte rendu du rendez-vous », « Grille tarifaire »',etape:'« Chiffrer l\'affaire »',critEtape:'« Le chiffrage couvre toutes les lignes du besoin. »',attention:'« Le besoin est flou et il faut rappeler le client. »',sortie:'« Chiffrage détaillé »',mission:'« Le pôle commercial transforme les demandes en contrats signés, au bon prix. »',releve:'« Tout ce qui concerne la vente, de la prise de contact à la signature du contrat. »',hors:'« La facturation : elle relève de l\'administration. »',attendu:'« Les conditions particulières du client, validées »'},
+marketing:{actCle:'« Planifier les contenus du mois », « Publier et suivre les campagnes »',actSec:'« Mettre à jour le calendrier éditorial »',res:'« Un calendrier éditorial validé chaque mois »',crit:'« Publié à la date prévue, relu, conforme à la ligne éditoriale. »',conseq:'« Le contenu sort en retard et la campagne perd son effet. Si absent, l\'entreprise n\'est plus visible. »',finalite:'« Donner aux commerciaux un contenu prêt à envoyer. »',declencheur:'« Lancement d\'une campagne »',besoin:'« Brief de campagne », « Charte graphique »',etape:'« Rédiger le contenu »',critEtape:'« Le texte est relu et validé par le responsable. »',attention:'« Le message doit rester cohérent d\'un canal à l\'autre. »',sortie:'« Contenu rédigé »',mission:'« Le pôle marketing rend l\'entreprise visible et génère des demandes qualifiées. »',releve:'« La communication externe, les contenus et les campagnes. »',hors:'« Les devis : ils relèvent du pôle commercial. »',attendu:'« Les références clients autorisées à la publication »'},
+creation:{actCle:'« Concevoir les maquettes », « Préparer les fichiers de livraison »',actSec:'« Archiver les anciennes versions »',res:'« Une maquette validée par le client »',crit:'« Conforme à la charte du client, livrée dans les formats demandés, sans faute de texte. »',conseq:'« Le client demande des reprises et le projet prend du retard. Si absent, la production ne démarre pas. »',finalite:'« Permettre au client de valider la direction visuelle. »',declencheur:'« Validation du brief créatif »',besoin:'« Brief créatif », « Logo et charte du client »',etape:'« Réaliser la première proposition »',critEtape:'« La proposition répond à tous les points du brief. »',attention:'« Le brief est souvent incomplet : prévoir un point avec le client. »',sortie:'« Première maquette »',mission:'« Le pôle création donne une identité visuelle claire et cohérente aux projets des clients. »',releve:'« La conception visuelle, du premier croquis aux fichiers finaux. »',hors:'« La mise en ligne : elle relève du pôle technique. »',attendu:'« Les textes validés par le client »'},
+realisation:{actCle:'« Suivre l\'avancement des projets », « Livrer les prestations »',actSec:'« Préparer les réunions de suivi »',res:'« Un point d\'avancement hebdomadaire envoyé au client »',crit:'« Envoyé chaque vendredi, avec l\'état d\'avancement et les points qui empêchent d\'avancer. »',conseq:'« Le client s\'inquiète et relance. Si absent, on perd sa confiance. »',finalite:'« Tenir le client informé pour qu\'il n\'ait pas à relancer. »',declencheur:'« Démarrage du projet »',besoin:'« Planning du projet », « Compte rendu de la dernière réunion »',etape:'« Planifier le projet »',critEtape:'« Le planning est validé par le client. »',attention:'« Un changement de périmètre décale tout le planning. »',sortie:'« Planning validé »',mission:'« Le pôle livraison garantit que chaque client reçoit ce qui a été vendu, à la date promise. »',releve:'« Tout ce qui permet de livrer ce qui a été vendu, du lancement à la recette. »',hors:'« La facturation : elle relève de l\'administration. »',attendu:'« Le cahier des charges signé »'},
+conseil:{actCle:'« Réaliser le diagnostic », « Animer les ateliers »',actSec:'« Capitaliser les retours d\'expérience »',res:'« Un rapport de recommandations remis au client »',crit:'« Chaque recommandation est argumentée, chiffrée et priorisée. »',conseq:'« Le client ne sait pas quoi décider. Si absent, la mission perd sa valeur. »',finalite:'« Permettre au client de décider des prochaines actions. »',declencheur:'« Fin de la phase d\'analyse »',besoin:'« Données fournies par le client », « Notes d\'entretien »',etape:'« Analyser les informations recueillies »',critEtape:'« Toutes les sources ont été croisées et les écarts expliqués. »',attention:'« Les données du client arrivent souvent en retard. »',sortie:'« Synthèse de l\'analyse »',mission:'« Le pôle conseil aide les clients à prendre de meilleures décisions grâce à une analyse claire. »',releve:'« L\'analyse, les recommandations et leur restitution. »',hors:'« La mise en œuvre : elle relève du pôle réalisation. »',attendu:'« Le périmètre de la mission, validé »'},
+support:{actCle:'« Répondre aux demandes entrantes », « Traiter les réclamations »',actSec:'« Mettre à jour la base de réponses »',res:'« Une réponse apportée à chaque demande »',crit:'« Réponse sous 24 heures, complète, avec le suivi proposé. »',conseq:'« Le client relance ou se plaint. Si absent, il quitte l\'entreprise. »',finalite:'« Rassurer le client et régler sa situation. »',declencheur:'« Réception d\'une demande client »',besoin:'« Historique du client », « Réponse technique de l\'équipe »',etape:'« Qualifier la demande »',critEtape:'« La demande est classée et attribuée. »',attention:'« Une demande urgente peut cacher un problème plus large. »',sortie:'« Demande qualifiée »',mission:'« Le pôle support garantit que chaque client est écouté et accompagné après la vente. »',releve:'« Toutes les demandes des clients après la livraison. »',hors:'« Les évolutions du produit : elles relèvent du pôle technique. »',attendu:'« La réponse technique à une demande complexe »'},
+admin:{actCle:'« Facturer les clients », « Suivre les paiements »',actSec:'« Archiver les justificatifs »',res:'« Une facture émise après chaque livraison »',crit:'« Émise sous 48 heures, avec le bon montant et les bonnes mentions. »',conseq:'« Le paiement est retardé. Si absent, la trésorerie en souffre. »',finalite:'« Permettre au client de payer sans délai. »',declencheur:'« Validation de la livraison »',besoin:'« Bon de livraison validé », « Devis signé »',etape:'« Préparer la facture »',critEtape:'« Le montant correspond au devis signé. »',attention:'« Un client a des conditions particulières. »',sortie:'« Facture préparée »',mission:'« Le pôle administration sécurise la gestion, les paiements et les obligations de l\'entreprise. »',releve:'« La facturation, la comptabilité, les contrats et les ressources humaines. »',hors:'« Les devis : ils relèvent du pôle commercial. »',attendu:'« Le bon de commande signé »'},
+tech:{actCle:'« Développer les fonctionnalités », « Corriger les anomalies »',actSec:'« Documenter les changements »',res:'« Une version testée et livrée »',crit:'« Tests passés, documentation à jour, aucun point qui empêche d\'avancer. »',conseq:'« Le client rencontre des erreurs. Si absent, la mise en ligne est repoussée. »',finalite:'« Permettre au client d\'utiliser la solution sans blocage. »',declencheur:'« Validation de la spécification »',besoin:'« Spécification validée », « Accès à l\'environnement du client »',etape:'« Développer la fonctionnalité »',critEtape:'« Le code est relu et les tests passent. »',attention:'« Une dépendance externe peut empêcher la livraison. »',sortie:'« Fonctionnalité développée »',mission:'« Le pôle technique construit et maintient les solutions promises aux clients. »',releve:'« Le développement, les tests, la mise en ligne et la maintenance. »',hors:'« Le support de premier niveau : il relève du pôle support. »',attendu:'« La spécification fonctionnelle validée »'},
+autre:{actCle:'« Préparer les livraisons », « Suivre les dossiers en cours »',actSec:'« Mettre à jour les suivis »',res:'« Un compte rendu remis après chaque dossier »',crit:'« Livré à la date prévue, complet, sans erreur. »',conseq:'« Le client relance. Si absent, on perd sa confiance. »',finalite:'« Permettre à celui qui le reçoit d\'agir sans relance. »',declencheur:'« Validation du dossier »',besoin:'« Information fournie par le client »',etape:'« Préparer le dossier »',critEtape:'« Toutes les informations sont réunies. »',attention:'« Un élément manque souvent en début de dossier. »',sortie:'« Dossier préparé »',mission:'« Ce pôle garantit que son travail est fait à temps et au bon niveau de qualité. »',releve:'« Tout ce qui concerne son domaine, de A à Z. »',hors:'« Ce qui relève d\'un autre pôle. »',attendu:'« Un document validé par un autre pôle »'}};
+function detectFamille(nom){var n=String(nom||'').toLowerCase();var R=[['marketing',/marketing|communication|contenu|r[ée]seaux|publicit/],['creation',/graph|design|cr[ée]a|studio|artistique|maquette|visuel/],['commercial',/commerc|vente|business|prospect|d[ée]veloppement commercial/],['conseil',/conseil|expert|strat[ée]g|audit|consult|formation|coaching/],['support',/support|sav|assistance|service client|relation client/],['admin',/admin|financ|compta|\brh\b|ressources|gestion|juridique|paie/],['tech',/tech|informatique|\bit\b|d[ée]v|syst[èe]me|donn[ée]es|data/],['realisation',/livraison|production|projet|r[ée]alisation|op[ée]ration|ex[ée]cution|d[ée]livery/]];
+ for(var i=0;i<R.length;i++)if(R[i][1].test(n))return R[i][0];return 'autre'}
+function famille(poleId){var p=S.O[poleId];return (p&&p.famille)||(p&&p.nom?detectFamille(p.nom):'autre')}
+function exm(key,poleId){var t=(EXL[famille(poleId||S.pole)]||EXL.autre)[key]||EXL.autre[key]||'';return (t.indexOf('», «')>-1?'Exemples : ':'Exemple : ')+t}
+
+/* ================= Temps « Décrire » (responsable de pôle) ================= */
+var AUCUN='Aucun outil particulier';
+var L_RYTHME=[['reg','Il revient régulièrement'],['unique','Une seule fois'],['evt','Quand un événement se produit']];
+var L_FREQD=[['jour','Chaque jour'],['sem','Chaque semaine'],['mois','Chaque mois'],['trim','Chaque trimestre'],['an','Chaque année'],['autre','Autre']];
+var L_DELAI=[['4h','Sous 4 heures'],['24h','Sous 24 heures'],['3j','Sous 3 jours'],['1s','Sous 1 semaine'],['1m','Sous 1 mois'],['autre','Autre']];
+var L_BTYPE=[['client','Un client'],['prospect','Un prospect'],['part','Un partenaire ou fournisseur'],['poste','Un poste de l\'entreprise'],['pole','Un pôle de l\'entreprise'],['presta','Un prestataire ou sous-traitant'],['dir','Le dirigeant'],['inst','L\'instance à laquelle le dirigeant rend compte'],['autre','Autre']];
+var L_IMP=[['ess','Essentielle : sans lui, l\'activité s\'arrête ou un client est perdu'],['imp','Importante'],['sec','Secondaire']];
+var L_RISQ=[['eleve','Élevé : client perdu, perte financière, risque juridique ou d\'image'],['moyen','Moyen : reprise de travail, retard chez un autre pôle'],['faible','Faible : gêne limitée']];
+var L_FORME=[['doc','Document'],['tab','Tableur'],['pres','Présentation'],['msg','Message ou e-mail'],['appel','Appel ou réunion'],['outil','Outil en ligne'],['autre','Autre']];
+var L_VAR=[['montant','Montant'],['urgence','Urgence'],['risque','Niveau de risque'],['client','Type de client'],['complex','Complexité'],['autre','Autre']];
+var L_DUREE=[['h','Moins d\'une demi-journée'],['demi','Une demi-journée'],['j','Une journée'],['2-3j','2 à 3 jours'],['s','Une semaine ou plus']];
+var L_PROV=[['poste','Un poste de l\'entreprise'],['livrable','Un livrable d\'un autre pôle'],['etape','La sortie d\'une étape précédente'],['ext','Un client, un prestataire ou un partenaire externe'],['autre','Autre ou je ne sais pas']];
+var L_INQD=[['avant','Avant le début de l\'étape'],['pendant','Pendant l\'étape'],['4h','Sous 4 heures'],['24h','Sous 24 heures'],['3j','Sous 3 jours'],['1s','Sous 1 semaine']];
+var L_DEST=[['suiv','L\'étape suivante'],['livrable','Un autre livrable'],['poste','Un autre poste'],['benef','Le bénéficiaire du livrable']];
+function fOutil(o,f,l,o2){o2=o2||{};return '<div class="field">'+lab(l,o2.req,o2.ex)+'<input type="text" list="dl-outils" data-tool="1" data-o="'+o.id+'" data-f="'+f+'" '+(o2.req?'data-req="1"':'')+' value="'+esc(o[f]||'')+'" autocomplete="off" placeholder="Choisis dans la liste ou ajoute un outil"></div>'}
+function fExt(o,f,l,o2){o2=o2||{};return '<div class="field">'+lab(l,o2.req,o2.ex)+'<input type="text" list="dl-ext" data-o="'+o.id+'" data-f="'+f+'" '+(o2.req?'data-req="1"':'')+' value="'+esc(o[f]||'')+'" autocomplete="off"></div>'}
+function fBool(o,f,l){return '<label style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="checkbox" data-bool="1" data-o="'+o.id+'" data-f="'+f+'"'+(o[f]?' checked':'')+'> '+l+'</label>'}
+function injectLists(){var m=document.querySelector('main');if(!m)return;var d=document.getElementById('lists');if(d)d.remove();
+ var ext={};list('livrable').forEach(function(l){});list('destinataire').forEach(function(d){if(d.ext)ext[d.ext]=1});
+ var h='<datalist id="dl-outils"><option value="'+AUCUN+'">'+list('outil').map(function(x){return '<option value="'+esc(x.nom)+'">'}).join('')+'</datalist><datalist id="dl-ext">'+Object.keys(ext).map(function(x){return '<option value="'+esc(x)+'">'}).join('')+'</datalist>';
+ var w=document.createElement('div');w.id='lists';w.innerHTML=h;m.appendChild(w)}
+function poleActuel(){return S.O[S.pole]||{nom:''}}
+function livrablesPole(){return list('livrable').filter(function(l){return l.pole===S.pole})}
+function critique(l){if(l.crit_force==='oui')return true;if(l.crit_force==='non')return false;return l.importance==='ess'||l.risque==='eleve'}
+function critRaison(l){if(l.crit_force==='oui')return 'Tu l\'as indiqué comme à fort enjeu.';if(l.crit_force==='non')return 'Tu l\'as indiqué comme sans fort enjeu.';if(l.importance==='ess')return 'À fort enjeu, car son importance est essentielle.';if(l.risque==='eleve')return 'À fort enjeu, car une erreur peut coûter cher.';return 'Pas de fort enjeu d\'après tes réponses.'}
+function complete(l){return critique(l)||!!l.chaine_complete}
+function etapesDe(l){return list('etape').filter(function(e){return e.livrable===l.id})}
+function intrantsDe(e){return list('intrant').filter(function(i){return i.etape===e.id})}
+function sortieDe(e){var s=list('sortie').filter(function(x){return x.etape===e.id});return s[0]||null}
+function genEtapes(lid){var l=S.O[lid];(l.acts||[]).forEach(function(aid){if(etapesDe(l).some(function(e){return e.activite===aid}))return;var a=S.O[aid];if(!a)return;if(etapesDe(l).length>=8)return;put('etape',{livrable:lid,nom:a.intitule,activite:aid,responsable:(a.postes||[])[0]||''})})}
+/* --- accueil responsable et suivi par le dirigeant --- */
+function hasExt(l){return (l.producteurs||[]).some(function(x){return x.indexOf('x_')===0})}
+function internes(l){return (l.producteurs||[]).filter(function(x){return x.indexOf('x_')!==0})}
+function needResp(l){return hasExt(l)||internes(l).length!==1}
+function respDe(l){return l.responsable||internes(l)[0]||''}
+function prodTxt(l){var t=internes(l).map(posteNom);if(hasExt(l))t.push(l.prod_ext||'Externe');return t.join(', ')}
+function flags(){return single('flags','flags')}
+function allAFini(){var ps=list('pole');return ps.length>0&&ps.every(function(p){return dInfo(p.id).fini})}
+function bOuvert(){return flags().bOuvert||allAFini()}
+function dInfo(pid){return S.O['seance_d_'+pid]||{}}
+function eInfo(pid){return S.O['seance_e_'+pid]||{}}
+function pill(i){return i.fini?'<span class="pill done">Terminé</span>':i.step?'<span class="pill">En cours</span>':''}
+function homeResp(){var p=S.O[S.pole]||{nom:''};var a=seanceInfo('d_'+S.pole),b=seanceInfo('e_'+S.pole);var ok=bOuvert();
+ return '<h1>Pôle '+esc(p.nom)+'</h1>'+tempsHead(2,'Décrire','Décris ici ce que le pôle produit, pour qui, et comment. On parle de fonctions, jamais de personnes. Les réponses sont enregistrées au fur et à mesure : il est possible de s\'arrêter à tout moment.')+'<div class="tz t2">'+
+ '<div class="card seance"><div><h3>Les activités et les livrables du pôle</h3></div><div style="display:flex;gap:10px;align-items:center">'+pill(a)+'<button class="primary" data-act="open" data-s="d" data-pole="'+S.pole+'">'+(a.fini?'Revoir':a.step?'Reprendre':'Commencer')+'</button></div></div>'+
+ '<div class="card seance"'+(ok?'':' style="opacity:.75"')+'><div><h3>La réalisation des livrables</h3>'+(ok?'':'<span class="muted small">S\'ouvre quand tous les pôles auront décrit leurs livrables.</span>')+'</div><div style="display:flex;gap:10px;align-items:center">'+pill(b)+'<button class="primary" data-act="open" data-s="e" data-pole="'+S.pole+'" '+(ok?'':'disabled')+'>'+(b.fini?'Revoir':b.step?'Reprendre':'Commencer')+'</button></div></div>'+
+ '</div>'+tempsHead(3,'Relier','Confirme les liens du pôle avec les autres pôles.')+'<div class="tz t3"><div class="card seance"'+(b.fini?'':' style="opacity:.75"')+'><div><h3>Les liens avec les autres pôles</h3>'+(b.fini?'':'<span class="muted small">S\'ouvre quand la réalisation des livrables du pôle est décrite.</span>')+'</div><div style="display:flex;gap:10px;align-items:center">'+pill(seanceInfo('r_'+S.pole))+'<button class="primary" data-act="open" data-s="r" data-pole="'+S.pole+'" '+(b.fini?'':'disabled')+'>'+(seanceInfo('r_'+S.pole).fini?'Revoir':seanceInfo('r_'+S.pole).step?'Reprendre':'Commencer')+'</button></div></div>'+(flags().cOuvert?'<div class="card seance"><div><h3>Rendez-vous réguliers et communication</h3><span class="muted small">Pour toute l\'entreprise. Le responsable propose, le dirigeant valide.</span></div><div style="display:flex;gap:10px;align-items:center">'+pill(seanceInfo('c'))+'<button class="primary" data-act="open" data-s="c">'+(seanceInfo('c').fini?'Revoir':seanceInfo('c').step?'Reprendre':'Commencer')+'</button></div></div>':'')+(arbPeut()?arbHtml():'')+(fichePeut()?ficheHome():'')+'</div>'+(decInfo(S.pole).ouvert?tempsHead(4,'Décider','Qui décide quoi, jusqu\'où. Le responsable propose, le dirigeant valide.')+'<div class="tz t4"><div class="card seance"><div><h3>Qui décide quoi, jusqu\'où</h3><span class="muted small">Le responsable propose, le dirigeant valide.</span></div><div style="display:flex;gap:10px;align-items:center">'+pill(seanceInfo('x_'+S.pole))+'<button class="primary" data-act="open" data-s="x" data-pole="'+S.pole+'">'+(seanceInfo('x_'+S.pole).fini?'Revoir':seanceInfo('x_'+S.pole).step?'Reprendre':'Commencer')+'</button></div></div></div>'+tempsHead(5,'Apaiser','Les procédures à suivre quand une tension apparaît dans le pôle. Le responsable propose, le dirigeant valide.')+'<div class="tz t5"><div class="card seance"><div><h3>Quand ça coince</h3><span class="muted small">Une procédure par nature de tension, et les principes de relation du pôle.</span></div><div style="display:flex;gap:10px;align-items:center">'+pill(seanceInfo('t_'+S.pole))+'<button class="primary" data-act="open" data-s="t" data-pole="'+S.pole+'">'+(seanceInfo('t_'+S.pole).fini?'Revoir':seanceInfo('t_'+S.pole).step?'Reprendre':'Commencer')+'</button></div></div></div>':'')}
+function suiviPoles(){var ps=list('pole');if(!ps.length)return '';var ok=bOuvert();var restants=ps.filter(function(p){return !dInfo(p.id).fini}).map(function(p){return p.nom});
+ var banner=ok?'':'<div class="note">La réalisation des livrables s\'ouvrira automatiquement quand tous les pôles auront décrit leurs livrables'+(restants.length?' (il reste : '+esc(restants.join(', '))+')':'')+'. <button type="button" class="link" data-act="openb">Ouvrir maintenant</button></div>';
+ return banner+ps.map(function(p){var resp=p.resp==='dirigeant'?'le dirigeant, qui renseigne lui-même ce pôle':p.resp&&p.resp!=='aucun'?posteNom(p.resp):'aucun responsable';return '<div class="card seance"><div><h3>'+esc(p.nom)+'</h3><span class="muted small">Responsable : '+esc(resp)+' · '+livrablesCount(p.id)+' livrable(s) décrit(s)</span></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+pill(dInfo(p.id))+'<button data-act="open" data-s="d" data-pole="'+p.id+'">Livrables</button><button data-act="open" data-s="e" data-pole="'+p.id+'" '+(ok?'':'disabled')+'>Réalisation</button><button data-act="open" data-s="r" data-pole="'+p.id+'">Liens</button></div>'+rappelHtml(p)+'</div>'}).join('')}
+function restantResp(pid){var r=[];if(!dInfo(pid).fini)r.push('Les activités et les livrables du pôle');if(bOuvert()&&!eInfo(pid).fini)r.push('La réalisation des livrables');if(eInfo(pid).fini&&!seanceInfo('r_'+pid).fini)r.push('Les liens avec les autres pôles');if(decInfo(pid).ouvert&&!seanceInfo('x_'+pid).fini)r.push('Qui décide quoi, jusqu\'où');return r}
+function rappelHtml(p){var hasResp=p.resp&&p.resp!=='dirigeant'&&p.resp!=='aucun';if(!hasResp)return '';var rs=restantResp(p.id);var ct=single('ct_'+p.id,'contact');ct.pole=p.id;
+ var h='<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">';
+ if(!rs.length)return h+'<p class="small muted" style="margin:0">Rien à rappeler : le responsable a terminé les parties qui lui sont ouvertes.</p></div>';
+ h+='<p class="small" style="margin:0 0 8px"><strong>Reste à renseigner par le responsable :</strong> '+esc(rs.join(' · '))+'</p>'+
+  fTxt(ct,'email','Adresse e-mail du responsable',{req:0,ex:'Sert uniquement à lui envoyer un rappel des parties restant à renseigner. Seul le dirigeant la voit.'})+
+  (ct.rappel_date?'<p class="muted small">Rappel envoyé le '+esc(new Date(ct.rappel_date).toLocaleDateString('fr-FR'))+'.</p>':'<button type="button" data-act="rappel" data-pole="'+p.id+'">Rappeler au responsable ce qui reste à renseigner</button>');
+ return h+'</div>'}
+function livrablesCount(pid){return list('livrable').filter(function(l){return l.pole===pid&&l.nom}).length}
+function delCascade(id){var o=S.O[id];if(!o)return;if(o.type==='etape'){list('intrant').filter(function(i){return i.etape===id}).forEach(function(i){del(i.id)});list('sortie').filter(function(x){return x.etape===id}).forEach(function(x){del(x.id)})}del(id)}
+/* --- étapes --- */
+STEPS.d=[
+ {k:'act',t:'Les activités du pôle',m:6,r:function(){var as=list('activite').filter(function(x){return x.pole===S.pole&&x.cle});if(!as.length)as=[put('activite',{pole:S.pole,cle:true})];
+  var sec=list('activite').filter(function(x){return x.pole===S.pole&&!x.cle});var ps=list('poste').filter(function(x){return x.pole===S.pole}).map(function(x){return [x.id,x.intitule]});
+  return '<h2>Les activités de ton pôle</h2><p class="muted">Commence par ce que fait le pôle. Les livrables viendront ensuite : un livrable est ce que le pôle produit et remet à quelqu\'un, en interne ou à l\'extérieur.</p>'+
+  '<h3 style="margin:14px 0 8px">Les activités clés</h3><p class="muted small">Celles sans lesquelles le pôle ne remplit pas sa mission. Huit au maximum recommandées. Commence chaque intitulé par un verbe.</p>'+
+  as.map(function(a,i){return '<div class="card">'+blockHead('Activité '+(i+1),a)+fTxt(a,'intitule','Quelle activité clé ?',{req:1,ex:exm('actCle')})+
+   fMulti(a,'postes','Quels postes la portent ?',ps,{req:1})+
+   fSel(a,'livrable','Débouche-t-elle sur un livrable ?',[['oui','Oui, un livrable précis'],['non','Non, c\'est une activité d\'appui'],['?','Je ne sais pas']],{req:1})+'</div>'}).join('')+
+  (as.length>=8?'<div class="warn">Huit activités clés suffisent en général. Tu peux en garder davantage, mais vérifie que toutes sont vraiment déterminantes.</div>':'')+addBtn('activite','Ajouter une activité clé','data-init=\''+JSON.stringify({pole:S.pole,cle:true})+'\'')+
+  '<h3 style="margin:26px 0 8px">Les autres activités <span class="opt">facultatif</span></h3>'+sec.map(function(a,i){return '<div class="card">'+blockHead('Activité '+(i+1),a)+fTxt(a,'intitule','Quelle activité, moins déterminante ?',{req:1,ex:exm('actSec')})+'</div>'}).join('')+addBtn('activite','Ajouter une autre activité','data-init=\''+JSON.stringify({pole:S.pole,cle:false})+'\'')}},
+ {k:'res',t:'Les résultats remis',m:6,r:function(){
+  var as=list('activite').filter(function(x){return x.pole===S.pole&&x.cle&&x.livrable==='oui'&&x.intitule});
+  as.forEach(function(a){if(!livrablesPole().some(function(l){return l.activite===a.id}))put('livrable',{pole:S.pole,activite:a.id,nom:''})});
+  var ls=livrablesPole();var li=ls.filter(function(l){return l.activite&&S.O[l.activite]});var lo=ls.filter(function(l){return !l.activite||!S.O[l.activite]});
+  return '<h2>Les résultats que ton pôle remet</h2><div class="note">Voici les activités de ton pôle qui débouchent sur un livrable. Pour chacune, indique le résultat concret remis à quelqu\'un : le résultat, pas l\'action.</div>'+
+  li.map(function(l){var a=S.O[l.activite];return '<div class="card">'+fTxt(l,'nom','Pour l\'activité « '+(a.intitule||'')+' », quel résultat concret est remis à quelqu\'un ?',{req:1,ex:exm('res')})+'</div>'}).join('')+
+  '<h3 style="margin:22px 0 8px">Un autre livrable ?</h3><p class="muted small">Un livrable du pôle qui ne vient d\'aucune activité ci-dessus.</p>'+
+  lo.map(function(l,i){return '<div class="card">'+blockHead('Livrable '+(i+1),l)+fTxt(l,'nom','Comment s\'appelle ce livrable ?',{req:1,ex:exm('res')})+'</div>'}).join('')+addBtn('livrable','Ajouter un livrable','data-init=\''+JSON.stringify({pole:S.pole})+'\'')}},
+ {k:'fiche',t:'La fiche de chaque livrable',m:18,each:function(){return livrablesPole().filter(function(l){return l.nom})},vide:'Aucun livrable n\'a encore été indiqué.',r:function(l){
+  var ps=postesOpts();var crit=critique(l);var h='<h2>'+esc(l.nom)+'</h2>';
+  h+='<div class="card">'+fTxt(l,'nom','Comment s\'appelle ce livrable ?',{req:1,ex:'Le résultat remis, pas l\'action. '+exm('res')})+
+   fMulti(l,'producteurs','Qui le produit ?',ps.concat([['x_presta','Un prestataire ou sous-traitant externe'],['x_part','Un partenaire'],['x_autre','Autre']]),{req:1,rr:1,ex:'Plusieurs réponses possibles.'})+
+   (hasExt(l)?fTxt(l,'prod_ext','Lequel ?',{req:1,ex:'Précise le prestataire, le partenaire ou la source.'}):'')+
+   (needResp(l)?fSel(l,'responsable','Qui en est responsable au sein de l\'entreprise ?',ps,{req:1,ex:'Une seule personne, qui le suit et en répond.'}):'<details class="multi-d"><summary>Le responsable du résultat est quelqu\'un d\'autre ?</summary><div style="padding-top:12px">'+fSel(l,'responsable','Qui en est responsable ? (par défaut, celui qui le produit)',ps,{req:0})+'</div></details>')+'<div style="height:14px"></div>'+
+   destBlock(l)+
+   fRadio(l,'rythme','À quel rythme ?',L_RYTHME,{req:1,rr:1})+
+   (l.rythme==='reg'?fSel(l,'freq','Quelle fréquence ?',L_FREQD,{req:1}):l.rythme==='evt'?fTxt(l,'declencheur','Quel événement le déclenche ?',{req:1,ex:exm('declencheur')}):'')+
+   fSel(l,'delai','Sous quel délai doit-il être remis ?',L_DELAI,{req:1,rr:1})+(l.delai==='autre'?fTxt(l,'delai_autre','Précise le délai',{req:1}):'')+
+   '<div class="field">'+lab('À quoi voit-on qu\'il est bien fait ?',1,'Un à trois critères. '+exm('crit'))+fTxt(l,'crit1','Premier critère',{req:1})+fTxt(l,'crit2','Deuxième critère',{req:0})+fTxt(l,'crit3','Troisième critère',{req:0})+'</div>'+
+   '<div class="note">Un livrable est à fort enjeu quand il est essentiel au fonctionnement de l\'entreprise, ou quand une erreur peut coûter cher : perte financière, risque juridique ou d\'image.</div>'+fSel(l,'importance','Quelle importance a-t-il pour l\'entreprise ?',L_IMP,{req:1,rr:1})+
+   fSel(l,'risque','Que risque-t-on s\'il est mal fait ou en retard ?',L_RISQ,{req:1,rr:1})+'</div>';
+  if(l.importance&&l.risque){h+='<div class="'+(crit?'warn':'note')+'"><strong>'+(crit?'Ce livrable est à fort enjeu : quelques questions de plus.':'Ce livrable n\'est pas à fort enjeu.')+'</strong> '+esc(critRaison(l))+
+   '<div style="margin-top:8px">'+fSel(l,'crit_force','Veux-tu le changer ?',[['','Non, garder ce résultat'],['oui','Le passer à fort enjeu'],['non','Le passer en sans fort enjeu']],{req:0,rr:1})+'</div></div>'}
+  if(crit&&l.importance&&l.risque){h+='<div class="card"><h3 style="margin-bottom:12px">La fiche complète</h3>'+
+   fTxt(l,'finalite','À quoi sert-il pour celui qui le reçoit ?',{req:1,ex:exm('finalite')})+
+   fSel(l,'forme','Sous quelle forme est-il remis ?',L_FORME,{req:0})+
+   fOutil(l,'outil_prod','Avec quel outil est-il produit ?',{req:0})+fOutil(l,'outil_trans','Avec quel outil est-il transmis ?',{req:0})+
+   fTxt(l,'consequences','Que se passe-t-il si ce livrable est en retard, s\'il n\'est pas produit, ou s\'il est produit avec une qualité insuffisante ?',{req:1,area:1,ex:exm('conseq')})+
+   fRadio(l,'variantes','Est-il remis différemment selon le montant, l\'urgence ou le client ?',[['oui','Oui'],['non','Non']],{req:1,rr:1})+
+   (l.variantes==='oui'?fMulti(l,'variantes_sur','Selon quoi ?',L_VAR,{req:1}):'')+'</div>'}
+  return h}},
+ {k:'revue',t:'Revue du pôle',m:3,r:function(){var at=list('attendu').filter(function(x){return x.pole===S.pole});var others=list('pole').filter(function(p){return p.id!==S.pole}).map(function(p){return [p.id,p.nom]});
+  return '<h2>Revue du pôle</h2><h3 style="margin:14px 0 8px">Livrables attendus d\'un autre pôle</h3><p class="muted small">Attends-tu un livrable d\'un autre pôle qui n\'apparaît pas encore ? Il sera proposé à son responsable.</p>'+
+  at.map(function(a,i){return '<div class="card">'+blockHead('Livrable attendu '+(i+1),a)+fTxt(a,'nom','Nom du livrable',{req:1,ex:exm('attendu')})+fSel(a,'de_pole','De quel pôle ?',others,{req:1})+'</div>'}).join('')+addBtn('attendu','Ajouter un livrable attendu','data-init=\''+JSON.stringify({pole:S.pole})+'\'')+
+  '<div class="card" style="margin-top:18px">'+fRadio(poleInfoObj(),'recense','As-tu tout recensé pour ce pôle ?',[['oui','Oui, j\'ai fini'],['non','Non, il me reste des livrables']],{req:1})+'</div>'}}
+];
+STEPS.e=[
+ {k:'choix',t:'Les livrables à décrire',m:3,r:function(){var ls=livrablesPole().filter(function(l){return l.nom&&l.importance});
+  ls.forEach(function(l){if(critique(l)&&!l.chaine){l.chaine=true;save(l.id,true)}});
+  return '<h2>Comment réaliser chaque livrable</h2><p class="muted">Choisis les livrables dont la réalisation doit être décrite. Les livrables à fort enjeu sont inclus d\'office.</p>'+
+  (ls.length?ls.map(function(l){var cr=critique(l);return '<div class="card"><label style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" data-bool="1" data-o="'+l.id+'" data-f="chaine" '+(l.chaine?'checked':'')+(cr?' disabled':'')+'><span><strong>'+esc(l.nom)+'</strong><br><span class="muted small">'+(cr?'Étapes détaillées (livrable à fort enjeu)':l.chaine_complete?'Étapes détaillées':'Étapes simples')+'</span></span></label>'+(l.chaine&&!cr&&!l.chaine_complete?'<div style="margin-top:8px">'+fBool(l,'chaine_complete','Décrire plus en détail')+'</div>':'')+'</div>'}).join(''):'<div class="warn">Aucun livrable complet pour le moment. Reviens aux fiches.</div>')}},
+ {k:'chaine',t:'Comment on réalise',m:20,each:function(){return livrablesPole().filter(function(l){return l.chaine&&l.nom})},vide:'Aucune réalisation à décrire.',check:function(l){if(!etapesDe(l).length)return 'Ajoute au moins une étape.'},r:function(l){
+  var acts=list('activite').filter(function(a){return a.pole===S.pole&&a.intitule});
+  etapesDe(l).forEach(function(e){if(!e.activite&&e.nom){var k=String(e.nom).trim().toLowerCase();var m=acts.filter(function(a){return String(a.intitule).trim().toLowerCase()===k&&!etapesDe(l).some(function(x){return x.activite===a.id})})[0];if(m){e.activite=m.id;save(e.id)}}});
+  var et=etapesDe(l);var comp=complete(l);var ps=postesOpts();var nman=et.filter(function(e){return !e.activite}).length;
+  var h='<h2>Comment on réalise « '+esc(l.nom)+' »</h2><p class="muted small">'+(comp?'Étapes détaillées.':'Étapes simples : les grandes étapes, et ce qu\'il faut pour chacune.')+'</p>';
+  h+='<div class="card"><h3 style="margin-bottom:6px">Les étapes de réalisation</h3>'+(acts.length?'<p class="muted small" style="margin-bottom:10px">Touche les activités du pôle dans l\'ordre où elles interviennent pour réaliser ce livrable. Le numéro indique l\'ordre de l\'étape. Touche à nouveau pour la retirer.'+(nman?' Les '+nman+' étape(s) écrite(s) à la main gardent leur place dans la liste ; les activités que tu touches viennent à la suite, et tu peux les réordonner avec les flèches.':'')+'</p><div class="chips">'+acts.map(function(a){var e=et.filter(function(x){return x.activite===a.id})[0];var n=e?et.indexOf(e)+1:0;return '<button type="button" class="chip'+(n?' on':'')+'" data-act="togact" data-lid="'+l.id+'" data-aid="'+a.id+'">'+(n?'<b>'+n+'</b>':'')+esc(a.intitule)+'</button>'}).join('')+'</div><p class="muted small" style="margin:10px 0 0">Une étape ne correspond à aucune activité ? Ajoute-la à la main plus bas.</p>':'<p class="muted small">Décris les grandes étapes, dans l\'ordre, huit au maximum.</p>')+'</div>';
+  et.forEach(function(e,idx){var last=idx===et.length-1;var ins=intrantsDe(e);var so=sortieDe(e);
+   if(idx>0&&comp){var prev=et[idx-1],ps2=sortieDe(prev);if(ps2&&ps2.nom&&!ins.some(function(i){return i.auto})){ins=[put('intrant',{etape:e.id,nom:ps2.nom,prov_type:'etape',prov_src:prev.id,auto:true})].concat(ins)}}
+   if(last&&!e.responsable&&respDe(l)){e.responsable=respDe(l);save(e.id,true)}
+   var tools='<button type="button" data-act="mv" data-pf="livrable" data-dir="up" data-id="'+e.id+'" '+(idx===0?'disabled':'')+'>↑</button><button type="button" data-act="mv" data-pf="livrable" data-dir="down" data-id="'+e.id+'" '+(last?'disabled':'')+'>↓</button>';
+   h+='<div class="card"><div class="blockhead"><h3>Étape '+(idx+1)+'</h3><div class="tools">'+tools+'<button type="button" data-act="del" data-id="'+e.id+'">Retirer</button></div></div>'+
+    fTxt(e,'nom','Que se passe-t-il à cette étape ?',{req:1,ex:'Commence par un verbe. '+(acts.length?'Exemple : « '+acts[0].intitule+' »':exm('etape'))})+fSel(e,'responsable','Qui réalise cette étape ?',ps,{req:1})+
+    '<h3 style="font-size:16px;margin:16px 0 8px">De quoi a-t-on besoin ?</h3>'+
+    ins.map(function(i,k){return '<div style="border-top:1px solid var(--line);padding-top:12px;margin-top:12px"><div class="blockhead"><span class="muted small">Besoin '+(k+1)+(i.auto?' · repris de l\'étape précédente':'')+'</span><button type="button" data-act="del" data-id="'+i.id+'">Retirer</button></div>'+
+     fTxt(i,'nom','De quoi as-tu besoin pour réaliser cette étape ?',{req:1,ex:exm('besoin')})+
+     fSel(i,'prov_type','D\'où cela vient-il ?',L_PROV,{req:1,rr:1})+
+     (i.prov_type==='poste'?fSel(i,'prov_src','Lequel ?',ps,{req:1}):i.prov_type==='livrable'?fSel(i,'prov_src','Lequel ?',list('livrable').filter(function(x){return x.id!==l.id&&x.nom}).map(function(x){return [x.id,x.nom+' ('+poleNom(x.pole)+')']}),{req:1}):i.prov_type==='etape'?fSel(i,'prov_src','Laquelle ?',et.slice(0,idx).map(function(x,n){return [x.id,'Étape '+(n+1)+' : '+(x.nom||'')]}),{req:1}):(i.prov_type==='ext'||i.prov_type==='autre')?fTxt(i,'prov_txt','Précise',{req:i.prov_type==='ext'}):'')+
+     (comp?'<div class="row">'+fSel(i,'forme','Sous quelle forme le reçois-tu ?',L_FORME,{req:1})+fSel(i,'delai','Quand doit-il être là ?',L_INQD,{req:1})+'</div>'+fRadio(i,'oblig','L\'étape peut-elle démarrer sans lui ?',[['non','Non, elle ne peut pas démarrer sans'],['oui','Oui, elle peut démarrer sans']],{req:1}):'')+'</div>'}).join('')+
+    '<div style="margin-top:12px">'+addBtn('intrant','Ajouter un besoin','data-init=\''+JSON.stringify({etape:e.id})+'\'')+'</div>';
+   if(!comp)h+='<div style="margin-top:14px">'+fSel(e,'duree','Combien de temps prend cette étape, en général ?',L_DUREE,{req:0})+'</div>';
+   if(comp){h+='<h3 style="font-size:16px;margin:20px 0 8px">La fiche de l\'étape</h3>'+fSel(e,'duree','Combien de temps prend cette étape, en général ?',L_DUREE,{req:1})+fOutil(e,'outil','Avec quel outil ?',{req:0})+fMulti(e,'contrib','Quelqu\'un d\'autre intervient-il ?',ps,{req:0})+
+     fTxt(e,'critere','Comment sait-on que cette étape est bien terminée ?',{req:1,ex:exm('critEtape')})+fRadio(e,'validation','Quelqu\'un doit-il valider avant de passer à la suite ?',[['oui','Oui'],['non','Non']],{req:1})+fTxt(e,'attention','Y a-t-il un point d\'attention à connaître à cette étape ?',{req:0,ex:exm('attention')});
+     if(!last){if(!so)so=put('sortie',{etape:e.id});h+='<h3 style="font-size:16px;margin:20px 0 8px">Ce que l\'étape produit</h3>'+fTxt(so,'nom','Qu\'est-ce que cette étape produit ?',{req:1,ex:exm('sortie')+' Il devient le besoin de l\'étape suivante.'})+fSel(so,'dest','À qui va-t-il ensuite ?',L_DEST,{req:1})+fTxt(so,'autre_usage','Sert-il aussi à autre chose ?',{req:0,ex:'Exemple : « Suivi de rentabilité »'})}}
+   h+='</div>'});
+  h+=(et.length>=8?'<div class="err">Huit étapes au maximum. Regroupe celles qui vont ensemble.</div>':addBtn('etape','Ajouter une étape','data-init=\''+JSON.stringify({livrable:l.id})+'\''))+'';return h}}
+];
+function poleInfoObj(){var o=S.O['info_'+S.pole];if(!o){o=S.O['info_'+S.pole]={type:'poleinfo',id:'info_'+S.pole,pole:S.pole,origine:'declare',etat:'a_confirmer'}}return o}
+var SEUIL_VERBES=/^(g[ée]rer|suivre|accompagner|faire)\b/i;
+function recapE(){var ls=livrablesPole().filter(function(l){return l.chaine&&l.nom});var pts=[];ls.forEach(function(l){etapesDe(l).forEach(function(e){if(!e.responsable)pts.push('« '+l.nom+' » : l\'étape « '+(e.nom||'sans nom')+' » n\'a pas de responsable.');intrantsDe(e).forEach(function(i){if(i.oblig==='non'&&i.prov_type==='autre'&&!i.prov_txt)pts.push('« '+l.nom+' » : « '+i.nom+' » est indispensable mais sans fournisseur connu.')})})});
+ var h='<h2>Récapitulatif : la réalisation, pôle '+esc(poleActuel().nom)+'</h2><div class="card"><table class="t"><tr><th>Livrable</th><th>Étapes</th></tr>'+ls.map(function(l){return '<tr><td>'+esc(l.nom)+'</td><td>'+etapesDe(l).map(function(e,i){return (i+1)+'. '+esc(e.nom||'')}).join('<br>')+'</td></tr>'}).join('')+'</table></div>'+ls.map(function(l){return '<div class="card"><h3 style="margin-bottom:8px">'+esc(l.nom)+'</h3>'+parcoursHtml(l)+retardHtml(l)+'</div>'}).join('');
+ h+=valCard('Validation des livrables et de leur réalisation',ls.map(function(l){return {o:l,l:l.nom}}));
+ if(pts.length)h+=ptsHtml(pts,{s:'e',pole:S.pole,rules:[[/./,'chaine']]});
+ return h+'<div class="actions"><button type="button" data-act="prev">Revenir</button><button type="button" class="primary" data-act="finish">Valider cette partie</button></div>'}
+function recapD(){var ls=livrablesPole().filter(function(l){return l.nom});var pts=[];
+ ls.forEach(function(l){if(SEUIL_VERBES.test(l.nom))pts.push('« '+l.nom+' » ressemble à une activité : quel résultat est remis ?');
+  if(destsDe(l).some(function(d){return d.genre==='poste'&&(l.producteurs||[]).indexOf(d.cible)>-1}))pts.push('« '+l.nom+' » : le producteur est aussi le bénéficiaire. Est-ce un livrable ou une activité ?');
+  [l.crit1,l.crit2,l.crit3].forEach(function(c){if(c&&/^(de qualité|rapide|bien|correct)\.?$/i.test(String(c).trim()))pts.push('« '+l.nom+' » : le critère « '+c+' » est difficile à observer.')});
+  
+ });
+ var h='<h2>Récapitulatif : le pôle '+esc(poleActuel().nom)+'</h2><div class="card"><table class="t"><tr><th>Livrable</th><th>Produit par</th><th>Pour</th><th>À fort enjeu</th></tr>'+ls.map(function(l){var b=destsDe(l).map(destTxt).join(', ');return '<tr><td>'+esc(l.nom)+'</td><td>'+esc(prodTxt(l))+'</td><td>'+esc(b)+'</td><td>'+(critique(l)?'Oui':'Non')+'</td></tr>'}).join('')+'</table></div>';
+ h+='<p class="muted small">'+list('etape').filter(function(e){return ls.some(function(l){return l.id===e.livrable})}).length+' étape(s) de production décrite(s).</p>';
+ h+=valCard('Validation du pôle et de ses livrables',[{o:S.O[S.pole],l:'Le pôle '+poleActuel().nom+', ses postes et son rattachement'}].concat(ls.map(function(l){return {o:l,l:l.nom}})));
+ if(pts.length)h+=ptsHtml(pts,{s:'d',pole:S.pole,rules:[[/ressemble à une activité/,'res'],[/./,'fiche']]});
+ return h+'<div class="actions"><button type="button" data-act="prev">Revenir</button><button type="button" class="primary" data-act="finish">Valider cette partie</button></div>'}
+
+/* ---------- temps « Relier » : dépendances et transmissions (module 5) ---------- */
+var L_CONF=[['oui','Oui'],['autre','Oui, mais autrement'],['non','Non, ce n\'est pas le cas'],['ns','Je ne sais pas']];
+var L_DTYPE=[['info','Une information'],['ressource','Une ressource (accès, budget, matériel)'],['decision','Une décision'],['validation','Une validation']];
+var L_SENS=[['envoie','Nous l\'envoyons'],['recoit','Nous le recevons'],['deux','Dans les deux sens']];
+function poleOf(pid){if(!pid||pid==='dirigeant')return null;var p=S.O[pid];return p?p.pole:null}
+function respPoste(poleId){var p=S.O[poleId];return p&&p.resp&&p.resp!=='aucun'?p.resp:''}
+function sameDe(a){return a}
+/* Calcul : rien n'est ressaisi, tout vient des intrants (temps B) et des destinataires des livrables (temps A) */
+function calcTrans(){var out=[];
+ list('etape').forEach(function(e){var l=S.O[e.livrable];if(!l||!l.nom||!e.responsable)return;
+  intrantsDe(e).forEach(function(i){var from='';
+   if(i.prov_type==='poste')from=i.prov_src;
+   else if(i.prov_type==='livrable'&&S.O[i.prov_src])from=respDe(S.O[i.prov_src]);
+   else if(i.prov_type==='etape'&&S.O[i.prov_src])from=S.O[i.prov_src].responsable;
+   if(!from||from===e.responsable||(from!=='dirigeant'&&!S.O[from]))return;
+   out.push({key:'tr_'+i.id,de:from,vers:e.responsable,nom:i.nom||'(sans nom)',livrable:l.id,etape:e.id,forme:i.forme,delai:i.delai,bloq:i.oblig==='non',src:'intrant',srcLiv:i.prov_type==='livrable'?i.prov_src:''})})});
+ list('destinataire').forEach(function(d){var l=S.O[d.livrable];if(!l||!l.nom||!d.suite)return;var from=respDe(l);var to='';
+  if(d.genre==='poste')to=d.cible;else if(d.genre==='pole')to=respPoste(d.cible);else if(d.genre==='dir')to='dirigeant';
+  if(!from||!to||from===to)return;if(out.some(function(t){return t.src==='intrant'&&t.srcLiv===l.id&&t.de===from&&t.vers===to}))return;out.push({key:'tr_'+d.id,de:from,vers:to,nom:l.nom,livrable:l.id,bloq:false,src:'dest'})});
+ /* échanges déclarés hors chaîne (entre pôles) */
+ list('echange').forEach(function(x){if(!x.nom||!x.pole_a||!x.pole_b)return;var a=respPoste(x.pole_a),b=respPoste(x.pole_b);
+  if(x.sens==='envoie'||x.sens==='deux')out.push({key:'tr_'+x.id+'a',de:a||('pole:'+x.pole_a),vers:b||('pole:'+x.pole_b),nom:x.nom,livrable:x.livrable,bloq:false,src:'echange',ech:x.id});
+  if(x.sens==='recoit'||x.sens==='deux')out.push({key:'tr_'+x.id+'b',de:b||('pole:'+x.pole_b),vers:a||('pole:'+x.pole_a),nom:x.nom,livrable:x.livrable,bloq:false,src:'echange',ech:x.id})});
+ return out}
+function trPole(pid){if(String(pid).indexOf('pole:')===0)return String(pid).slice(5);return poleOf(pid)}
+function trNom(pid){if(String(pid).indexOf('pole:')===0)return 'Pôle '+poleNom(String(pid).slice(5));return posteNom(pid)}
+function trObj(t){var o=single(t.key,'transmission');if(o.bloq===undefined)o.bloq=t.bloq?'oui':'non';return o}
+function trEtat(t){var o=S.O[t.key]||{};var a=o.c_de,b=o.c_vers;if(trPole(t.de)===trPole(t.vers)){a=b}
+ if(a==='non'||b==='non')return 'contradictoire';if(a==='oui'&&b==='oui')return 'confirme';if((a==='autre'||b==='autre'))return 'autrement';return 'a_confirmer'}
+var TR_ETAT={confirme:'Confirmée',a_confirmer:'À confirmer',autrement:'Proposée autrement',contradictoire:'À reprendre'};
+function trDuPole(pid){var all=calcTrans();return {recoit:all.filter(function(t){return trPole(t.vers)===pid}),envoie:all.filter(function(t){return trPole(t.de)===pid&&trPole(t.vers)!==pid})}}
+/* Compétences sollicitées : rien n'est ressaisi. Elles viennent de « Quelqu'un d'autre intervient-il ? » (étapes) et des validations où « on lui demande son avis ». */
+function calcComp(){var out=[];
+ list('etape').forEach(function(e){var l=S.O[e.livrable];if(!l||!l.nom||!e.responsable)return;
+  (e.contrib||[]).forEach(function(c){if(!c||c===e.responsable||(c!=='dirigeant'&&!S.O[c]))return;out.push({de:c,vers:e.responsable,nom:'Intervient à l\u2019étape « '+(e.nom||'sans nom')+' » du livrable « '+l.nom+' »',livrable:l.id,etape:e.id,src:'etape'})})});
+ list('validation').forEach(function(v){if(v.role!=='avis'||!v.validateur)return;var eid=String(v.id).indexOf('va_')===0?String(v.id).slice(3):'';var e=S.O[eid];if(!e||e.type!=='etape'||!e.responsable||v.validateur===e.responsable)return;var l=S.O[e.livrable];
+  out.push({de:v.validateur,vers:e.responsable,nom:'Donne son avis sur l\u2019étape « '+(e.nom||'sans nom')+' »'+(l?' du livrable « '+l.nom+' »':''),livrable:e.livrable,etape:e.id,src:'avis'})});
+ return out}
+function compDuPole(pid){var all=calcComp();return {sollicite:all.filter(function(c){return trPole(c.vers)===pid&&trPole(c.de)!==pid}),sollicitePar:all.filter(function(c){return trPole(c.de)===pid&&trPole(c.vers)!==pid}),interne:all.filter(function(c){return trPole(c.de)===pid&&trPole(c.vers)===pid})}}
+function compHtml(pid){var d=compDuPole(pid);var n=d.sollicite.length+d.sollicitePar.length+d.interne.length;if(!n)return '';
+ var row=function(c,sens){return '<tr><td>'+esc(c.nom)+'</td><td>'+sens+'</td><td>'+esc(sens==='Sollicité'?trNom(c.vers):trNom(c.de))+'</td></tr>'};
+ return '<div class="card"><h3 style="margin-bottom:6px">Les compétences sollicitées</h3><p class="muted small">Ce que les postes s\u2019apportent comme expertise ou comme avis. Rien n\u2019est à ressaisir : cela vient des étapes décrites.</p><table class="t"><tr><th>Intervention</th><th>Sens</th><th>Avec</th></tr>'+
+  d.sollicitePar.map(function(c){return row(c,'Sollicité')}).join('')+d.sollicite.map(function(c){return row(c,'Fait appel à')}).join('')+d.interne.map(function(c){return '<tr><td>'+esc(c.nom)+'</td><td>Dans le pôle</td><td>'+esc(trNom(c.de))+' → '+esc(trNom(c.vers))+'</td></tr>'}).join('')+'</table></div>'}
+function trPhrase(t,dir){var l=S.O[t.livrable],e=S.O[t.etape];var de=trNom(t.de),vers=trNom(t.vers);var pd=trPole(t.de),pv=trPole(t.vers);
+ var dp=pd?' (pôle '+poleNom(pd)+')':'',vp=pv?' (pôle '+poleNom(pv)+')':'';
+ var f=t.forme?(L_FORME.filter(function(x){return x[0]===t.forme})[0]||[0,''])[1].toLowerCase():'',d=t.delai?(L_INQD.filter(function(x){return x[0]===t.delai})[0]||[0,''])[1].toLowerCase():'';
+ var h='<strong>'+esc(de)+'</strong>'+dp+' transmet « '+esc(t.nom)+' » à <strong>'+esc(vers)+'</strong>'+vp+'.';
+ if(e)h+=' C\'est nécessaire à l\'étape « '+esc(e.nom||'')+' » du livrable « '+esc(l?l.nom:'')+' ».';else if(l&&t.src==='dest')h+=' Il s\'agit de la suite du travail sur le livrable « '+esc(l.nom)+' ».';
+ if(f||d)h+=' Prévu : '+[f&&('sous forme de '+esc(f)),d&&esc(d)].filter(Boolean).join(', ')+'.';return h}
+function trCard(t,cote){var o=trObj(t);var dir=cote==='recoit';var intra=trPole(t.de)===trPole(t.vers);var fld=dir?'c_vers':'c_de';var e=S.O[t.etape];
+ var h='<div class="card"><h3 style="margin-bottom:6px">'+esc(t.nom)+'</h3><p class="small" style="margin:0 0 12px">'+trPhrase(t,dir)+'</p>';
+ h+=fRadio(o,fld,'Est-ce bien ainsi que cela se passe ?',L_CONF,{req:0,rr:1});
+ if(o[fld]==='autre'||o[fld]==='non')h+=fTxt(o,dir?'corr_vers':'corr_de',o[fld]==='autre'?'Comment cela se passe-t-il, plutôt ?':'Que faut-il corriger ?',{req:0});
+ if(dir||intra){h+=fSel(o,'dtype','Qu\'est-ce que « '+t.nom+' » représente pour '+trNom(t.vers)+' ?',L_DTYPE,{req:0})+fRadio(o,'bloq',e?'L\'étape « '+(e.nom||'')+' » peut-elle avancer sans « '+t.nom+' » ?':'Le travail peut-il avancer sans « '+t.nom+' » ?',[['non','Oui, elle peut avancer sans'],['oui','Non, elle ne peut pas avancer sans']],{req:0})+fOutil(o,'outil','Par quel outil « '+t.nom+' » passe-t-il ?',{req:0})+fTxt(o,'qualite','Qu\'attends-tu pour que ce soit utilisable ?',{req:0,ex:'Exemple : « Les prix à jour de ce mois-ci »'})}
+ else{h+='<p class="muted small">Outil indiqué par celui qui le reçoit : '+esc(o.outil||'pas encore précisé')+(o.qualite?' · Attente : '+esc(o.qualite):'')+'</p>'}
+ return h+'</div>'}
+function trSync(){calcTrans().forEach(function(t){var o=trObj(t);if(trPole(t.de)===trPole(t.vers)&&o.c_vers&&o.c_de!==o.c_vers){o.c_de=o.c_vers}})}
+STEPS.r=[
+ {k:'recoit',t:'Ce que ton pôle reçoit',m:6,r:function(){trSync();var ts=trDuPole(S.pole).recoit;
+  return '<h2>Ce que le pôle '+esc(poleActuel().nom)+' reçoit</h2><p class="muted">Voici ce dont le pôle a besoin pour produire ses livrables, et de qui. Rien n\'est à ressaisir : confirme ou corrige. Aucune réponse n\'est obligatoire pour continuer.</p>'+
+  (ts.length?ts.map(function(t){return trCard(t,'recoit')}).join(''):'<div class="note">Aucun besoin venant d\'un autre poste n\'a été décrit pour ce pôle. Il est possible de passer à la suite.</div>')}},
+ {k:'envoie',t:'Ce que ton pôle envoie',m:4,r:function(){var ts=trDuPole(S.pole).envoie;
+  return '<h2>Ce que le pôle '+esc(poleActuel().nom)+' envoie</h2><p class="muted">D\'autres pôles comptent sur ce que le pôle envoie. Confirme que cela se passe bien ainsi.</p>'+
+  (ts.length?ts.map(function(t){return trCard(t,'envoie')}).join(''):'<div class="note">Aucun envoi vers un autre pôle n\'a été relevé pour l\'instant. Il apparaîtra dès que d\'autres pôles décriront leur réalisation.</div>')}},
+ {k:'hors',t:'Les autres échanges',m:4,r:function(){var ri=single('rel_'+S.pole,'relinfo');var ex=list('echange').filter(function(x){return x.pole_a===S.pole});
+  var others=list('pole').filter(function(p){return p.id!==S.pole}).map(function(p){return [p.id,p.nom]});var ls=livrablesPole().filter(function(l){return l.nom}).map(function(l){return [l.id,l.nom]});
+  return '<h2>Les autres échanges</h2><div class="card"><h3 style="margin-bottom:8px">Ce qui figure déjà</h3>'+recapLiens()+'</div><p class="muted">Le pôle échange-t-il régulièrement avec un autre pôle quelque chose qui n\'apparaît pas encore ici ?</p>'+
+  '<div class="card">'+fRadio(ri,'hors','Y a-t-il un échange à ajouter ?',[['oui','Oui'],['non','Non'],['ns','Je ne sais pas']],{req:0,rr:1})+'</div>'+
+  (ri.hors==='oui'?ex.map(function(x,i){return '<div class="card">'+blockHead('Échange '+(i+1),x)+fSel(x,'pole_b','Avec quel pôle ?',others,{req:1})+fTxt(x,'nom','Qu\'est-ce qui passe de l\'un à l\'autre ?',{req:1,ex:'Exemple : « Les dates de signature des contrats »'})+fSel(x,'sens','Dans quel sens ?',L_SENS,{req:1})+fOutil(x,'outil','Par quel outil ?',{req:0})+fSel(x,'livrable','À quel livrable de ton pôle le relier ?',ls,{req:0})+'</div>'}).join('')+addBtn('echange','Ajouter un échange','data-init=\''+JSON.stringify({pole_a:S.pole})+'\''):'')}}
+];
+function recapLiens(){var d=trDuPole(S.pole);var f=function(arr,r){return arr.length?'<ul style="margin:4px 0 10px 18px;padding:0">'+arr.map(function(t){return '<li>« '+esc(t.nom)+' » '+(r?'de ':'vers ')+esc(trNom(r?t.de:t.vers))+'</li>'}).join('')+'</ul>':'<p class="muted small" style="margin:4px 0 10px">Rien pour l\'instant.</p>'};
+ return '<strong>Ton pôle reçoit</strong>'+f(d.recoit,1)+'<strong>Ton pôle envoie</strong>'+f(d.envoie,0)}
+/* ---------- circuits alternatifs (module 7) : on ne stocke que les écarts au circuit standard ---------- */
+var L_CTYPE=[['simplifie','Plus simple et plus rapide'],['renforce','Avec une validation en plus'],['urgence','Court, en urgence'],['exception','Exceptionnel']];
+var L_CTYPE_N={simplifie:'simplifié',renforce:'avec validation en plus',urgence:'court',exception:'exceptionnel'};
+var L_SORTIE=[['livraison','Jusqu\'à la livraison du livrable'],['condition','Tant que la condition reste vraie'],['decision','Jusqu\'à une décision d\'un poste']];
+var L_ECART=[['identique','Identique'],['supprimee','Supprimée'],['remplacee','Remplacée par…']];
+function condsDe(l){return list('cond').filter(function(c){return c.livrable===l.id})}
+function ensureConds(l){(l.variantes_sur||[]).forEach(function(k){if(!condsDe(l).some(function(c){return c.critere===k&&c.prefill}))put('cond',{livrable:l.id,critere:k,prefill:true})})}
+function cheminsDe(l){var types=[];condsDe(l).forEach(function(c){if(c.ctype&&types.indexOf(c.ctype)<0)types.push(c.ctype)});
+ return types.map(function(t){var c=list('chemin').filter(function(x){return x.livrable===l.id&&x.ctype===t})[0];if(!c)c=put('chemin',{livrable:l.id,ctype:t,statut:'propose',decideur:(t==='renforce'||t==='exception')?'dirigeant':respDe(l),delai:l.delai||''});return c})}
+function regleImposee(key){return list('oblig').filter(function(x){return x.valid===key&&x.txt})[0]}
+function ecartObj(c,e){var o=single('ec_'+c.id+'_'+e.id,'ecart');if(!o.chemin){o.chemin=c.id;o.etape=e.id;o.mode='identique'}return o}
+function critNom(k){return (L_VAR.filter(function(x){return x[0]===k})[0]||[0,k||'Autre'])[1]}
+function cheminBlock(l,c){var et=etapesDe(l);var ps=postesOpts().concat([['dirigeant','Le dirigeant']]);
+ var h='<div class="card"><h3 style="margin-bottom:4px">Circuit '+esc(L_CTYPE_N[c.ctype])+'</h3><p class="muted small" style="margin:0 0 10px">Cas : '+esc(condsDe(l).filter(function(x){return x.ctype===c.ctype&&x.cond}).map(function(x){return critNom(x.critere)+' — '+x.cond}).join(' ; ')||'à préciser')+'. Tout est identique au circuit standard : ne touche que ce qui change.</p>';
+ if(et.length){h+='<h3 style="font-size:16px;margin:8px 0">Les étapes</h3>'+et.map(function(e,i){var o=ecartObj(c,e);var ri2=regleImposee('va_'+e.id);return '<div style="border-top:1px solid var(--line);padding-top:10px;margin-top:10px">'+fSel(o,'mode','Étape '+(i+1)+' : « '+(e.nom||'')+' »',ri2?L_ECART.filter(function(x){return x[0]!=='supprimee'}):L_ECART,{req:0,rr:1})+(ri2?'<p class="muted small">Cette étape ne peut pas être supprimée : règle obligatoire « '+esc(ri2.txt)+' »</p>':'')+(o.mode==='remplacee'?fTxt(o,'txt','Remplacée par quoi ?',{req:0}):'')+'</div>'}).join('')}
+ else h+='<p class="muted small">Les étapes du circuit standard ne sont pas encore décrites : il sera possible d\'indiquer ici ce qui change une fois les étapes décrites.</p>';
+ var vl=validsPole(l.pole).filter(function(v){return v.lid===l.id});if(vl.length)h+='<h3 style="font-size:16px;margin:16px 0 8px">Les validations</h3>'+vl.map(function(v){var ev=single('ev_'+c.id+'_'+v.key,'ecartv');if(!ev.mode)ev.mode='identique';var rg=regleImposee(v.key);return fSel(ev,'mode',v.label,rg?[['identique','Identique'],['renforcee','Renforcée (un validateur en plus)']]:[['identique','Identique'],['renforcee','Renforcée (un validateur en plus)'],['retiree','Retirée']],{req:0,rr:1})+(rg?'<p class="muted small">Elle ne peut pas être retirée : règle obligatoire « '+esc(rg.txt)+' »</p>':'')+(ev.mode==='renforcee'?fSel(ev,'plus','Quel validateur en plus ?',postesDir(),{req:0}):'')}).join('');
+ h+=fTxt(c,'ajout','Faut-il ajouter une étape dans ce circuit ?',{req:0,ex:'Exemple : « Obtenir l\'accord du dirigeant, après le chiffrage »'})+
+  fSel(c,'delai','Combien de temps pour ce circuit ?',L_DELAI,{req:0})+fSel(c,'poste','Un autre poste réalise-t-il ce circuit ?',postesOpts(),{req:0})+
+  fSel(c,'sortie','Jusqu\'à quand ce circuit s\'applique-t-il ?',L_SORTIE,{req:0,rr:1})+(c.sortie==='decision'?fSel(c,'sortie_poste','Quel poste décide d\'en sortir ?',ps,{req:0}):'')+
+  fSel(c,'decideur','Qui décide d\'utiliser ce circuit ?',ps,{req:0})+'<p class="muted small" style="margin-top:10px">Si ce circuit se passe mal : '+esc(escTxt(l.pole)||'aucune règle définie pour faire remonter dans ce pôle (voir « Décider »)')+'.</p>'+fSel(c,'esc_vers','Remonter ailleurs pour ce circuit ?',ps,{req:0});
+ return h+'</div>'}
+STEPS.r.push({k:'chemins',t:'Les circuits alternatifs',m:8,each:function(){return livrablesPole().filter(function(l){return l.nom&&l.variantes==='oui'})},vide:'Aucun de tes livrables n\'est remis différemment selon le cas : il n\'y a rien à décrire ici.',r:function(l){
+ ensureConds(l);var cs=condsDe(l);var ch=cheminsDe(l);
+ var h='<h2>Quand le circuit change : « '+esc(l.nom)+' »</h2><p class="muted">Tu as indiqué que ce livrable est remis différemment selon '+esc((l.variantes_sur||[]).map(critNom).join(', ').toLowerCase()||'le cas')+'. Dis-nous à partir de quand, et quel circuit prendre. Rien n\'est obligatoire pour continuer.</p>';
+ cs.forEach(function(c,i){h+='<div class="card">'+(c.prefill?'<h3 style="margin-bottom:8px">'+esc(critNom(c.critere))+'</h3>':blockHead('Autre cas',c)+fSel(c,'critere','Selon quel critère ?',L_VAR,{req:0}))+
+  fTxt(c,'cond',c.prefill?'Pour le critère « '+critNom(c.critere)+' », dans quel cas le circuit change-t-il ?':'Dans quel cas le circuit change-t-il ?',{req:0,ex:exm_cond(c.critere)})+
+  fSel(c,'ctype','Quel circuit faut-il alors ?',L_CTYPE,{req:0,rr:1})+'</div>'});
+ if(cs.length<3)h+='<div style="margin-bottom:16px">'+addBtn('cond','Ajouter un cas','data-init=\''+JSON.stringify({livrable:l.id})+'\'')+'</div>';
+ else h+='<p class="muted small">Trois cas au maximum par livrable.</p>';
+ ch.forEach(function(c){h+=cheminBlock(l,c)});
+ if(ch.length>1)h+='<div class="card">'+fSel(l,'prio_chemin','Si deux de ces cas sont vrais en même temps, lequel l\'emporte ?',ch.map(function(c){return [c.ctype,'Le circuit '+L_CTYPE_N[c.ctype]]}),{req:0})+'</div>';
+ return h}});
+function exm_cond(k){return {montant:'Exemple : « Au-dessus de 10 000 € »',urgence:'Exemple : « Livraison demandée sous 48 heures »',risque:'Exemple : « Client en procédure de recouvrement »',client:'Exemple : « Client grand compte de plus de 250 salariés »',complex:'Exemple : « Plus de trois sites à couvrir »'}[k]||'Exemple : « Quand… » (un seuil ou un fait observable)'}
+function aiguillage(l){var cs=condsDe(l).filter(function(c){return c.cond&&c.ctype});if(!cs.length)return '';var by={};cs.forEach(function(c){(by[c.ctype]=by[c.ctype]||[]).push(critNom(c.critere).toLowerCase()+' : '+c.cond)});
+ return Object.keys(by).map(function(t){return 'Si '+by[t].join(', ou ')+' → circuit '+L_CTYPE_N[t]}).join(' ; ')+' ; sinon, circuit standard'+(Object.keys(by).length>1&&l.prio_chemin?' (en cas de doute, le circuit '+L_CTYPE_N[l.prio_chemin]+' l\'emporte)':'')+'.'}
+function pointsChemins(){var pts=[];livrablesPole().filter(function(l){return l.nom&&l.variantes==='oui'}).forEach(function(l){var cs=condsDe(l);
+ if(!cs.some(function(c){return c.cond&&c.ctype}))pts.push('« '+l.nom+' » : aucun cas n\'est encore décrit. À partir de quand le circuit change-t-il ?');
+ cs.forEach(function(c){if(c.cond&&!/\d/.test(c.cond)&&/(urgent|important|gros|petit|grand|complexe|difficile)/i.test(c.cond))pts.push('« '+l.nom+' » : « '+c.cond+' » est difficile à observer. Un seuil ou un exemple aiderait.');if(c.prefill&&!c.cond)pts.push('« '+l.nom+' » : le critère « '+critNom(c.critere)+' » n\'a pas encore de condition.')});
+ cheminsDe(l).forEach(function(c){if(!c.sortie)pts.push('« '+l.nom+' » : le circuit '+L_CTYPE_N[c.ctype]+' n\'a pas de règle de sortie.')});
+ cheminsDe(l).forEach(function(c){etapesDe(l).forEach(function(e){var o=S.O['ec_'+c.id+'_'+e.id];var rg=regleImposee('va_'+e.id);if(o&&o.mode==='supprimee'&&rg)pts.push('« '+l.nom+' » : le circuit '+L_CTYPE_N[c.ctype]+' supprime l\'étape « '+(e.nom||'')+' », liée à la règle obligatoire « '+rg.txt+' ».')});validsPole(l.pole).filter(function(v){return v.lid===l.id}).forEach(function(v){var ev=S.O['ev_'+c.id+'_'+v.key];var rg=regleImposee(v.key);if(ev&&ev.mode==='retiree'&&rg)pts.push('« '+l.nom+' » : le circuit '+L_CTYPE_N[c.ctype]+' retire une validation couverte par la règle obligatoire « '+rg.txt+' ».')})});
+ if(cheminsDe(l).length&&!escPole(l.pole).length)cheminsDe(l).forEach(function(c){if(!c.esc_vers)pts.push('« '+l.nom+' » : le circuit '+L_CTYPE_N[c.ctype]+' n\'a pas de règle pour faire remonter.')});
+ if(cheminsDe(l).length>1&&!l.prio_chemin)pts.push('« '+l.nom+' » : si deux cas sont vrais en même temps, quel circuit l\'emporte ?')});return pts}
+/* ---------- temps « Décider » (module 6) : validations, autonomie, escalade, non-réponse ---------- */
+var L_VROLE=[['oblig','Elle doit valider'],['facult','Elle peut valider'],['avis','On lui demande son avis'],['info','On l\'informe seulement'],['controle','Elle contrôle après coup']];
+var L_NIV=[['seul','Décide seul'],['informe','Décide, puis informe'],['valide','Propose, fait valider']];
+var L_REG=[['pres','Suit de près'],['echant','Vérifie après coup, sur échantillon'],['alerte','Intervient seulement sur alerte']];
+var L_SIT=[['limite','Au-delà de ce que le poste peut décider seul'],['client','Client sensible ou stratégique'],['desacc','Désaccord avec un autre pôle'],['risque','Risque juridique, financier ou d\'image']];
+var L_SCEN=[['remplacant','Son remplaçant décide'],['escalade','On fait remonter au poste prévu'],['defaut','La décision par défaut s\'applique'],['dirigeant','Le dirigeant tranche']];
+var L_STAT={propose:'Proposé',valide:'Validé',revoir:'À revoir',retire:'Retiré'};
+function decInfo(pid){return single('dec_'+pid,'decinfo')}
+function posteSup(pid){var p=S.O[pid];return p&&p.rend_compte&&p.rend_compte!=='aucun'&&p.rend_compte!=='personne'?p.rend_compte:'dirigeant'}
+function postesDir(){return postesOpts().concat([['dirigeant','Le dirigeant']])}
+function validsPole(pid){var out=[];
+ list('livrable').filter(function(l){return l.pole===pid&&l.nom}).forEach(function(l){etapesDe(l).forEach(function(e){if(e.validation==='oui')out.push({key:'va_'+e.id,lid:l.id,eid:e.id,label:'Validation de l\'étape « '+(e.nom||'')+' » du livrable « '+l.nom+' »',resp:e.responsable,crit:e.critere})})});
+ calcTrans().forEach(function(t){if(trPole(t.vers)===pid&&S.O[t.key]&&S.O[t.key].dtype==='validation')out.push({key:'va_'+t.key,lid:t.livrable,label:'Validation de « '+t.nom+' » par '+trNom(t.de),resp:t.vers})});
+ list('validation').filter(function(v){return v.pole===pid&&v.manuel}).forEach(function(v){out.push({key:v.id,label:v.nom||'Validation ajoutée',manuel:true})});
+ return out}
+function valObj(v){var o=single(v.key,'validation');o.pole=o.pole||S.pole;if(!o.role)o.role='oblig';if(!o.validateur)o.validateur=v.resp?posteSup(v.resp):'dirigeant';return o}
+function decisionsPole(pid){return list('decision').filter(function(d){return d.pole===pid})}
+function regleObj(o){var r=single('ru_'+o.id,'regle');r.cible=o.id;if(!r.niveau)r.niveau=(o.type==='livrable'&&!critique(o))||o.type==='decision'?'informe':'';if(!r.statut)r.statut='propose';return r}
+function interPoles(pid){var all=calcTrans(),m={};all.forEach(function(t){var a=trPole(t.de),b=trPole(t.vers);if(a&&b&&a!==b&&(a===pid||b===pid)){var o=a===pid?b:a;if(all.some(function(u){return trPole(u.de)===(o)&&trPole(u.vers)===pid})&&all.some(function(u){return trPole(u.de)===pid&&trPole(u.vers)===o}))m[o]=1}});return Object.keys(m)}
+function escListe(pid){var es=escPole(pid);if(!es.length)return '';return '<ul style="margin:4px 0 0 0;padding:0;list-style:none">'+es.map(function(e){var sit=(L_SIT.filter(function(x){return x[0]===e.sit})[0]||[0,e.sit_txt||'Autre'])[1];var d=e.delai?(L_DELAI.filter(function(x){return x[0]===e.delai})[0]||[0,''])[1].replace('Sous ','sous '):'';return '<li style="padding:8px 0;border-top:1px solid var(--line)"><strong>'+esc(sit)+'</strong><br><span class="small">Remonte à : '+esc(trNom(e.vers))+(d?' · Réponse attendue '+esc(d):'')+'</span></li>'}).join('')+'</ul>'}
+function escPole(pid){return list('escalade').filter(function(e){return e.pole===pid&&e.vers})}
+function escTxt(pid){var es=escPole(pid);return es.length?es.map(function(e){return (L_SIT.filter(function(x){return x[0]===e.sit})[0]||[0,e.sit_txt||'Autre'])[1].toLowerCase()+' : '+trNom(e.vers)+(e.delai?', sous '+((L_DELAI.filter(function(x){return x[0]===e.delai})[0]||[0,''])[1].replace('Sous ','')):'')}).join(' ; '):''}
+STEPS.x=[
+ {k:'valid',t:'Les validations',m:6,r:function(){var vs=validsPole(S.pole);var ps=postesDir();
+  return '<h2>Les validations du pôle '+esc(poleActuel().nom)+'</h2><p class="muted">Voici les validations indiquées dans la réalisation des livrables. Pour chacune, précise la fonction concernée, son rôle et le délai de réponse.</p>'+
+  (vs.length?vs.map(function(v){var o=valObj(v);return '<div class="card">'+(v.manuel?blockHead(v.label,o):'<h3 style="margin-bottom:8px">'+esc(v.label)+'</h3>')+(v.manuel?fTxt(o,'nom','Quelle validation ?',{req:0}):'')+fSel(o,'validateur','Quelle fonction intervient dans cette validation ?',ps,{req:0})+fSel(o,'role','Quel rôle joue cette fonction ?',L_VROLE,{req:0})+fSel(o,'delai','En combien de temps doit-elle répondre ?',L_DELAI,{req:0})+fSel(o,'decideur','Qui décide en dernier, si ce n\'est pas cette fonction ?',ps,{req:0})+(v.crit?'<p class="muted small">Critère de validation : « '+esc(v.crit)+' »</p>':'')+'</div>'}).join(''):'<div class="note">Aucune validation n\'a été indiquée pour ce pôle.</div>')+
+  '<div style="margin-bottom:12px">'+addBtn('validation','Ajouter une validation','data-init=\''+JSON.stringify({pole:S.pole,manuel:true})+'\'')+'</div>'}},
+ {k:'autonomie',t:'Jusqu\'où chacun décide seul',m:10,each:function(){return list('livrable').filter(function(l){return l.pole===S.pole&&l.nom}).concat(decisionsPole(S.pole))},vide:'Aucun livrable n\'est décrit pour ce pôle.',r:function(o){var r=regleObj(o);var liv=o.type==='livrable';var crit=!liv||critique(o);var resp=liv?respDe(o):o.poste;var obl=list('oblig').filter(function(x){return x.cible===o.id});
+  var h='<h2>'+(liv?'« '+esc(o.nom)+' »':'Décision : '+esc(o.nom||'à nommer'))+'</h2><p class="muted small">Responsable : '+esc(resp?posteNom(resp):'à préciser')+(liv?' · Résultat attendu : le livrable lui-même':'')+'</p>';
+  if(!liv)h+='<div class="card">'+blockHead('Cette décision',o)+fTxt(o,'nom','Quelle décision revient régulièrement ?',{req:1,ex:'Exemple : « Remises et prix », « Budgets », « Recrutement »'})+fSel(o,'poste','Quel poste en est responsable ?',postesOpts(),{req:1})+'</div>';
+  h+='<div class="card">'+fSel(r,'niveau','Jusqu\'où '+(resp?'« '+posteNom(resp)+' »':'le responsable')+' décide-t-il seul ?',L_NIV,{req:0,rr:1})+
+   (crit&&r.niveau&&r.niveau!=='valide'?fTxt(r,'limite','Jusqu\'à quel seuil cette fonction décide-t-elle seule ?',{req:0,ex:'Indique le seuil au-delà duquel il faut faire valider ou remonter : un montant, un pourcentage de remise, une durée ou une situation précise. Exemple : « Jusqu\'à 5 000 € et 10 % de remise ; au-delà, validation du dirigeant »'}):'')+
+   fSel(r,'regard','Comment le dirigeant suit-il ce sujet ?',L_REG,{req:0})+'</div>';
+  if(crit)h+='<div class="card"><h3 style="margin-bottom:6px">Ce qui doit toujours être fait ou validé</h3><p class="muted small">Quoi qu\'il arrive. Facultatif.</p>'+obl.map(function(x){return '<div style="display:flex;gap:8px;align-items:flex-end">'+'<div style="flex:1">'+fTxt(x,'txt','Règle',{req:0,ex:'Exemple : « Toute remise supérieure à 10 % passe par le dirigeant. »'})+fSel(x,'valid','Cette règle impose-t-elle une validation précise ?',validsPole(S.pole).filter(function(v){return v.lid===o.id}).map(function(v){return [v.key,v.label]}),{req:0})+'</div><button type="button" data-act="del" data-id="'+x.id+'">Retirer</button></div>'}).join('')+addBtn('oblig','Ajouter une règle','data-init=\''+JSON.stringify({cible:o.id})+'\'')+'</div>';
+  return h}},
+ {k:'remonter',t:'Quand remonter',m:5,r:function(){var ri=single('esc_'+S.pole,'escinfo');var ps=postesDir();var sits=(ri.sits||[]).slice();
+  var inter=interPoles(S.pole);var h='<h2>Quand remonter</h2><p class="muted">Dans quelles situations l\'équipe du pôle '+esc(poleActuel().nom)+' doit-elle remonter plutôt que décider ?</p>'+(inter.length?'<div class="card">'+fSel(ri,'tranche','Le pôle '+esc(poleActuel().nom)+' et le pôle '+esc(inter.map(poleNom).join(', '))+' dépendent l\'un de l\'autre. Qui tranche en cas de blocage ?',postesDir(),{req:0})+'</div>':'')+'<div class="card">'+fMulti(ri,'sits','Coche celles qui s\'appliquent',L_SIT,{req:0,rr:1})+fTxt(ri,'autre','Une autre situation ?',{req:0,ex:'Exemple : « Demande hors catalogue »'})+'</div>';
+  var all=sits.map(function(k){return {k:k,t:(L_SIT.filter(function(x){return x[0]===k})[0]||[0,k])[1]}});if(ri.autre)all.push({k:'autre',t:ri.autre,txt:ri.autre});
+  all.forEach(function(s){var o=single('es_'+S.pole+'_'+s.k,'escalade');o.pole=S.pole;o.sit=s.k;if(s.txt)o.sit_txt=s.txt;if(!o.vers)o.vers=(s.k==='desacc'&&ri.tranche)?ri.tranche:(respPoste(S.pole)?posteSup(respPoste(S.pole)):'dirigeant');if(!o.delai)o.delai='24h';
+   h+='<div class="card"><h3 style="margin-bottom:8px">'+esc(s.t)+'</h3>'+fSel(o,'vers','À qui remonte-t-on ?',ps,{req:0})+fSel(o,'delai','Sous quel délai doit-on lui répondre ?',L_DELAI,{req:0})+'</div>'});
+  return h}},
+ {k:'nonrep',t:'Si la personne ne répond pas',m:4,r:function(){var ri=single('nr_'+S.pole,'nrinfo');var faible=list('livrable').some(function(l){return l.pole===S.pole&&l.nom&&l.risque==='faible'});var vs=validsPole(S.pole);
+  var sc=L_SCEN.filter(function(x){return x[0]!=='defaut'||faible});
+  return '<h2>Si la personne ne répond pas</h2><p class="muted">Deux relances partent toujours, à la moitié du délai puis à l\'échéance. Que se passe-t-il ensuite ?</p><div class="card">'+fSel(ri,'scenario','Si la personne ne répond pas dans le délai, après deux relances, que se passe-t-il ?',sc,{req:0,rr:1})+
+   (ri.scenario==='defaut'?fSel(ri,'defaut','Quelle est la décision par défaut ?',[['valide','On valide'],['refuse','On refuse'],['suspend','On suspend, rien n\'avance']],{req:0}):'')+
+   (faible?'':'<p class="muted small">La décision par défaut n\'est offerte que pour un livrable dont le risque est faible.</p>')+'</div>'+
+   (vs.length?'<div class="card"><h3 style="margin-bottom:6px">Un autre scénario pour une validation précise ?</h3>'+vs.map(function(v){var o=valObj(v);return fSel(o,'scenario',v.label,sc,{req:0})}).join('')+'</div>':'')}}
+];
+function pointsDec(){var pts=[];list('livrable').filter(function(l){return l.pole===S.pole&&l.nom}).forEach(function(l){var r=regleObj(l);if(!r.niveau)pts.push('« '+l.nom+' » : jusqu\'où le responsable décide seul n\'est pas précisé.');else if(critique(l)&&r.niveau!=='valide'&&!r.limite)pts.push('« '+l.nom+' » : on ne sait pas jusqu\'où le poste peut décider seul.');if(!r.regard)pts.push('« '+l.nom+' » : le regard du dirigeant n\'est pas précisé.')});
+ validsPole(S.pole).forEach(function(v){var o=valObj(v);if(!o.delai)pts.push(v.label+' : le délai de réponse n\'est pas précisé.')});
+ if(!escPole(S.pole).length)pts.push('Aucune situation de remontée n\'est définie pour ce pôle.');if(!single('nr_'+S.pole,'nrinfo').scenario)pts.push('Le scénario en cas de non-réponse n\'est pas choisi.');return pts}
+function recapX(){var dir=S.role!=='responsable';var rows=list('livrable').filter(function(l){return l.pole===S.pole&&l.nom}).concat(decisionsPole(S.pole)).filter(function(o){return o.nom});
+ var h='<h2>Matrice d\'autonomie : pôle '+esc(poleActuel().nom)+'</h2><p class="muted small">'+(dir?'Une règle n\'entre dans la matrice finale qu\'une fois validée. Un seuil chiffré se confirme séparément.':'Le dirigeant valide ces règles. Tant qu\'elles ne sont pas validées, elles restent « proposées ».')+'</p>';
+ h+=rows.map(function(o){var r=regleObj(o);var liv=o.type==='livrable';var st=r.statut;var lim=r.limite;
+  return '<div class="card"'+(st==='propose'?' style="font-style:italic"':'')+'><h3 style="margin-bottom:4px">'+esc(o.nom)+'</h3><p class="small" style="margin:0 0 8px">'+esc(posteNom(liv?respDe(o):o.poste))+' · '+esc((L_NIV.filter(function(x){return x[0]===r.niveau})[0]||[0,'niveau à préciser'])[1])+(lim?' · décide seul jusqu\'à : '+esc(lim)+(r.seuil_ok?' (confirmée)':' (à confirmer)'):'')+' · Dirigeant : '+esc((function(t){return t.charAt(0).toLowerCase()+t.slice(1)})((L_REG.filter(function(x){return x[0]===r.regard})[0]||[0,'regard à préciser'])[1]))+'</p>'+
+   '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill'+(st==='valide'?' done':'')+'">'+L_STAT[st]+'</span>'+(dir?(lim&&!r.seuil_ok?'<button type="button" data-act="seuil" data-id="'+r.id+'">Confirmer ce seuil</button>':'')+'<button type="button" class="primary" data-act="rstat" data-id="'+r.id+'" data-v="valide"'+(lim&&!r.seuil_ok?' disabled':'')+'>Valider</button><button type="button" data-act="rstat" data-id="'+r.id+'" data-v="revoir">À revoir</button><button type="button" data-act="rstat" data-id="'+r.id+'" data-v="retire">Retirer</button>':'')+'</div></div>'}).join('');
+ var chv=list('chemin').filter(function(c){var l=S.O[c.livrable];return l&&l.pole===S.pole&&(c.ctype==='renforce'||c.ctype==='exception')});if(chv.length)h+='<h3 style="margin:18px 0 8px">Circuits alternatifs à valider</h3>'+chv.map(function(c){var l=S.O[c.livrable];var st=c.statut||'propose';return '<div class="card"'+(st==='propose'?' style="font-style:italic"':'')+'><h3 style="margin-bottom:4px">'+esc(l.nom)+' : circuit '+esc(L_CTYPE_N[c.ctype])+'</h3><p class="small" style="margin:0 0 8px">'+esc(condsDe(l).filter(function(x){return x.ctype===c.ctype&&x.cond}).map(function(x){return critNom(x.critere)+' : '+x.cond}).join(' ; ')||'conditions à préciser')+'</p><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill'+(st==='valide'?' done':'')+'">'+L_STAT[st]+'</span>'+(dir?'<button type="button" class="primary" data-act="rstat" data-id="'+c.id+'" data-v="valide">Valider</button><button type="button" data-act="rstat" data-id="'+c.id+'" data-v="revoir">À revoir</button><button type="button" data-act="rstat" data-id="'+c.id+'" data-v="retire">Retirer</button>':'')+'</div></div>'}).join('');
+ var es=escListe(S.pole);if(es)h+='<div class="card"><h3 style="margin-bottom:2px">Quand remonter</h3>'+es+'</div>';
+ var pc=pointsDec();if(pc.length)h+=ptsHtml(pc,{s:'x',pole:S.pole,rules:[[/délai de réponse|^Validation/,'valid'],[/remontée/,'remonter'],[/non-réponse/,'nonrep'],[/./,'autonomie']]});
+ return h+'<div class="actions"><button type="button" data-act="prev">Revenir</button><button type="button" class="primary" data-act="finish">Valider cette partie</button></div>'}
+function jlog(txt){put('journal',{date:new Date().toISOString(),auteur:S.role==='responsable'?'Responsable du pôle '+poleNom(S.pole):'Dirigeant',txt:txt})}
+function journalHtml(){var j=list('journal').slice().reverse().slice(0,15);if(!j.length)return '';return '<details style="margin-top:22px"><summary style="cursor:pointer"><strong>Journal des décisions</strong> <span class="muted small">('+list('journal').length+')</span></summary>'+j.map(function(x){return '<p class="small" style="margin:6px 0"><span class="muted">'+esc(new Date(x.date).toLocaleDateString('fr-FR')+' · '+x.auteur)+'</span><br>'+esc(x.txt)+'</p>'}).join('')+'</details>'}
+function decHome(){var ps=list('pole');if(!ps.length)return '';
+ return ps.map(function(p){var di=decInfo(p.id);var ri=seanceInfo('x_'+p.id);var hasResp=p.resp&&p.resp!=='dirigeant'&&p.resp!=='aucun';
+   return '<div class="card seance"><div><h3>'+esc(p.nom)+'</h3><span class="muted small">'+(di.ouvert?'Ouvert au responsable du pôle':hasResp?'Réservé au dirigeant':'Réservé au dirigeant (pas de responsable désigné)')+'</span></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+pill(ri)+
+    '<button class="primary" data-act="open" data-s="x" data-pole="'+p.id+'">'+(ri.fini?'Revoir':ri.step?'Reprendre':'Commencer')+'</button><button data-act="recapx" data-pole="'+p.id+'">Matrice</button>'+(hasResp?'<button data-act="toggledec" data-pole="'+p.id+'">'+(di.ouvert?'Fermer au responsable':'Ouvrir au responsable')+'</button>':'')+'</div></div>'}).join('')}
+/* ---------- module 8 : quand ça coince, et charte de fonctionnement ---------- */
+var L_TNAT=[
+ {k:'desacc',t:'Désaccord sur un choix de travail',d:'Deux fonctions ne s\'accordent pas sur une priorité, une méthode ou une décision.'},
+ {k:'relation',t:'Tension entre deux personnes',d:'Un malentendu, un ton ou une façon de communiquer qui crispe la relation.'},
+ {k:'frustr',t:'Frustration face au fonctionnement',d:'Surcharge, manque de reconnaissance, répartition jugée injuste, impression que « ça ne marche pas comme prévu ».'},
+ {k:'role',t:'Rôle flou ou empiétement',d:'Quelqu\'un fait ce qui revient à un autre, ou personne ne s\'occupe d\'un sujet.'},
+ {k:'dirig',t:'Tension impliquant le dirigeant',d:'Le désaccord ou la frustration concerne le dirigeant lui-même.'}];
+var L_TRET=[['oui','Prévoir une procédure'],['non','Ne pas en prévoir']];
+var L_TPREM=[['direct','En parler directement avec la personne concernée'],['rdv','Le déposer dans un rendez-vous régulier'],['resp','En parler d\'abord au responsable du pôle'],['tiers','Passer directement par le tiers']];
+var L_TDEL=[['2j','Après 2 jours ouvrés'],['1s','Après 1 semaine'],['2s','Après 2 semaines']];
+var L_TCONF=[['confid','Reste entre les personnes concernées et le tiers'],['resp','Le responsable du pôle est informé'],['dir','Le dirigeant est informé de l\'issue, pas du détail']];
+var L_HSIG=[['resp','Le dire au responsable du pôle dès que possible'],['point','Le dire lors du prochain point régulier'],['ecrit','Le signaler par écrit, dans le canal prévu'],['dir','Le dire directement au dirigeant']];
+var L_HERR=[['dire','Le dire vite, sans chercher de coupable, et corriger ensemble'],['resp','Le signaler d\'abord au responsable, qui organise la correction'],['retex','Le reprendre à froid en rendez-vous régulier, pour en tirer une règle']];
+var L_HREC=[['direct','Le dire de vive voix, au moment où c\'est constaté'],['point','Le noter lors d\'un point régulier'],['ecrit','Le dire par écrit, de façon visible par l\'équipe']];
+var L_HRET=[['prive','En tête-à-tête, jamais devant l\'équipe'],['faits','À partir de faits observés, sans interpréter les intentions'],['prevu','Dans un temps prévu à l\'avance, pas à chaud']];
+function tensDef(pid,k){var rp=respPoste(pid);var crit=list('livrable').some(function(l){return l.pole===pid&&l.nom&&critique(l)});var nb=list('poste').filter(function(x){return x.pole===pid&&x.intitule}).length;
+ var d={ret:'oui',premier:'direct',delai:crit?'2j':'1s',tiers:rp||'dirigeant',final:'dirigeant',confid:'resp'};var why=[];
+ if(k==='desacc'){var es=S.O['es_'+pid+'_desacc'];if(es&&es.vers){d.tiers=es.vers;why.push('le tiers reprend la règle « pour faire remonter » posée dans « Décider »')}
+  if(crit)why.push('le pôle produit des livrables à fort enjeu, d\'où un délai court');
+  var ip=interPoles(pid);if(ip.length)why.push('les pôles ' +ip.map(poleNom).join(', ')+' dépendent de celui-ci : un point régulier entre pôles limiterait ces désaccords')}
+ else if(k==='relation'){d.confid='confid';if(nb<=1){d.tiers='dirigeant';why.push('le pôle ne compte qu\'une personne : le dirigeant tient le rôle de tiers')}else if(rp)why.push('le responsable du pôle est le premier tiers')}
+ else if(k==='frustr'){d.premier='rdv';d.confid='confid';d.delai='1s';why.push('une frustration se dit d\'abord dans un cadre prévu à cet effet')}
+ else if(k==='role'){d.premier='rdv';if(crit)why.push('le pôle produit des livrables à fort enjeu, d\'où un délai court');why.push('se règle par le fonctionnement : revoir qui décide quoi, puis corriger le système plutôt que la personne')}
+ else if(k==='dirig'){var dt=(arbCfg().postes||[])[0];d.tiers=dt||'externe';d.final=dt||'externe';d.confid='confid';d.delai='1s';why.push(dt?'le tiers est le poste désigné pour trancher à la place du dirigeant':'aucun poste n\'est désigné pour trancher à la place du dirigeant : un accompagnant externe est proposé')}
+ d.why=why.length?why.join(' ; ')+'.':'';d.why=d.why.charAt(0).toUpperCase()+d.why.slice(1);return d}
+function tensFill(o,k){if(!o.init){o.init=true;var d=tensDef(o.pole,k);Object.keys(d).forEach(function(f){if(o[f]==null||o[f]==='')o[f]=d[f]});if(!o.statut)o.statut='propose'}return o}
+function tensObj(pid,k){var o=single('tn_'+pid+'_'+k,'tension');o.pole=pid;o.nat=k;return tensFill(o,k)}
+function tensListe(pid){var l=L_TNAT.map(function(n){var o=tensObj(pid,n.k);o.titre=n.t;o.desc=n.d;return o});
+ list('tension').filter(function(x){return x.pole===pid&&x.perso}).forEach(function(o){tensFill(o,'frustr');o.titre=o.nom||'Autre nature de tension';l.push(o)});return l}
+function humObj(pid){var o=single('th_'+pid,'tenshum');o.pole=pid;if(!o.init){o.init=true;o.signal=respPoste(pid)?'resp':'dir';o.erreur='dire';o.reco='direct';o.retour=['prive','faits']}return o}
+var T_TIERS=function(){return postesDir().concat([['externe','Un accompagnant externe']])};
+function tensCard(o,pid){var h='<div class="card">'+(o.perso?blockHead(o.titre,o)+fTxt(o,'nom','Quelle nature de tension ?',{req:0,ex:'Exemple : « Tension avec un prestataire »'})+fTxt(o,'desc','En deux mots, de quoi s\'agit-il ?',{req:0}):'<h3 style="margin-bottom:4px">'+esc(o.titre)+'</h3><p class="muted small" style="margin:0 0 10px">'+esc(o.desc)+'</p>')+fRadio(o,'ret','Prévoir une procédure pour ce cas ?',L_TRET,{req:0,rr:1});
+ if(o.ret!=='non'){var dir=o.nat==='dirig';var tp=dir?postesOpts().concat([['externe','Un accompagnant externe']]):T_TIERS();
+  h+=(o.why?'<div class="note small" style="margin-top:10px">Proposition préremplie : '+esc(o.why.charAt(0).toLowerCase()+o.why.slice(1))+' À confirmer ou à modifier.</div>':'')+
+   fSel(o,'premier','Quel est le premier pas ?',L_TPREM,{req:0})+fSel(o,'delai','Sans accord, quand solliciter un tiers ?',L_TDEL,{req:0})+fSel(o,'tiers','Qui joue le rôle de tiers ?',tp,{req:0})+
+   fSel(o,'final','Qui tranche en dernier ?',dir?tp:postesDir(),{req:0})+fSel(o,'confid','Qu\'est-ce qui reste confidentiel ?',L_TCONF,{req:0})}
+ return h+'</div>'}
+STEPS.t=[
+ {k:'natures',t:'Les procédures',m:8,r:function(){var pid=S.pole;
+  return '<h2>Quand ça coince : pôle '+esc(poleActuel().nom)+'</h2><p class="muted">Une procédure par nature de tension, préremplie d\'après ce qui a été décrit. Garde, modifie ou écarte chacune. Rien n\'est obligatoire pour continuer.</p>'+
+  tensListe(pid).map(function(o){return tensCard(o,pid)}).join('')+'<div style="margin-bottom:12px">'+addBtn('tension','Ajouter une autre nature de tension','data-init=\''+JSON.stringify({pole:pid,perso:true,ret:'oui'})+'\'')+'</div>'}},
+ {k:'humain',t:'Le côté humain',m:5,r:function(){var o=humObj(S.pole);
+  return '<h2>Le côté humain</h2><p class="muted">Quelques principes pour que la relation reste saine dans le pôle '+esc(poleActuel().nom)+'. Ils sont préremplis et se révisent ensuite avec le dirigeant.</p><div class="card">'+
+   fSel(o,'signal','Quand quelqu\'un est surchargé ou frustré, que doit-il faire ?',L_HSIG,{req:0})+fSel(o,'erreur','Quand une erreur est commise, quel principe s\'applique ?',L_HERR,{req:0})+fSel(o,'reco','Comment reconnaît-on un travail bien fait ?',L_HREC,{req:0})+fMulti(o,'retour','Comment se donne un retour difficile ?',L_HRET,{req:0})+fTxt(o,'autre','Un autre principe à poser pour ce pôle ?',{req:0,area:1,ex:'Une phrase observable : quelqu\'un doit pouvoir constater si elle est respectée.'})+'</div>'+
+   '<div class="note small">Les situations graves (harcèlement, discrimination, atteinte à la santé) ne relèvent pas de ces procédures internes. Elles se traitent selon le cadre légal, avec un interlocuteur extérieur à l\'équipe.</div>'}}
+];
+function lab2(L,v){return (L.filter(function(x){return x[0]===v})[0]||[0,'à préciser'])[1]}
+function tiersTxt(v){return v==='externe'?'Un accompagnant externe':posteNom(v)}
+function tensResume(o){return '<p class="small" style="margin:0 0 4px">'+esc(lab2(L_TPREM,o.premier))+'. '+esc(lab2(L_TDEL,o.delai))+', sollicitation de : <strong>'+esc(tiersTxt(o.tiers))+'</strong>. Tranche en dernier : <strong>'+esc(tiersTxt(o.final))+'</strong>.</p><p class="muted small" style="margin:0 0 8px">'+esc(lab2(L_TCONF,o.confid))+'.</p>'}
+function tensActives(pid){return tensListe(pid).filter(function(o){return o.ret!=='non'})}
+function humResume(pid){var o=humObj(pid);var rt=(o.retour||[]).map(function(k){return lab2(L_HRET,k)});
+ return '<dl class="sum"><dt>Surcharge ou frustration</dt><dd>'+esc(lab2(L_HSIG,o.signal))+'</dd><dt>Erreur commise</dt><dd>'+esc(lab2(L_HERR,o.erreur))+'</dd><dt>Reconnaissance</dt><dd>'+esc(lab2(L_HREC,o.reco))+'</dd><dt>Retour difficile</dt><dd>'+(rt.length?esc(rt.join(' ; ')):'à préciser')+'</dd>'+(o.autre?'<dt>Autre principe</dt><dd>'+esc(o.autre)+'</dd>':'')+'</dl>'}
+function pointsTens(){var pts=[];tensActives(S.pole).forEach(function(o){var n='« '+o.titre+' » : ';if(!o.premier||!o.delai||!o.tiers||!o.final)pts.push(n+'procédure à compléter (premier pas, délai, tiers ou personne qui tranche).');if(o.perso&&!o.nom)pts.push(n+'la nature de tension n\'est pas nommée.');if(o.tiers&&o.tiers!=='externe'&&o.tiers===o.final&&o.nat!=='dirig'&&o.tiers!=='dirigeant')pts.push(n+'le tiers et la personne qui tranche sont les mêmes : prévoir un niveau au-dessus ?')});return pts}
+function recapT(){var dir=S.role!=='responsable';var pid=S.pole;var act=tensActives(pid);
+ var h='<h2>Récapitulatif : quand ça coince, pôle '+esc(poleActuel().nom)+'</h2><p class="muted small">'+(dir?'Une procédure n\'entre dans la charte qu\'une fois validée.':'Le dirigeant valide ces procédures. Tant qu\'elles ne sont pas validées, elles restent « proposées ».')+'</p>';
+ h+=act.length?act.map(function(o){var st=o.statut||'propose';return '<div class="card"'+(st==='propose'?' style="font-style:italic"':'')+'><h3 style="margin-bottom:4px">'+esc(o.titre)+'</h3>'+tensResume(o)+'<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill'+(st==='valide'?' done':'')+'">'+L_STAT[st]+'</span>'+(dir?'<button type="button" class="primary" data-act="tstat" data-id="'+o.id+'" data-v="valide">Valider</button><button type="button" data-act="tstat" data-id="'+o.id+'" data-v="revoir">À revoir</button>':'')+'</div></div>'}).join(''):'<div class="note">Aucune procédure retenue pour ce pôle.</div>';
+ h+='<div class="card"><h3 style="margin-bottom:6px">Le côté humain</h3>'+humResume(pid)+'</div>';
+ var pc=pointsTens();if(pc.length)h+=ptsHtml(pc,{s:'t',pole:pid,rules:[[/./,'natures']]});
+ return h+'<div class="actions"><button type="button" data-act="prev">Revenir</button><button type="button" class="primary" data-act="finish">Valider cette partie</button></div>'}
+function tensHome(){var ps=list('pole');if(!ps.length)return '';
+ return ps.map(function(p){var di=decInfo(p.id);var ri=seanceInfo('t_'+p.id);var hasResp=p.resp&&p.resp!=='dirigeant'&&p.resp!=='aucun';
+  return '<div class="card seance"><div><h3>'+esc(p.nom)+'</h3><span class="muted small">'+(di.ouvert?'Ouvert au responsable du pôle':hasResp?'Réservé au dirigeant':'Réservé au dirigeant (pas de responsable désigné)')+'</span></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+pill(ri)+'<button class="primary" data-act="open" data-s="t" data-pole="'+p.id+'">'+(ri.fini?'Revoir':ri.step?'Reprendre':'Commencer')+'</button><button data-act="recapt" data-pole="'+p.id+'">Procédures</button></div></div>'}).join('')}
+/* charte de fonctionnement */
+var PREL=[['p1','Parler à la personne concernée avant d\'en parler à d\'autres.'],['p2','Partir de faits observés plutôt que d\'intentions supposées.'],['p3','Signaler une difficulté dès qu\'elle apparaît, sans attendre qu\'elle s\'installe.'],['p4','Dire une erreur sans chercher de coupable : l\'objectif est de la corriger ensemble.'],['p5','Donner un retour difficile en tête-à-tête, jamais devant l\'équipe.'],['p6','Reconnaître de façon visible un travail bien fait.']];
+var L_KFREQ=[['6m','Tous les six mois'],['an','Une fois par an'],['evt','À chaque changement important d\'organisation']];
+function relListe(){return PREL.map(function(p){var o=single('pk_'+p[0],'principe_rel');if(!o.init){o.init=true;o.txt=p[1]}return o}).concat(list('principe_rel').filter(function(x){return x.perso}))}
+function relRetenus(){return relListe().filter(function(o){return (o.etat==='retenu'||o.etat==='reformule')&&o.txt})}
+function revObj(){var o=single('ch_rev','charterev');if(!o.init){o.init=true;o.freq='an';o.qui='dirigeant'}return o}
+STEPS.k=[
+ {k:'relation',t:'Les principes de relation',m:5,r:function(){var ps=relListe();
+  return '<h2>Les principes de relation</h2><p class="muted">Des principes de départ pour la façon de se parler et de traiter les tensions. Retiens, reformule ou écarte chacun, puis ajoute les tiens.</p>'+
+  ps.map(function(o){return '<div class="card">'+(o.perso?blockHead('Principe ajouté',o):'')+fTxt(o,'txt','Principe',{req:0,area:1})+fRadio(o,'etat','Veux-tu l\'appliquer ?',L_RETAT,{req:0})+'</div>'}).join('')+
+  (relRetenus().length>7?'<div class="warn">Sept principes suffisent en général.</div>':'')+'<div style="margin-bottom:12px">'+addBtn('principe_rel','Ajouter un principe','data-init=\''+JSON.stringify({perso:true,etat:'retenu'})+'\'')+'</div><p class="muted small">Une phrase observable : quelqu\'un doit pouvoir constater si elle est respectée. Pas de nom de personne : une fonction.</p>'}},
+ {k:'revision',t:'La révision',m:2,r:function(){var o=revObj();
+  return '<h2>La révision de la charte</h2><p class="muted">Une charte vit : elle se relit à intervalles prévus.</p><div class="card">'+fSel(o,'freq','À quelle fréquence relire la charte ?',L_KFREQ,{req:0})+fSel(o,'qui','Qui peut demander une révision à tout moment ?',postesDir(),{req:0})+'</div>'}}
+];
+function chSec(n,t,etat,body){var cl=etat==='Complétée'?' done':'';return '<div class="card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap"><h3 style="margin-bottom:6px">'+n+'. '+esc(t)+'</h3><span class="pill'+cl+'">'+etat+'</span></div>'+body+'</div>'}
+function recapK(){var e=S.O.entreprise||{};var rs=rituelsRetenus();var rv=revObj();var nbV=list('regle').filter(function(r){return r.statut==='valide'}).length;var ps=list('pole');
+ var h='<h2>Charte de fonctionnement</h2><p class="muted small">Les parties préremplies viennent des réponses déjà données. Les autres se complètent avec le dirigeant et les personnes concernées. Rien n\'est publié avant la validation du dirigeant.</p>';
+ h+=chSec(1,'Notre cap',e.mission?'Préremplie':'À compléter',e.mission?'<dl class="sum"><dt>Mission</dt><dd>'+esc(e.mission)+'</dd><dt>Vision</dt><dd>'+esc(e.vision||'')+'</dd><dt>Ce que les clients trouvent chez nous</dt><dd>'+esc(e.valeur||'')+'</dd></dl>':'<p class="muted small">Le cap n\'est pas encore renseigné.</p>');
+ h+=chSec(2,'Comment nous travaillons ensemble',rs.length?'Préremplie':'À compléter',rs.length?'<ul style="margin:0 0 0 18px;padding:0">'+rs.map(function(r){return '<li>'+esc(r.nom||'')+' <span class="muted small">· '+esc(lab2(L_FREQ,r.freq))+' · animé par '+esc(animeTxt(r))+'</span></li>'}).join('')+'</ul>'+(principesListe().filter(function(o){return (o.etat==='retenu'||o.etat==='reformule')&&o.txt}).length?'<p class="small" style="margin:10px 0 4px"><strong>Principes de réunion</strong></p><ul style="margin:0 0 0 18px;padding:0">'+principesListe().filter(function(o){return (o.etat==='retenu'||o.etat==='reformule')&&o.txt}).map(function(o){return '<li>'+esc(o.txt)+'</li>'}).join('')+'</ul>':''):'<p class="muted small">Les rendez-vous réguliers ne sont pas encore définis.</p>');
+ h+=chSec(3,'Qui décide quoi',nbV?'Préremplie':'À compléter',nbV?'<p class="small">'+nbV+' règle(s) validée(s) dans la matrice d\'autonomie. '+ps.map(function(p){var es=escListe(p.id);return es?'<br><strong>'+esc(p.nom)+'</strong>'+es:''}).join('')+'</p>':'<p class="muted small">Aucune règle de décision n\'est encore validée.</p>');
+ var tv=ps.map(function(p){var a=tensActives(p.id).filter(function(o){return o.statut==='valide'});return a.length?'<p class="small" style="margin:8px 0 2px"><strong>Pôle '+esc(p.nom)+'</strong></p>'+a.map(function(o){return '<p class="small" style="margin:6px 0 0"><em>'+esc(o.titre)+'</em></p>'+tensResume(o)}).join(''):''}).join('');
+ h+=chSec(4,'Quand ça coince',tv?'Préremplie':'À compléter',tv||'<p class="muted small">Aucune procédure n\'est encore validée.</p>')+'<div class="note small">Les situations graves (harcèlement, discrimination, atteinte à la santé) ne relèvent pas de ces procédures internes. Elles se traitent selon le cadre légal, avec un interlocuteur extérieur à l\'équipe.</div>';
+ var rr=relRetenus();h+=chSec(5,'Nos principes de relation',seanceInfo('k').fini?'Complétée':'À compléter',rr.length?'<ul style="margin:0 0 0 18px;padding:0">'+rr.map(function(o){return '<li>'+esc(o.txt)+'</li>'}).join('')+'</ul>':'<p class="muted small">Aucun principe retenu pour l\'instant.</p>');
+ h+=chSec(6,'Révision',seanceInfo('k').fini?'Complétée':'Préremplie','<p class="small">'+esc(lab2(L_KFREQ,rv.freq))+'. Une révision peut être demandée à tout moment par : '+esc(tiersTxt(rv.qui))+'.</p>');
+ if(S.role!=='responsable')h+=valCard('Validation de la charte',rr.map(function(o){return {o:o,l:o.txt}}).concat([{o:rv,l:'Révision de la charte'}]),'Les parties préremplies suivent la validation des autres rubriques.');
+ return h+'<div class="actions"><button type="button" data-act="prev">Revenir</button><button type="button" class="primary" data-act="finish">Valider cette partie</button></div>'}
+function charteHome(){var ri=seanceInfo('k');return '<h3 style="margin:22px 0 10px">Charte de fonctionnement</h3><div class="card seance"><div><h3>La charte de fonctionnement de l\'entreprise</h3><span class="muted small">Préremplie d\'après les réponses déjà données ; les principes de relation et la révision se complètent avec le dirigeant.</span></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+pill(ri)+'<button class="primary" data-act="open" data-s="k">'+(ri.fini?'Revoir':ri.step?'Reprendre':'Compléter')+'</button><button data-act="recapk">Voir la charte</button></div></div>'}
+/* ---------- fiches de poste : générées, jamais saisies ---------- */
+var F_SECT=[['mission','La mission du poste'],['etapes','Ce que fait le poste'],['echanges','Ce que le poste reçoit et envoie'],['competences','Les compétences sollicitées'],['decisions','Ce que le poste décide'],['rdv','Les rendez-vous réguliers'],['tensions','Quand ça coince'],['rattach','Le rattachement']];
+function ficheCfg(){var o=single('fiche_cfg','fichecfg');if(!o.postes)o.postes=[];return o}
+function fichePeut(){if(S.role!=='responsable')return true;var rp=respPoste(S.pole);return !!rp&&ficheCfg().postes.indexOf(rp)>-1}
+function ficheProps(pid){return list('prop_fiche').filter(function(x){return !pid||x.poste===pid})}
+function ficheEnAttente(){return list('prop_fiche').filter(function(x){return x.statut==='propose'})}
+function ficheDonnees(pid){var p=S.O[pid];if(!p)return null;
+ var livs=list('livrable').filter(function(l){return l.nom&&((l.producteurs||[]).indexOf(pid)>-1||respDe(l)===pid)});
+ var ets=list('etape').filter(function(e){return e.responsable===pid&&S.O[e.livrable]&&S.O[e.livrable].nom});
+ var contrib=list('etape').filter(function(e){return (e.contrib||[]).indexOf(pid)>-1&&S.O[e.livrable]&&S.O[e.livrable].nom});
+ var tr=calcTrans();var recoit=tr.filter(function(t){return t.vers===pid}),envoie=tr.filter(function(t){return t.de===pid});
+ var comp=calcComp();var sollicite=comp.filter(function(c){return c.vers===pid}),sollicitePar=comp.filter(function(c){return c.de===pid});
+ var regles=livs.map(function(l){return {nom:l.nom,r:regleObj(l)}}).concat(decisionsPole(p.pole).filter(function(d){return d.poste===pid&&d.nom}).map(function(d){return {nom:d.nom,r:regleObj(d)}})).filter(function(x){return x.r.niveau});
+ var rdv=rituelsRetenus().filter(function(r){return r.anime===pid||(r.participants||[]).indexOf(pid)>-1});
+ var tens=tensActives(p.pole).filter(function(o){return o.statut==='valide'});
+ return {p:p,livs:livs,ets:ets,contrib:contrib,recoit:recoit,envoie:envoie,sollicite:sollicite,sollicitePar:sollicitePar,regles:regles,rdv:rdv,tens:tens}}
+function ficheSect(id,d){var ul=function(a){return a.length?'<ul style="margin:4px 0 0 18px;padding:0">'+a.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'<p class="muted small" style="margin:4px 0 0">Rien de renseigné pour l\'instant.</p>'};
+ var p=d.p;
+ if(id==='mission')return ul(d.livs.map(function(l){return '<strong>'+esc(l.nom)+'</strong>'+(l.finalite?' <span class="muted small">· '+esc(l.finalite)+'</span>':'')}).concat(d.contrib.map(function(e){return 'Contribue à « '+esc(S.O[e.livrable].nom)+' » (étape « '+esc(e.nom||'')+' »)'})));
+ if(id==='etapes')return ul(d.ets.map(function(e){return esc(e.nom||'étape sans nom')+' <span class="muted small">· livrable « '+esc(S.O[e.livrable].nom)+'»'+(DUR_J[e.duree]!=null?' · '+esc(lab2(L_DUREE,e.duree).toLowerCase()):'')+'</span>'}));
+ if(id==='echanges')return '<p class="small" style="margin:6px 0 0"><strong>Reçoit</strong></p>'+ul(d.recoit.map(function(t){return esc(t.nom)+' <span class="muted small">· de '+esc(trNom(t.de))+(t.bloq?' · indispensable pour avancer':'')+'</span>'}))+'<p class="small" style="margin:10px 0 0"><strong>Envoie</strong></p>'+ul(d.envoie.map(function(t){return esc(t.nom)+' <span class="muted small">· à '+esc(trNom(t.vers))+'</span>'}));
+ if(id==='competences')return '<p class="small" style="margin:6px 0 0"><strong>Sollicité pour</strong></p>'+ul(d.sollicite.map(function(c){return esc(c.nom)+' <span class="muted small">· par '+esc(trNom(c.de))+'</span>'}))+'<p class="small" style="margin:10px 0 0"><strong>Sollicite</strong></p>'+ul(d.sollicitePar.map(function(c){return esc(c.nom)+' <span class="muted small">· '+esc(trNom(c.vers))+'</span>'}));
+ if(id==='decisions')return ul(d.regles.map(function(x){var r=x.r;return '<strong>'+esc(x.nom)+'</strong> : '+esc(lab2(L_NIV,r.niveau).toLowerCase())+(r.limite?' jusqu\'à '+esc(r.limite):'')+(r.statut!=='valide'?' <span class="muted small">(proposé, pas encore validé)</span>':'')}));
+ if(id==='rdv')return ul(d.rdv.map(function(r){return esc(r.nom||'')+' <span class="muted small">· '+esc(lab2(L_FREQ,r.freq))+(r.anime===p.id?' · animé par ce poste':'')+'</span>'}));
+ if(id==='tensions'){var l=d.tens.map(function(o){return esc(o.titre)+' : '+esc(lab2(L_TPREM,o.premier).toLowerCase())+' ; '+esc(lab2(L_TDEL,o.delai).toLowerCase())+', sollicitation de '+esc(tiersTxt(o.tiers))});
+  list('tension').concat([]).forEach(function(){});var hum=humObj(p.pole);return ul(l)+'<p class="muted small" style="margin:8px 0 0">Principe de pôle : '+esc(lab2(L_HSIG,hum.signal).toLowerCase())+'.</p>'}
+ if(id==='rattach'){var sup=posteSup(p.id);return '<p class="small" style="margin:4px 0 0">Rend compte à : <strong>'+esc(posteNom(sup))+'</strong>. Remplaçant : <strong>'+esc(p.remplacant==='meme'?'une autre personne du même poste':!p.remplacant||p.remplacant==='aucun'?'personne aujourd\'hui':posteNom(p.remplacant))+'</strong>. Pôle : '+esc(poleNom(p.pole))+'.</p>'}
+ return ''}
+function ficheHtml(){var pid=S.fiche;var d=ficheDonnees(pid);if(!d)return '<p>Poste introuvable.</p>';var tit=S.fVue==='titulaire';var pr=ficheProps(pid);
+ var h='<div class="noprint" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><button type="button" data-act="fichehome">Retour</button><button type="button" data-act="fprint">Exporter (PDF)</button><button type="button" data-act="fvue">'+(tit?'Revenir à la vue du dirigeant':'Voir comme le titulaire')+'</button></div>';
+ h+='<h1>'+esc(d.p.intitule)+'</h1><p class="muted small">Pôle '+esc(poleNom(d.p.pole))+' · Fiche de poste générée d\'après le système de fonctionnement. Elle décrit le poste, pas la personne.</p>';
+ h+=F_SECT.map(function(s){var n=pr.filter(function(x){return x.section===s[0]&&x.statut==='valide'});
+  return '<div class="card"><h3 style="margin-bottom:4px">'+s[1]+'</h3>'+ficheSect(s[0],d)+(n.length?'<div class="note small" style="margin:10px 0 0"><strong>Précisions validées</strong><ul style="margin:4px 0 0 18px;padding:0">'+n.map(function(x){return '<li>'+esc(x.txt)+'</li>'}).join('')+'</ul></div>':'')+'</div>'}).join('');
+ if(tit){h+='<div class="card noprint"><h3 style="margin-bottom:6px">Proposer une correction</h3><p class="muted small">Ce qui est inexact ou manque dans cette fiche. Le responsable désigné et le dirigeant la reçoivent, la corrigent si besoin et la valident.</p><div class="field"><label class="q">Quelle partie ?</label><select id="fpsec">'+F_SECT.map(function(s){return '<option value="'+s[0]+'">'+s[1]+'</option>'}).join('')+'</select></div><div class="field"><label class="q">Que faut-il corriger ou ajouter ?</label><textarea id="fptxt"></textarea></div><button type="button" class="primary" data-act="fprop">Envoyer la proposition</button></div>'}
+ else if(pr.length){h+='<div class="card noprint"><h3 style="margin-bottom:6px">Propositions de correction</h3>'+pr.map(function(x){return fichePropHtml(x)}).join('')+'</div>'}
+ return h}
+function fichePropHtml(x){var peut=fichePeut();var sec=(F_SECT.filter(function(s){return s[0]===x.section})[0]||[0,''])[1];
+ return '<div class="small" style="padding:8px 0;border-top:1px solid var(--line)"><span class="muted">'+esc(sec)+' · '+esc(L_PST[x.statut]||x.statut)+'</span>'+(peut&&x.statut==='propose'?fTxt(x,'txt','Texte (modifiable avant validation)',{req:0,area:1}):'<br>'+esc(x.txt))+(peut&&x.statut==='propose'?'<div style="display:flex;gap:8px;margin-top:6px"><button type="button" class="primary" data-act="fpstat" data-id="'+x.id+'" data-v="valide">Valider</button><button type="button" data-act="fpstat" data-id="'+x.id+'" data-v="refuse">Écarter</button></div>':'')+'</div>'}
+var L_PST={propose:'À traiter',valide:'Validée',refuse:'Écartée'};
+function ficheHome(){var ps=list('poste').filter(function(p){return p.intitule});if(!ps.length)return '';var att=ficheEnAttente();
+ var h='<h3 style="margin:22px 0 10px">Fiches de poste</h3><div class="card"><p class="small" style="margin:0 0 6px">Une fiche par poste, générée d\'après les réponses. Les titulaires proposent des corrections depuis la vue publique ; le dirigeant et le responsable désigné les valident. Aucun salaire, aucune évaluation de la personne.</p>'+
+  (S.role!=='responsable'?fMulti(ficheCfg(),'postes','Postes qui valident aussi les propositions',postesOpts(),{req:0}):'')+'</div>';
+ h+=ps.map(function(p){var n=ficheProps(p.id).filter(function(x){return x.statut==='propose'}).length;return '<div class="card seance"><div><h3>'+esc(p.intitule)+'</h3><span class="muted small">Pôle '+esc(poleNom(p.pole))+(n?' · '+n+' proposition(s) à traiter':'')+'</span></div><div><button class="primary" data-act="fiche" data-id="'+p.id+'">Voir la fiche</button></div></div>'}).join('');
+ return h}
+/* accès équipe (lecteur) : la version consultable sera construite à l'étape suivante */
+function lecteurHtml(){var n=Object.keys(S.O).length;return '<h1>'+esc(S.nom||'')+'</h1><div class="card"><p>Version consultable du système de fonctionnement.</p><p class="muted small">'+n+' élément(s) validé(s) reçus. La présentation arrive à l\'étape suivante.</p></div>'}
+/* ---------- validation : ce que l'équipe verra dans la version consultable ---------- */
+var VAL_TYPES={pole:1,livrable:1,rituel:1,principe:1,principe_rel:1,regle:1,tension:1,charterev:1,entreprise:1,pubflag:1};
+function valRacine(o){if(!o)return null;if(String(o.id).indexOf('cv_')===0)return single('pub_comm','pubflag');if(VAL_TYPES[o.type])return o;if(o.type==='poste')return S.O[o.pole]||null;if(o.livrable&&S.O[o.livrable])return S.O[o.livrable];if(o.etape&&S.O[o.etape])return valRacine(S.O[o.etape]);return null}
+function stOf(o){return o.statut||'propose'}
+function valPeut(o){if(S.role!=='responsable')return true;return arbPeut()&&(o.pole===S.pole||o.id===S.pole)}
+function valNom(o){return o.nom||o.titre||o.intitule||o.txt||o.objectif||o.resultat||(o.type==='entreprise'?'cap de l\'entreprise':'élément')}
+function valRow(o,label){var st=stOf(o);var peut=valPeut(o);
+ return '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:7px 0;border-bottom:1px solid var(--line)"><span style="flex:1;min-width:160px">'+esc(label||valNom(o))+'</span><span class="pill'+(st==='valide'?' done':'')+'">'+L_STAT[st]+'</span>'+
+  (peut?(st==='valide'?'':'<button type="button" class="primary" data-act="vstat" data-id="'+o.id+'" data-v="valide">Valider</button>')+(st==='revoir'?'':'<button type="button" data-act="vstat" data-id="'+o.id+'" data-v="revoir">À revoir</button>'):'')+'</div>'}
+function valCard(titre,rows,note){rows=rows.filter(function(r){return r&&r.o});if(!rows.length)return '';
+ var ids=rows.filter(function(r){return valPeut(r.o)&&stOf(r.o)!=='valide'}).map(function(r){return r.o.id});
+ return '<div class="card" data-val="1"><h3 style="margin-bottom:4px">'+esc(titre)+'</h3><p class="muted small" style="margin:0 0 6px">'+esc(note||'Seuls les éléments validés sont visibles dans la version consultable par l\'équipe.')+'</p>'+rows.map(function(r){return valRow(r.o,r.l)}).join('')+
+  (ids.length>1?'<div style="margin-top:10px"><button type="button" data-act="vall" data-ids="'+ids.join(',')+'">Tout valider ('+ids.length+')</button></div>':'')+'</div>'}
+function pubHome(){var cat=[['Pôles',list('pole')],['Livrables',list('livrable').filter(function(l){return l.nom})],['Règles de décision',list('regle')],['Rendez-vous réguliers',rituelsRetenus()],['Procédures « Quand ça coince »',list('tension').filter(function(o){return o.init&&o.ret!=='non'})],['Principes de relation',relRetenus()]];
+ var e=single('entreprise','entreprise');
+ var h='<h3 style="margin:22px 0 10px">Ce que l\'équipe verra</h3><div class="card"><p class="muted small" style="margin:0 0 8px">La version consultable par l\'équipe ne montre que les éléments validés. Chaque validation se fait dans le récapitulatif concerné.</p><table class="t"><tr><th>Rubrique</th><th>Validés</th></tr>'+cat.map(function(c){var v=c[1].filter(function(o){return o.statut==='valide'}).length;return '<tr><td>'+esc(c[0])+'</td><td>'+v+' sur '+c[1].length+'</td></tr>'}).join('')+'</table>'+valRow(e,'Cap de l\'entreprise (mission, vision)')+'</div>';return h}
+/* ---------- rendez-vous réguliers et communication (module 11), pour toute l'entreprise ---------- */
+var L_FREQ=[['hebdo','Chaque semaine'],['bimensuelle','Toutes les deux semaines'],['mensuelle','Chaque mois'],['trimestrielle','Chaque trimestre'],['demande','À la demande']];
+var L_RDUREE=[['15','15 minutes'],['30','30 minutes'],['60','1 heure'],['120','2 heures'],['demi','Une demi-journée']];
+var L_RCANAL=[['presence','Réunion en présence'],['visio','Visioconférence'],['tel','Appel téléphonique'],['msg','Messagerie d\'équipe'],['mail','E-mail'],['doc','Document partagé'],['autre','Autre (à préciser)']];
+function animeTxt(r){return r.anime==='autre'?(r.anime_autre||'autre fonction à préciser'):(r.anime?posteNom(r.anime):'à préciser')}
+function canauxTxt(r){var c=(r.canaux||[]).map(function(k){return k==='autre'?(r.canal_autre||'autre canal'):(L_RCANAL.filter(function(x){return x[0]===k})[0]||[0,k])[1]});return c.length?c.join(', '):'à préciser'}
+var L_RETAT=[['retenu','Retenir'],['reformule','Reformuler'],['ecarte','Écarter']];
+var L_RSTAT=[['place','Déjà en place'],['lancer','À lancer']];
+function hasValidations(){return list('pole').some(function(p){return validsPole(p.id).length>0})}
+function interBloq(){var m={};calcTrans().forEach(function(t){var a=trPole(t.de),b=trPole(t.vers);if(a&&b&&a!==b&&trObj(t).bloq==='oui'){m[[a,b].sort().join('|')]=1}});return Object.keys(m)}
+var RIT=[
+ {k:'equipe',nom:'Point d\'équipe',obj:'Partager les priorités de la semaine et lever les blocages',freq:'hebdo',duree:'30',anime:'dirigeant',cond:function(){return true}},
+ {k:'pole',nom:'Réunion de pôle',obj:'Suivre l\'avancement des livrables du pôle',freq:'hebdo',duree:'60',cond:function(){return true}},
+ {k:'decision',nom:'Point de décision',obj:'Traiter les validations en attente et les arbitrages',freq:'hebdo',duree:'30',anime:'dirigeant',cond:hasValidations},
+ {k:'critique',nom:'Revue des livrables critiques',obj:'Vérifier la qualité et les délais des livrables critiques',freq:'mensuelle',duree:'60',anime:'dirigeant',cond:function(){return list('livrable').some(function(l){return l.nom&&critique(l)})}},
+ {k:'entrepoles',nom:'Point entre pôles',obj:'Coordonner deux pôles qui dépendent l\'un de l\'autre',freq:'bimensuelle',duree:'30',cond:function(){return interBloq().length>0}},
+ {k:'indiv',nom:'Point individuel',obj:'Échanger entre le dirigeant et chaque responsable',freq:'bimensuelle',duree:'30',anime:'dirigeant',cond:function(){return true}},
+ {k:'retex',nom:'Retour d\'expérience',obj:'Tirer les enseignements d\'une livraison majeure ou d\'un incident',freq:'demande',duree:'60',anime:'dirigeant',cond:function(){return true}},
+ {k:'collectif',nom:'Temps collectif',obj:'Faire le bilan et célébrer les réussites',freq:'trimestrielle',duree:'120',anime:'dirigeant',cond:function(){return true}},
+ {k:'revue',nom:'Revue du système',obj:'Ajuster le Système après adoption',freq:'trimestrielle',duree:'60',anime:'dirigeant',cond:function(){return true}}
+];
+var PRIN=[['p1','Une réunion a un objectif écrit et un animateur.'],['p2','L\'ordre du jour est envoyé à l\'avance.'],['p3','Les décisions sont consignées par écrit, avec un responsable et une échéance.'],['p4','La durée prévue est tenue.'],['p5','Seules les fonctions concernées sont invitées.'],['p6','Le compte rendu part dans la journée.'],['p7','Un retour sur un livrable se donne dans les jours qui suivent, sur des faits observables et entre les fonctions concernées.']];
+var CONV=[
+ {k:'courante',t:'Demande courante',canal:'',delai:'24h',opt:L_DELAI.slice(0,4)},
+ {k:'urgente',t:'Demande urgente',canal:'Téléphone, puis confirmation écrite',ro:'urgence'},
+ {k:'info',t:'Information à partager',canal:'Canal d\'équipe ou e-mail',delai:'24h',opt:[['aucune','Aucune réponse attendue, lecture sous 24 heures']]},
+ {k:'valid',t:'Demande de validation',canal:'',ro:'valid'},
+ {k:'retour',t:'Retour sur un travail',canal:'De vive voix ou en visio, puis trace écrite',delai:'3j',opt:L_DELAI.slice(0,4)},
+ {k:'absence',t:'Absence',canal:'Agenda partagé et message au remplaçant',delai:'avant',opt:[['avant','Avant le départ']]}
+];
+function rituelsListe(){var a=RIT.filter(function(r){return r.cond()}).map(function(r){var o=single('ri_'+r.k,'rituel');if(!o.init){o.init=true;o.cat=r.k;o.nom=r.nom;o.objectif=r.obj;o.freq=r.freq;o.duree=r.duree;if(r.anime)o.anime=r.anime}return o});return a.concat(list('rituel').filter(function(x){return x.perso}))}
+function rituelsRetenus(){return rituelsListe().filter(function(r){return r.etat==='retenu'||r.etat==='reformule'})}
+function principesListe(){return PRIN.map(function(p){var o=single('pr_'+p[0],'principe');if(!o.init){o.init=true;o.txt=p[1]}return o}).concat(list('principe').filter(function(x){return x.perso}))}
+function convObj(c){var o=single('cv_'+c.k,'conv');if(!o.init){o.init=true;o.type=c.t;o.canal=c.canal||'';if(c.delai)o.delai=c.delai}return o}
+function delaiUrgence(){var d=list('chemin').filter(function(c){return c.ctype==='urgence'&&c.delai})[0];return d?(L_DELAI.filter(function(x){return x[0]===d.delai})[0]||[0,''])[1]:null}
+function delaiValid(){var ds=[];list('pole').forEach(function(p){validsPole(p.id).forEach(function(v){var o=S.O[v.key];if(o&&o.delai)ds.push(o.delai)})});var ord=['4h','24h','3j','1s','1m','autre'];ds.sort(function(a,b){return ord.indexOf(a)-ord.indexOf(b)});return ds.length?(L_DELAI.filter(function(x){return x[0]===ds[0]})[0]||[0,''])[1]:null}
+var RIT_ETAT_TXT={retenu:'retenu',reformule:'reformulé',ecarte:'écarté'};
+STEPS.c=[
+ {k:'rituels',t:'Les rituels',m:8,r:function(){var rs=rituelsListe();var nb=rituelsRetenus().length;
+  return '<h2>Les rendez-vous réguliers de l\'entreprise</h2><p class="muted">Voici les rendez-vous réguliers proposés d\'après ce qui a été décrit. Retiens, reformule ou écarte chacun. Aucune réponse n\'est obligatoire pour continuer.</p>'+
+  rs.map(function(o){var h='<div class="card">'+(o.perso?blockHead(o.nom||'Nouveau rendez-vous régulier',o)+fTxt(o,'nom','Quel est ce rendez-vous régulier ?',{req:0}):'<h3 style="margin-bottom:6px">'+esc(o.nom)+'</h3>')+
+   fRadio(o,'etat',o.perso?'Veux-tu le garder ?':'Veux-tu le garder ?',L_RETAT,{req:0,rr:1});
+   if(o.etat==='retenu'||o.etat==='reformule'||o.perso)h+=(o.etat==='reformule'&&!o.perso?fTxt(o,'nom','Comment l\'appelles-tu ?',{req:0}):'')+fTxt(o,'objectif','Quel est son objectif, en une phrase ?',{req:0})+fTxt(o,'description','Description du rendez-vous régulier',{req:0,area:1,ex:'Ce qui s\'y passe, comment il se déroule.'})+fRadio(o,'statut','Existe-t-il déjà dans ton entreprise ?',L_RSTAT,{req:0})+
+    '<div class="row">'+fSel(o,'freq','À quelle fréquence ?',L_FREQ,{req:0})+fSel(o,'duree','Combien de temps ?',L_RDUREE,{req:0})+'</div>'+fMulti(o,'participants','Quelles fonctions y participent ?',postesDir(),{req:0})+fSel(o,'anime','Quelle fonction l\'anime ?',postesDir().concat([['autre','Autre (à préciser)']]),{req:0,rr:1})+(o.anime==='autre'?fTxt(o,'anime_autre','Quelle autre fonction ?',{req:0}):'')+fMulti(o,'canaux','Par quel canal ?',L_RCANAL,{req:0,rr:1})+((o.canaux||[]).indexOf('autre')>-1?fTxt(o,'canal_autre','Quel autre canal ?',{req:0}):'');
+   return h+'</div>'}).join('')+
+  (nb>=8?'<div class="warn">Huit rendez-vous réguliers au maximum suffisent en général. Regroupe ou écarte ceux qui se ressemblent.</div>':'')+
+  '<div style="margin-bottom:12px">'+addBtn('rituel','Ajouter un rendez-vous régulier','data-init=\''+JSON.stringify({perso:true,etat:'retenu'})+'\'')+'</div>'}},
+ {k:'principes',t:'Les principes de réunion',m:4,r:function(){var ps=principesListe();
+  return '<h2>Les principes de réunion</h2><p class="muted">Quelques règles simples pour toutes les réunions. Retiens celles à appliquer.</p>'+
+  ps.map(function(o){return '<div class="card">'+(o.perso?blockHead('Principe ajouté',o):'')+fTxt(o,'txt','Principe',{req:0})+fRadio(o,'etat','Veux-tu l\'appliquer ?',L_RETAT,{req:0})+'</div>'}).join('')+
+  (ps.filter(function(o){return o.etat==='retenu'||o.etat==='reformule'}).length>6?'<div class="warn">Six principes suffisent en général.</div>':'')+
+  '<div style="margin-bottom:12px">'+addBtn('principe','Ajouter un principe','data-init=\''+JSON.stringify({perso:true,etat:'retenu'})+'\'')+'</div><p class="muted small">Écris une phrase observable : quelqu\'un doit pouvoir constater si elle est respectée.</p>'}},
+ {k:'comm',t:'La communication',m:4,r:function(){var du=delaiUrgence(),dv=delaiValid();
+  return '<h2>Comment nous communiquons</h2><p class="muted">Pour chaque type d\'échange : le canal et le délai de réponse attendus. Ce qui vient des circuits alternatifs et des validations est repris tel quel.</p>'+
+  CONV.map(function(c){var o=convObj(c);var h='<div class="card"><h3 style="margin-bottom:8px">'+esc(c.t)+'</h3>';
+   if(c.ro==='urgence')h+=fOutil(o,'canal','Par quel canal ?',{req:0})+'<p class="small">Délai de réponse : '+esc(du||'à préciser dans les circuits d\'urgence')+' <span class="muted">(repris des circuits alternatifs)</span></p>';
+   else if(c.ro==='valid')h+=fOutil(o,'canal','Par quel outil ?',{req:0})+'<p class="small">Délai de réponse : '+esc(dv||'à préciser dans « Décider »')+' <span class="muted">(repris des validations)</span></p>';
+   else h+=fOutil(o,'canal','Par quel canal ?',{req:0})+fSel(o,'delai','Quel délai de réponse ?',c.opt,{req:0});
+   return h+'</div>'}).join('')+
+  list('conv').filter(function(x){return x.perso}).map(function(o){return '<div class="card">'+blockHead('Autre type d\'échange',o)+fTxt(o,'type','Quel type d\'échange ?',{req:0})+fOutil(o,'canal','Par quel canal ?',{req:0})+fSel(o,'delai','Quel délai de réponse ?',L_DELAI.slice(0,4),{req:0})+'</div>'}).join('')+
+  '<div style="margin-bottom:12px">'+addBtn('conv','Ajouter un type d\'échange','data-init=\''+JSON.stringify({perso:true,init:true})+'\'')+'</div>'}}
+];
+function nomPersonne(t){t=String(t||'');if(/\b(M\.|Mme|Monsieur|Madame)\s+[A-ZÉÈ]/.test(t))return true;var known={};list('pole').forEach(function(p){String(p.nom||'').split(/\s+/).forEach(function(w){known[w.toLowerCase()]=1})});list('poste').forEach(function(p){String(p.intitule||'').split(/\s+/).forEach(function(w){known[w.toLowerCase()]=1})});
+ var m=t.match(/(?:^|[\s,;(])([A-ZÉÈ][a-zéèêëïîôûç]+)\s+([A-ZÉÈ][a-zéèêëïîôûç]+)/g)||[];return m.some(function(x){var ws=x.replace(/^[\s,;(]+/,'').split(/\s+/);return ws.some(function(w){return !known[w.toLowerCase()]})&&ws.length===2&&t.indexOf(x.trim())>0})}
+function pointsRit(){var pts=[];var rs=rituelsRetenus();
+ rs.forEach(function(r){var n='« '+(r.nom||'Rendez-vous régulier sans nom')+' »';if(!r.anime||(r.anime==='autre'&&!r.anime_autre))pts.push(n+' : quelle fonction l\'anime ?');if(!r.freq||!r.duree)pts.push(n+' : fréquence ou durée à préciser.');if(!r.objectif)pts.push(n+' : l\'objectif n\'est pas écrit.');if(nomPersonne(r.nom)||nomPersonne(r.objectif))pts.push(n+' : un nom de personne semble présent. Utilise la fonction.')});
+ if(rs.length>8)pts.push('Plus de huit rendez-vous réguliers sont retenus : regrouper ou écarter ?');
+ var pd=rs.filter(function(r){return r.cat==='decision'})[0];if(pd){var dec={};list('pole').forEach(function(p){validsPole(p.id).forEach(function(v){var o=S.O[v.key];if(o){[o.decideur||o.validateur].forEach(function(x){if(x)dec[x]=1})}})});var ids=Object.keys(dec);var part=pd.participants||[];if(ids.length&&!ids.some(function(x){return part.indexOf(x)>-1}))pts.push('Le point de décision ne réunit aucune fonction qui valide : les décisions ne pourront pas y être prises.')}
+ if(!rs.some(function(r){return r.cat==='entrepoles'||(r.perso&&/p[oô]les/i.test(r.nom||''))}))interBloq().forEach(function(k){var q=k.split('|');pts.push('Les pôles « '+poleNom(q[0])+' » et « '+poleNom(q[1])+' » dépendent l\'un de l\'autre pour avancer, sans rendez-vous régulier qui les réunisse. Un point entre pôles pourrait aider.')});
+ principesListe().forEach(function(o){if(nomPersonne(o.txt))pts.push('Un principe semble contenir un nom de personne. Utilise la fonction.')});
+ var outils={};list('outil').forEach(function(x){outils[String(x.nom).toLowerCase()]=1});
+ CONV.map(convObj).concat(list('conv').filter(function(x){return x.perso})).forEach(function(o){if(!o.canal)pts.push('« '+(o.type||'Échange')+' » : aucun canal n\'est indiqué.')});
+ return pts}
+function recapC(){var rs=rituelsRetenus();var dir=S.role!=='responsable';
+ var lab=function(L,v){return (L.filter(function(x){return x[0]===v})[0]||[0,'à préciser'])[1]};
+ var h='<h2>Récapitulatif : rendez-vous réguliers et communication</h2><div class="card"><h3 style="margin-bottom:8px">Nos rendez-vous réguliers</h3>'+(rs.length?'<table class="t"><tr><th>Rendez-vous régulier</th><th>Fréquence</th><th>Canal</th><th>Animateur</th></tr>'+rs.map(function(r){return '<tr><td><strong>'+esc(r.nom||'')+'</strong><br><span class="small">'+esc(r.objectif||'')+'</span>'+(r.description?'<br><span class="muted small">'+esc(r.description)+'</span>':'')+'</td><td>'+esc(lab(L_FREQ,r.freq))+'<br><span class="muted small">'+esc(lab(L_RDUREE,r.duree))+'</span></td><td>'+esc(canauxTxt(r))+'</td><td>'+esc(animeTxt(r))+'</td></tr>'}).join('')+'</table>':'<p class="muted small">Aucun rendez-vous régulier retenu pour l\'instant.</p>')+'</div>'+
+  '<div class="card"><h3 style="margin-bottom:8px">Comment nous communiquons</h3><table class="t"><tr><th>Échange</th><th>Canal</th><th>Délai</th></tr>'+CONV.map(function(c){var o=convObj(c);var d=c.ro==='urgence'?(delaiUrgence()||'à préciser'):c.ro==='valid'?(delaiValid()||'à préciser'):lab(c.opt||L_DELAI,o.delai);return '<tr><td>'+esc(c.t)+'</td><td>'+esc(o.canal||'à préciser')+'</td><td>'+esc(d)+'</td></tr>'}).join('')+'</table></div>'+
+  '<div class="card"><h3 style="margin-bottom:8px">Nos principes de réunion</h3><ul style="margin:0 0 0 18px;padding:0">'+principesListe().filter(function(o){return (o.etat==='retenu'||o.etat==='reformule')&&o.txt}).map(function(o){return '<li>'+esc(o.txt)+'</li>'}).join('')+'</ul></div>';
+ if(dir)h+=valCard('Validation des rendez-vous réguliers, de la communication et des principes',rs.map(function(r){return {o:r,l:r.nom}}).concat([{o:single('pub_comm','pubflag'),l:'Comment nous communiquons'}]).concat(principesListe().filter(function(o){return (o.etat==='retenu'||o.etat==='reformule')&&o.txt}).map(function(o){return {o:o,l:o.txt}})));
+ var pc=pointsRit();if(pc.length)h+=ptsHtml(pc,{s:'c',rules:[[/principe/,'principes'],[/canal/,'comm'],[/./,'rituels']]});
+ return h+'<p class="muted small">Rien n\'est publié avant la validation du dirigeant.</p><div class="actions"><button type="button" data-act="prev">Revenir</button><button type="button" class="primary" data-act="finish">Valider cette partie</button></div>'}
+function ritHome(){var ri=seanceInfo('c');return '<h3 style="margin:22px 0 10px">Rendez-vous réguliers et communication</h3><div class="card seance"><div><h3>Les rendez-vous réguliers, les principes de réunion et la communication</h3><span class="muted small">Pour toute l\'entreprise. '+(flags().cOuvert?'Ouvert aux responsables de pôle, qui peuvent proposer ; le dirigeant valide.':'Rubrique renseignée par le dirigeant. Elle peut être ouverte aux responsables de pôle.')+'</span></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">'+pill(ri)+'<button class="primary" data-act="open" data-s="c">'+(ri.fini?'Revoir':ri.step?'Reprendre':'Commencer')+'</button><button data-act="togglec">'+(flags().cOuvert?'Fermer aux responsables':'Ouvrir aux responsables')+'</button></div></div>'}
+function recapR(){trSync();var d=trDuPole(S.pole);var all=d.recoit.concat(d.envoie);var n=all.filter(function(t){return trEtat(t)==='confirme'}).length;
+ var h='<h2>Récapitulatif : les liens du pôle '+esc(poleActuel().nom)+'</h2><div class="card"><table class="t"><tr><th>Élément</th><th>Sens</th><th>Avec</th><th>État</th></tr>'+
+  all.map(function(t){var r=trPole(t.vers)===S.pole;return '<tr><td>'+esc(t.nom)+'</td><td>'+(r?'Reçu':'Envoyé')+'</td><td>'+esc(trNom(r?t.de:t.vers))+'</td><td>'+TR_ETAT[trEtat(t)]+'</td></tr>'}).join('')+'</table></div>';
+ h+=compHtml(S.pole);
+ var ag=livrablesPole().filter(function(l){return l.nom&&l.variantes==='oui'&&aiguillage(l)});if(ag.length)h+='<div class="card"><h3 style="margin-bottom:6px">Les circuits alternatifs</h3>'+ag.map(function(l){return '<p class="small"><strong>'+esc(l.nom)+'</strong><br>'+esc(aiguillage(l))+'</p>'}).join('')+'</div>';
+ var pc=pointsChemins();if(pc.length)h+=ptsHtml(pc,{s:'r',pole:S.pole,rules:[[/./,'chemins']]});
+ h+='<p class="muted small">'+n+' sur '+all.length+' confirmée(s). Les autres restent « à confirmer » : celui qui l\'envoie et celui qui le reçoit les confirment chacun de leur côté.</p>';
+ return h+'<div class="actions"><button type="button" data-act="prev">Revenir</button><button type="button" class="primary" data-act="finish">Valider cette partie</button></div>'}
+/* contrôles de cohérence (règles F1, F3, F5, F6, F7, F8, F9) : ils signalent, ils ne corrigent rien */
+function anomR(){var all=calcTrans();var res=[];all.forEach(trObj);
+ var grp=function(arr,pf,fn){var m={};arr.forEach(function(t){var p=pf(t);if(p){(m[p]=m[p]||[]).push(t)}});return m};
+ var each=function(arr,pf,step,g,txt){var m=grp(arr,pf,0);Object.keys(m).forEach(function(p){res.push({g:g,t:txt(m[p].length,poleNom(p)),pole:p,step:step})})};
+ each(all.filter(function(t){return trEtat(t)==='contradictoire'}),function(t){return trPole(t.vers)},0,'moy',function(n,p){return n+' lien(s) contesté(s) au pôle '+p+' : à reprendre avec les deux responsables.'});
+ each(all.filter(function(t){return trEtat(t)!=='confirme'&&trEtat(t)!=='contradictoire'}),function(t){return trPole(t.vers)},0,'info',function(n,p){return n+' lien(s) reçu(s) par le pôle '+p+' restent à confirmer.'});
+ each(all.filter(function(t){return !S.O[t.key].outil}),function(t){return trPole(t.vers)},0,'faible',function(n,p){return n+' lien(s) reçu(s) par le pôle '+p+' sans outil indiqué.'});
+ var ia=arbItems().filter(function(x){return !x.rep||x.rep==='tard'});if(ia.length)res.push({g:'moy',t:ia.length+' arbitrage(s) à trancher (voir « Arbitrages », sous les liens entre les pôles).',pole:'',step:0});
+ var cnt={};all.forEach(function(t){if(S.O[t.key].bloq==='oui'){cnt[t.de]=(cnt[t.de]||0)+1}});
+ var cnt2=cnt;Object.keys(cnt).forEach(function(k){var p=S.O[k];if(p&&p.type==='poste'&&(Number(p.effectif)||0)===0&&(!p.remplacant||p.remplacant==='aucun'))res.push({g:'haute',t:'« '+trNom(k)+' » est vacant, sans remplaçant, et des échanges indispensables pour avancer en partent.',pole:trPole(k),step:1})});
+ list('echange').filter(function(x){return x.nom&&!x.livrable}).forEach(function(x){res.push({g:'info',t:'L\'échange « '+x.nom+' » (pôle '+poleNom(x.pole_a)+') n\'est relié à aucun livrable.',pole:x.pole_a,step:2})});
+ return res}
+/* ---------- délais cumulés (F4), ce qui détermine le délai, conséquences d'un retard ---------- */
+var DUR_J={h:0.25,demi:0.5,j:1,'2-3j':2.5,s:5};
+var DEL_J={'4h':0.5,'24h':1,'3j':3,'1s':5,'1m':20};
+var DEL_ORD=['4h','24h','3j','1s','1m'];
+function jTxt(j){if(j<1)return 'moins d\'une journée';var r=Math.round(j*2)/2;return (r===1?'1 jour':String(r).replace('.',',')+' jours')}
+function cumulLiv(l,seen){seen=seen||{};if(seen[l.id])return {j:0,own:0,steps:[],missing:0,amont:null};seen[l.id]=1;
+ var et=etapesDe(l),own=0,missing=0;et.forEach(function(e){if(DUR_J[e.duree]!=null)own+=DUR_J[e.duree];else missing++});
+ var best=null;et.forEach(function(e){intrantsDe(e).forEach(function(i){if(i.oblig==='non'&&i.prov_type==='livrable'&&S.O[i.prov_src]&&S.O[i.prov_src].nom){var c=cumulLiv(S.O[i.prov_src],Object.assign({},seen));if(!best||c.j>best.c.j)best={l:S.O[i.prov_src],c:c}}})});
+ return {j:own+(best?best.c.j:0),own:own,steps:et,missing:missing+(best?best.c.missing:0),amont:best}}
+function f4Items(){var out=[];list('livrable').forEach(function(l){if(!l.nom||DEL_J[l.delai]==null)return;var c=cumulLiv(l);if(!c.steps.length||c.missing>0)return;
+  if(c.j>DEL_J[l.delai]+0.001)out.push({key:'ar_D5_'+l.id,t:'D5',cible:l.id,q:'Le livrable « '+l.nom+' » est promis '+lab2(L_DELAI,l.delai).toLowerCase()+', mais ses étapes'+(c.amont?' et ce qu\'il attend de « '+c.amont.l.nom+' »':'')+' cumulent environ '+jTxt(c.j)+'.',pole:l.pole,steps:c.steps})});return out}
+function parcoursHtml(l){var c=cumulLiv(l);if(!c.steps.length)return '';
+ var ch=[];(function walk(x){if(x.amont){ch.push('« '+x.amont.l.nom+' » (pôle '+poleNom(x.amont.l.pole)+')');walk(x.amont.c)}})(c);
+ var lst=ch.reverse().concat(c.steps.map(function(e){return esc(e.nom||'étape sans nom')+(DUR_J[e.duree]!=null?' <span class="muted small">('+esc(lab2(L_DUREE,e.duree).toLowerCase())+')</span>':'')}));
+ var h='<p class="small" style="margin:0 0 4px"><strong>Ce qui détermine le délai de ce livrable</strong></p><p class="small" style="margin:0 0 4px">'+lst.join(' → ')+'</p>';
+ if(c.missing)h+='<p class="muted small" style="margin:0">La durée de '+c.missing+' étape(s) n\'est pas indiquée : le cumul n\'est pas calculé.</p>';
+ else{h+='<p class="muted small" style="margin:0">Cumul d\'environ '+jTxt(c.j)+(DEL_J[l.delai]!=null?', pour un délai promis '+esc(lab2(L_DELAI,l.delai).toLowerCase()):'')+'.</p>'}return h}
+function avalLiv(l){var res=[],seen={};seen[l.id]=1;(function walk(x){list('intrant').forEach(function(i){if(i.prov_type!=='livrable'||i.prov_src!==x.id)return;var e=S.O[i.etape],y=e&&S.O[e.livrable];if(!y||!y.nom||seen[y.id])return;seen[y.id]=1;res.push(y);walk(y)})})(l);return res}
+function retardHtml(l){var av=avalLiv(l);var pls={};av.forEach(function(y){pls[y.pole]=1});calcTrans().forEach(function(t){if(t.livrable===l.id&&t.src==='dest'){var pv=trPole(t.vers);if(pv&&pv!==l.pole)pls[pv]=1}});
+ var h='<p class="small" style="margin:10px 0 4px"><strong>Si ce livrable prend du retard</strong></p>';
+ h+=av.length?'<p class="small" style="margin:0 0 4px">Livrables touchés : '+av.map(function(y){return esc(y.nom)+' <span class="muted">(pôle '+esc(poleNom(y.pole))+')</span>'}).join(', ')+'.</p>':'<p class="small muted" style="margin:0 0 4px">Aucun autre livrable n\'en dépend directement.</p>';
+ var pk=Object.keys(pls).filter(function(k){return k!==l.pole});if(pk.length)h+='<p class="small" style="margin:0 0 4px">Pôles concernés : '+pk.map(function(k){return esc(poleNom(k))}).join(', ')+'.</p>';
+ if(l.consequences)h+='<p class="small" style="margin:0">Conséquence déjà décrite : '+esc(l.consequences)+'</p>';return h}
+/* ---------- arbitrages (module 5, D1 à D4) : une question à la fois, toujours reportable ---------- */
+function arbCfg(){var o=single('arb_cfg','arbcfg');if(!o.postes)o.postes=[];return o}
+function arbPeut(){if(S.role!=='responsable')return true;var rp=respPoste(S.pole);return !!rp&&arbCfg().postes.indexOf(rp)>-1}
+function commun(a,b){var sa=posteSup(a),sb=posteSup(b);return sa===sb||sa===b||sb===a}
+function arbItems(){var out=[],all=calcTrans();all.forEach(trObj);var seen={};all.forEach(function(t){seen[t.de+'>'+t.vers]=1});
+ Object.keys(seen).forEach(function(k){var q=k.split('>');if(q[0]<q[1]&&seen[q[1]+'>'+q[0]]){var a=trNom(q[0]),b=trNom(q[1]);
+  out.push({key:'ar_D1_'+q[0]+'_'+q[1],t:'D1',q:'« '+a+' » et « '+b+' » dépendent chacun de l\'autre : l\'un attend ce que l\'autre produit, et inversement. Est-ce un va-et-vient voulu ?',pole:trPole(q[1])});
+  if(trPole(q[0])!==trPole(q[1])&&!commun(q[0],q[1]))out.push({key:'ar_D4_'+q[0]+'_'+q[1],t:'D4',a:q[0],b:q[1],q:'« '+a+' » (pôle '+poleNom(trPole(q[0]))+') et « '+b+' » (pôle '+poleNom(trPole(q[1]))+') dépendent l\'un de l\'autre sans responsable commun. Qui tranche en cas de blocage ?',pole:trPole(q[1])})}});
+ list('intrant').forEach(function(i){if(i.oblig!=='non'||i.delai!=='pendant')return;var e=S.O[i.etape],l=e&&S.O[e.livrable];if(!e||!l||!l.nom||!i.nom)return;
+  out.push({key:'ar_D2_'+i.id,t:'D2',cible:i.id,q:'« '+i.nom+' » est indispensable pour démarrer l\'étape « '+(e.nom||'sans nom')+' » du livrable « '+l.nom+' », mais il n\'arrive qu\'en cours d\'étape. Que faire ?',pole:l.pole})});
+ var cnt={};all.forEach(function(t){if(S.O[t.key].bloq==='oui'){cnt[t.de]=(cnt[t.de]||0)+1}});
+ Object.keys(cnt).forEach(function(k){if(cnt[k]>5)out.push({key:'ar_D3_'+k,t:'D3',a:k,q:'« '+trNom(k)+' » est la source de '+cnt[k]+' échanges indispensables pour avancer. Prévoir un remplaçant ou répartir ?',pole:trPole(k)})});
+ out=out.concat(f4Items());
+ out.forEach(function(x){var o=S.O[x.key];x.rep=o&&o.rep||'';x.o=o});return out}
+var ARB_OPT={D1:[['oui1','Oui, un aller-retour'],['oui2','Oui, deux allers-retours'],['oui3','Oui, trois ou plus'],['non','Non, à corriger']],
+ D2:[['avancer','Avancer la date : l\'élément sera là avant le début de l\'étape'],['rallonger','Rallonger le délai du livrable'],['garder','Garder tel quel, en le notant']],
+ D5:[['rallonger','Rallonger le délai promis'],['garder','Garder tel quel, en le notant']],
+ D3:[['remplacant','Prévoir un remplaçant'],['repartir','Répartir sur un autre poste'],['garder','Garder tel quel, en le notant']]};
+function arbRepTxt(x){var o=x.o||{};if(x.t==='D5'&&o.rep==='rac')return 'Raccourcir l\'étape « '+((S.O[o.qui]||{}).nom||'')+' »';if(x.t==='D4')return o.qui?trNom(o.qui)+' tranche':'';var l=(ARB_OPT[x.t]||[]).filter(function(c){return c[0]===o.rep})[0];return l?l[1]:''}
+function arbHtml(){var it=arbItems();if(!it.length)return '';var peut=arbPeut();
+ var cur=it.filter(function(x){return !x.rep})[0],tard=it.filter(function(x){return x.rep==='tard'}),fait=it.filter(function(x){return x.rep&&x.rep!=='tard'});
+ var h='<h3 style="margin:22px 0 10px">Arbitrages</h3>';
+ h+='<div class="card"><p class="small" style="margin:0 0 6px"><strong>Qui tranche ces questions ?</strong> Le dirigeant, par défaut. Il peut désigner un poste qui tranche à sa place ; le responsable d\'un pôle ne répond pas, sauf s\'il est désigné.</p>'+
+  (S.role!=='responsable'?fMulti(arbCfg(),'postes','Postes qui peuvent aussi trancher',postesOpts(),{req:0}):'<p class="small muted" style="margin:0">'+(arbCfg().postes.length?'Désignés : '+arbCfg().postes.map(trNom).map(esc).join(', ')+'.':'Aucun poste n\'est désigné pour l\'instant.')+'</p>')+'</div>';
+ if(cur){h+='<div class="card"><p style="margin:0 0 4px" class="muted small">Un arbitrage à la fois'+(it.filter(function(x){return !x.rep}).length>1?' · '+(it.filter(function(x){return !x.rep}).length-1)+' autre(s) ensuite':'')+'</p><p style="margin:0 0 12px"><strong>'+esc(cur.q)+'</strong></p>';
+  if(!peut)h+='<p class="small muted" style="margin:0">Cette question est tranchée par le dirigeant ou par un poste désigné.</p>';
+  else{if(cur.t==='D5')h+='<div class="field"><label class="q">Raccourcir une étape ?</label><select data-arb5="'+cur.key+'"><option value="">Choisir l\'étape…</option>'+cur.steps.map(function(e){return '<option value="'+e.id+'">'+esc(e.nom||'Étape sans nom')+'</option>'}).join('')+'</select></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="primary" data-act="arb5" data-key="'+cur.key+'">Raccourcir cette étape</button>'+ARB_OPT.D5.map(function(c){return '<button type="button" data-act="arb" data-key="'+cur.key+'" data-v="'+c[0]+'">'+esc(c[1])+'</button>'}).join('')+'<button type="button" data-act="arb" data-key="'+cur.key+'" data-v="tard">À trancher plus tard</button></div>';
+   else if(cur.t==='D4')h+='<div class="field"><select data-arb4="'+cur.key+'"><option value="">Choisir…</option>'+postesDir().map(function(p){return '<option value="'+esc(p[0])+'">'+esc(p[1])+'</option>'}).join('')+'</select></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="primary" data-act="arb4" data-key="'+cur.key+'">Valider</button><button type="button" data-act="arb" data-key="'+cur.key+'" data-v="tard">À trancher plus tard</button></div>';
+   else h+='<div style="display:flex;gap:8px;flex-wrap:wrap">'+ARB_OPT[cur.t].map(function(c){return '<button type="button" class="'+(c[0]==='garder'?'':'primary')+'" data-act="arb" data-key="'+cur.key+'" data-v="'+c[0]+'">'+esc(c[1])+'</button>'}).join('')+'<button type="button" data-act="arb" data-key="'+cur.key+'" data-v="tard">À trancher plus tard</button></div>'}
+  h+='</div>'}
+ else if(!tard.length)h+='<div class="note">Aucun arbitrage en attente.</div>';
+ if(tard.length)h+='<div class="card"><h3 style="margin-bottom:6px">À trancher plus tard</h3>'+tard.map(function(x){return '<div class="small" style="padding:8px 0;border-top:1px solid var(--line)">'+esc(x.q)+(peut?'<div style="margin-top:6px"><button type="button" data-act="arbreset" data-key="'+x.key+'">Trancher maintenant</button></div>':'')+'</div>'}).join('')+'</div>';
+ if(fait.length)h+='<div class="card"><h3 style="margin-bottom:6px">Arbitrages tranchés</h3>'+fait.map(function(x){return '<div class="small" style="padding:8px 0;border-top:1px solid var(--line)">'+esc(x.q)+'<br><strong>'+esc(arbRepTxt(x))+'</strong>'+(peut?' <button type="button" data-act="arbreset" data-key="'+x.key+'" style="margin-left:8px">Modifier</button>':'')+'</div>'}).join('')+'</div>';
+ return h}
+function arbRepondre(key,v,qui){var it=arbItems().filter(function(x){return x.key===key})[0];if(!it)return;var o=single(key,'arbitrage');o.rep=v;
+ if(it.t==='D4'&&v!=='tard'){o.qui=qui;[trPole(it.a),trPole(it.b)].forEach(function(pid){if(!pid)return;var e=single('es_'+pid+'_desacc','escalade');e.pole=pid;e.sit='desacc';if(!e.vers){e.vers=qui;save(e.id,true)}})}
+ if(it.t==='D2'&&v==='avancer'&&S.O[it.cible]){S.O[it.cible].delai='avant';save(it.cible,true)}
+ if(it.t==='D5'&&v==='rallonger'&&S.O[it.cible]){var l5=S.O[it.cible],c5=cumulLiv(l5);var nx=DEL_ORD.filter(function(k){return DEL_J[k]>=c5.j})[0];l5.delai=nx||'autre';save(l5.id,true)}
+ if(it.t==='D5'&&v==='rac'){o.qui=qui;if(S.O[qui]){S.O[qui].a_raccourcir=true;save(qui,true)}}
+ save(o.id,true);var x=Object.assign({},it,{o:o,rep:v});if(v==='tard')jlog('Arbitrage reporté : '+it.q);else jlog('Arbitrage tranché : '+it.q+' → '+arbRepTxt(x))}
+function aConf(all){var td=all.filter(function(t){return trEtat(t)!=='confirme'});if(!td.length)return '';
+ return '<h3 style="margin:18px 0 6px">Liens à confirmer</h3><p class="muted small" style="margin:0 0 8px">Les responsables de pôle confirment chacun leur côté. Le dirigeant peut aussi confirmer un lien pour les deux côtés à la fois.</p>'+
+  td.map(function(t){var pv=trPole(t.vers);return '<div class="card"><p class="small" style="margin:0 0 10px">'+trPhrase(t)+'</p><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="pill">'+TR_ETAT[trEtat(t)]+'</span><button type="button" class="primary" data-act="confirmtr" data-key="'+t.key+'">Confirmer ce lien</button>'+(pv?'<button type="button" data-act="goto" data-s="r" data-pole="'+pv+'" data-step="0">Voir le détail</button>':'')+'</div></div>'}).join('')}
+var G_LAB={haute:'Haute',moy:'Moyenne',faible:'Faible',info:'Information'};
+function carteHtml(){var ps=list('pole');if(!ps.length)return '';var all=calcTrans();if(!all.length&&!list('echange').length)return '';
+ var an=anomR();
+ return '<h3 style="margin:0 0 10px">Les liens entre les pôles</h3><div class="card"><table class="t"><tr><th>Pôle</th><th>Reçoit</th><th>Envoie</th><th>Confirmées</th></tr>'+
+  ps.map(function(p){var d=trDuPole(p.id);var tt=d.recoit.concat(d.envoie);return '<tr><td>'+esc(p.nom)+'</td><td>'+d.recoit.length+'</td><td>'+d.envoie.length+'</td><td>'+tt.filter(function(t){return trEtat(t)==='confirme'}).length+' / '+tt.length+'</td></tr>'}).join('')+'</table></div>'+
+  aConf(all)+(an.length?'<div class="warn"><strong>À regarder</strong> (rien n\'est corrigé d\'office, la décision te revient) :<ul style="margin:6px 0 0 18px;padding:0">'+an.map(function(a){return '<li><span class="muted small">'+G_LAB[a.g]+' · </span>'+esc(a.t)+(a.pole?' <button type="button" class="link" data-act="goto" data-s="r" data-pole="'+a.pole+'" data-step="'+a.step+'">Aller à cet écran</button>':'')+'</li>'}).join('')+'</ul></div>':'<div class="note">Tous les liens sont cohérents.</div>')}
+
+/* ---------- vue récap : branchement ---------- */
+var _render=render;render=function(){if(S.view==='fiche'){var hd='<div class="bar noprint"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=hd+'<main>'+ficheHtml()+'</main>';updBar()}else if(S.view==='recap'){var head='<div class="bar"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=head+'<main>'+recapHtml()+'</main>';updBar()}else _render()};
+render();
+</script>
+</html>
