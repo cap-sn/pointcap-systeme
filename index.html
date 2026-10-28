@@ -72,7 +72,7 @@ table.t{width:100%;border-collapse:collapse;font-size:14.5px;display:block;overf
 <script>
 'use strict';
 /* ---------- configuration ---------- */
-var CFG={API_URL:'',NOM_AFFICHE:'Atelier Mercier'}; // vide = mode démonstration (données dans le navigateur)
+var CFG={API_URL:'https://script.google.com/macros/s/AKfycbzIS-xIrJLjSS14PAyBujl1qA2jJlJrp15G72DedlXyRwdRsOd_SBWUB0OHq12-XYJ5/exec',NOM_AFFICHE:'Atelier Mercier'}; // vide = mode démonstration (données dans le navigateur)
 /* ---------- utilitaires ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function uid(p){return p+'_'+Math.random().toString(36).slice(2,9)}
