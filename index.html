@@ -22,6 +22,17 @@ h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.25;text-wrap:b
 h1{font-size:30px}h2{font-size:23px;margin-bottom:6px}h3{font-size:18px}
 p{margin:0 0 12px}.muted{color:var(--muted)}.small{font-size:14px}
 .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;background:var(--surface);border-bottom:1px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
+.wide{max-width:1040px}.rhead h1{margin-bottom:4px}.rtabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 18px;position:sticky;top:46px;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line)}
+.rtabs button{border-radius:999px}.rtabs button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}.rtabs .pdf{margin-left:auto}
+.rs{display:none}.rs.on{display:block}.ptitle{display:none}.rl{margin:4px 0 0 18px;padding:0}.rl li{margin:3px 0}.rb h4{margin:16px 0 4px;font-size:14px}
+details.card>summary{cursor:pointer;list-style:revert}.mapbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.legend{display:flex;gap:6px 18px;flex-wrap:wrap;margin-top:10px}.chk{display:inline-flex;gap:6px;align-items:center;font-size:14px}
+.mapw{overflow-x:auto}.map{max-width:none;height:auto;display:block;margin:0 auto}.map text{font:500 13.5px var(--fb);fill:var(--ink)}.map .sub{font-size:11px;fill:var(--muted)}
+.map .nd rect,.map .nd circle{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}.map .nd.pole{cursor:pointer}.map .nd.pole circle{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}.map .nd.resp circle{stroke:var(--warn);stroke-width:3}.map .nd.pole:hover circle,.map .nd.pole:focus circle,.map .nd.ext:hover rect{stroke-width:3}.map .nd.ext{cursor:pointer}.map .nd.ext text{font-size:12px}
+.map .hier{stroke:var(--line);stroke-width:1.5}.map .edge path{fill:none;stroke-width:2}.map .edge circle{fill:var(--bg);stroke:currentColor;stroke-width:1.2}.map .edge text{font-size:11px;font-weight:600;fill:currentColor}
+.e-liv{color:var(--accent)}.e-comp{color:var(--t2)}.e-rem{color:var(--warn)}.e-val{color:var(--t5)}.map .edge path{stroke:currentColor}.e-comp path{stroke-dasharray:7 4}.e-rem path{stroke-dasharray:2 4}.e-val path{stroke-dasharray:10 3 2 3}
+.mk-liv{fill:var(--accent)}.mk-comp{fill:var(--t2)}.mk-rem{fill:var(--warn)}.mk-val{fill:var(--t5)}
+.sw{display:inline-block;width:26px;border-top:3px solid}.sw-liv{border-color:var(--accent)}.sw-comp{border-color:var(--t2);border-top-style:dashed}.sw-rem{border-color:var(--warn);border-top-style:dotted}.sw-val{border-color:var(--t5);border-top-style:dashed}
+@media print{.rs{display:block!important;break-before:page}.rs:first-of-type{break-before:auto}.ptitle{display:block}.rtabs,.noprint{display:none!important}details.card>*{display:block}.mapw{overflow:visible}.map{width:100%!important}}
 .mx{overflow-x:auto}.mx td.mx-seul{background:var(--accent-soft)}.mx td.mx-inf{background:color-mix(in srgb,var(--warn) 18%,transparent)}.mx td.mx-val{background:color-mix(in srgb,var(--warn) 38%,transparent)}.card.seance{cursor:pointer}.card.seance:hover{border-color:var(--accent)}.tp{border-left:5px solid var(--tc);padding:2px 0 2px 14px;margin:34px 0 14px}.tp .tn{display:block;font-size:12.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--tc)}.tp h2{margin:2px 0 4px}.tp p{margin:0}
 .t1{--tc:var(--t1)}.t2{--tc:var(--t2)}.t3{--tc:var(--t3)}.t4{--tc:var(--t4)}.t5{--tc:var(--t5)}.t6{--tc:var(--t6)}@media print{.bar,.noprint,.actions{display:none!important}body{background:#fff}.card{break-inside:avoid;box-shadow:none}}
 .tz{border-left:3px solid var(--tc);padding-left:12px;margin-left:2px}
@@ -92,7 +103,7 @@ function mock(action,p){
  var key='sfo_demo';var db=null;var raw=lsGet(key);try{db=JSON.parse(raw||'null')}catch(e){if(raw)lsSet('sfo_demo_corrompu',raw)}
  if(!db){db={nom:'Atelier Mercier',O:DEMO_SEED()}}
  function persist(){lsSet(key,JSON.stringify(db))}
- if(action==='login'){var R={'DEMO':{role:'dirigeant'},'DEMO-COM':{role:'responsable',pole:'po1'},'DEMO-LIV':{role:'responsable',pole:'po2'},'DEMO-ADM':{role:'responsable',pole:'po3'}};var ro=R[String(p.code).toUpperCase()];if(ro&&p.pwd==='demo'){persist();return {ok:true,nom:db.nom,token:'demo',objets:db.O,role:ro.role,pole:ro.pole||null}}return {ok:false,erreur:'Code ou mot de passe incorrect.'}}
+ if(action==='login'){var R={'DEMO':{role:'dirigeant'},'DEMO-COM':{role:'responsable',pole:'po1'},'DEMO-LIV':{role:'responsable',pole:'po2'},'DEMO-ADM':{role:'responsable',pole:'po3'},'DEMO-EQ':{role:'lecteur'}};var ro=R[String(p.code).toUpperCase()];if(ro&&p.pwd==='demo'){persist();return {ok:true,nom:db.nom,token:'demo',objets:ro.role==='lecteur'?visLecteur(db.O):db.O,role:ro.role,pole:ro.pole||null}}return {ok:false,erreur:'Code ou mot de passe incorrect.'}}
  if(action==='save'){db.O[p.objet.id]=p.objet;persist();return {ok:true}}
  if(action==='remove'){delete db.O[p.id];persist();return {ok:true}}
  if(action==='rappel'){return {ok:true,demo:true}}
@@ -245,7 +256,7 @@ function render(){
  if(S.view==='login'){HIST.last='';return renderLogin()}
  var head='<div class="bar"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';
  var body=S.role==='lecteur'?lecteurHtml():S.view==='home'?homeHtml():stepHtml();
- $app.innerHTML=head+'<main>'+body+'</main>';updBar();histPush()}
+ $app.innerHTML=head+'<main'+(S.role==='lecteur'?' class="wide"':'')+'>'+body+'</main>';updBar();histPush()}
 function renderLogin(){$app.innerHTML='<main><div class="login card"><h1 style="margin-bottom:6px">'+titre(CFG.NOM_AFFICHE)+'</h1><p class="muted">Saisis le code et le mot de passe reçus.</p><div id="lerr"></div>'+
  '<div class="field"><label class="q" for="lc">Code entreprise</label><input type="text" id="lc" autocomplete="username"></div><div class="field"><label class="q" for="lp">Mot de passe</label><input type="password" id="lp" autocomplete="current-password" style="width:100%;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 11px"></div><button class="primary" id="lgo" type="button">Entrer</button>'+(CFG.API_URL?'':'<p class="muted small" style="margin-top:14px">Mode démonstration : mot de passe demo. Code DEMO (dirigeant), ou DEMO-COM, DEMO-LIV, DEMO-ADM (responsables de pôle).</p>')+'</div></main>';
  var go=function(){var c=document.getElementById('lc').value.trim(),p=document.getElementById('lp').value;S.code=c;api('login',{code:c,pwd:p}).then(function(r){if(!r||!r.ok){document.getElementById('lerr').innerHTML='<div class="err">'+esc((r&&r.erreur)||'Connexion impossible.')+'</div>';return}S.token=r.token;S.nom=r.nom;S.O=r.objets||{};S.role=r.role||'dirigeant';S.pole=r.pole||null;S.view='home';render()})};
@@ -262,7 +273,7 @@ function homeHtml(){if(S.role==='responsable')return homeResp();var all=SEANCES.
  tempsHead(3,'Relier','Les liens entre les pôles et les arbitrages à rendre.')+'<div class="tz t3">'+carteHtml()+arbHtml()+'</div>'+
  tempsHead(4,'Décider','Qui décide quoi, jusqu\'où. Le dirigeant renseigne cette rubrique. Elle peut être ouverte au responsable d\'un pôle, qui peut proposer, et le dirigeant valide.')+'<div class="tz t4">'+decHome()+'</div>'+
  tempsHead(5,'Rythmer','Les rendez-vous réguliers et la communication de l\'entreprise, une fois les décisions posées.',6)+'<div class="tz t6">'+ritHome()+'</div>'+
- tempsHead(6,'Apaiser','Les procédures à suivre quand une tension apparaît, et la charte de fonctionnement qui réunit l\'ensemble. Le dirigeant renseigne cette rubrique ; elle suit l\'ouverture de « Décider » pour les responsables de pôle.',5)+'<div class="tz t5">'+tensHome()+charteHome()+ficheHome()+'</div>'+pubHome()+journalHtml()}
+ tempsHead(6,'Apaiser','Les procédures à suivre quand une tension apparaît, et la charte de fonctionnement qui réunit l\'ensemble. Le dirigeant renseigne cette rubrique ; elle suit l\'ouverture de « Décider » pour les responsables de pôle.',5)+'<div class="tz t5">'+tensHome()+charteHome()+ficheHome()+'</div>'+pubHome()+'<div class="card seance"><div><h3>Voir la version de l\'équipe</h3><span class="muted small">Ce que verra l\'équipe avec le mot de passe commun : uniquement ce qui est validé.</span></div><div><button class="primary" data-act="resti">Ouvrir l\'aperçu</button></div></div>'+journalHtml()}
 function curSteps(){return STEPS[S.seance]}
 function stepHtml(){var st=curSteps()[S.step];var n=curSteps().length;var last=S.step===n-1;var body,items=null;
  if(st.each){items=st.each();if(!items.length){return '<h2>'+esc(st.t)+'</h2><div class="note">'+esc(st.vide||'Rien à décrire ici pour le moment.')+'</div><div class="actions"><button type="button" data-act="prev">Précédent</button><button type="button" class="primary" data-act="skip">Continuer</button></div>'}
@@ -288,8 +299,10 @@ function purgeEmpty(){var types={s1:['contrainte','principe','indicateur','clien
  (types[S.seance]||[]).forEach(function(t){var l=list(t);l.forEach(function(o,i){var vals=Object.keys(o).filter(function(k){return ['type','id','origine','etat','ordre','maj'].indexOf(k)<0}).filter(function(k){var v=o[k];return Array.isArray(v)?v.length:String(v||'').trim()});if(!vals.length&&(i>0||t!=='client'))del(o.id)})})}
 function persistPos(){var i=seanceInfo(skey());i.step=S.step+1;i.sub=S.sub;save(i.id,true)}
 function goStep(d){S.step+=d;persistPos();S.view='step';render();window.scrollTo(0,0)}
+document.addEventListener('change',function(ev){var el=ev.target;if(!el.dataset||!el.dataset.r)return;var k=el.dataset.r;
+ if(k==='niv')RS.niv=el.value;else if(k==='crit')RS.crit=el.checked;else if(k==='type')RS.types[el.dataset.k]=el.checked;else if(k==='pole')RS.pole=el.value;render()});
 function tileClick(ev){var t=ev.target;if(t.closest('button,a,input,select,textarea,label,details,summary,.field,pre'))return;var c=t.closest('.card.seance');if(!c)return;
- var bt=c.querySelector('button.primary[data-act="open"]:not([disabled])')||c.querySelector('button[data-act="open"]:not([disabled])');if(bt)bt.click()}
+ var bt=c.querySelector('button.primary[data-act="open"]:not([disabled]),button.primary[data-act="rfiche"]')||c.querySelector('button[data-act="open"]:not([disabled])');if(bt)bt.click()}
 document.addEventListener('click',function(ev){var b=ev.target.closest('[data-act]');if(!b){tileClick(ev);return}var a=b.dataset.act;
  if(a==='open'){S.matAll=false;S.seance=b.dataset.s;if((S.seance==='d'||S.seance==='e'||S.seance==='r'||S.seance==='x'||S.seance==='t')&&b.dataset.pole)S.pole=b.dataset.pole;var i=seanceInfo(skey());S.step=Math.max(0,(i.step||1)-1);S.sub=i.sub||0;S.view='step';render();window.scrollTo(0,0)}
  else if(a==='prev'){if(S.view==='recap'){S.view='step';render();return}if(S.sub>0){S.sub--;render();window.scrollTo(0,0);return}if(S.step===0){S.view='home';render()}else{S.step--;var ps=curSteps()[S.step];S.sub=ps.each?Math.max(0,ps.each().length-1):0;S.view='step';render();window.scrollTo(0,0)}}
@@ -318,10 +331,14 @@ document.addEventListener('click',function(ev){var b=ev.target.closest('[data-ac
  else if(a==='fichehome'){S.view='home';render();window.scrollTo(0,0)}
  else if(a==='fvue'){S.fVue=S.fVue==='titulaire'?'':'titulaire';render()}
  else if(a==='fprint'){try{window.print()}catch(x){toast('Utiliser Ctrl+P (ou Cmd+P) pour exporter en PDF.')}}
- else if(a==='fprop'){var tx=document.getElementById('fptxt').value.trim();if(!tx){toast('Écrire la proposition.');return}put('prop_fiche',{poste:S.fiche,section:document.getElementById('fpsec').value,txt:tx,statut:'propose'});jlog('Proposition de correction sur la fiche « '+posteNom(S.fiche)+' »');toast('Proposition envoyée.');S.fVue='';render()}
+ else if(a==='fprop'){var tx=document.getElementById('fptxt').value.trim();if(!tx){toast('Écrire la proposition.');return}put('prop_fiche',{poste:S.fiche,section:document.getElementById('fpsec').value,txt:tx,statut:'propose'});if(S.role!=='lecteur'&&S.view!=='resti')jlog('Proposition de correction sur la fiche « '+posteNom(S.fiche)+' »');toast('Proposition envoyée. Le dirigeant la recevra pour validation.');S.fVue=(S.role==='lecteur'||S.view==='resti')?'titulaire':'';render()}
  else if(a==='fpstat'){var px=S.O[b.dataset.id];px.statut=b.dataset.v;save(px.id,true);jlog((L_PST[px.statut]||px.statut)+' : proposition de correction sur la fiche « '+posteNom(px.poste)+' »');render()}
  else if(a==='vstat'){var r=S.O[b.dataset.id];if(!r)return;r.statut=b.dataset.v;save(r.id,true);jlog((L_STAT[r.statut]||r.statut)+' : '+valNom(r));render()}
  else if(a==='vall'){var ids=b.dataset.ids.split(',');ids.forEach(function(id){var r=S.O[id];if(r){r.statut='valide';save(r.id,true)}});jlog('Validé : '+ids.length+' éléments');render()}
+ else if(a==='rtab'){RS.tab=b.dataset.t;RS.fiche='';render();window.scrollTo(0,0)}
+ else if(a==='rniv'){RS.niv=b.dataset.id;RS.tab='carte';render();window.scrollTo(0,0)}
+ else if(a==='rfiche'){RS.fiche=b.dataset.id;RS.tab='fiches';render();window.scrollTo(0,0)}
+ else if(a==='resti'){S.view='resti';RS.fiche='';render();window.scrollTo(0,0)}
  else if(a==='recapmat'){S.seance='x';S.matAll=true;S.view='recap';render();window.scrollTo(0,0)}
  else if(a==='home'){S.matAll=false;S.view='home';render();window.scrollTo(0,0)}
  else if(a==='recapx'){S.matAll=false;S.seance='x';S.pole=b.dataset.pole;S.view='recap';render();window.scrollTo(0,0)}
@@ -879,7 +896,6 @@ function ficheHome(){var ps=list('poste').filter(function(p){return p.intitule})
  h+=ps.map(function(p){var n=ficheProps(p.id).filter(function(x){return x.statut==='propose'}).length;return '<div class="card seance"><div><h3>'+esc(p.intitule)+'</h3><span class="muted small">Pôle '+esc(poleNom(p.pole))+(n?' · '+n+' proposition(s) à traiter':'')+'</span></div><div><button class="primary" data-act="fiche" data-id="'+p.id+'">Voir la fiche</button></div></div>'}).join('');
  return h}
 /* accès équipe (lecteur) : la version consultable sera construite à l'étape suivante */
-function lecteurHtml(){var n=Object.keys(S.O).length;return '<h1>'+esc(S.nom||'')+'</h1><div class="card"><p>Version consultable du système de fonctionnement.</p><p class="muted small">'+n+' élément(s) validé(s) reçus. La présentation arrive à l\'étape suivante.</p></div>'}
 /* ---------- validation : ce que l'équipe verra dans la version consultable ---------- */
 var VAL_TYPES={pole:1,livrable:1,rituel:1,principe:1,principe_rel:1,regle:1,tension:1,charterev:1,entreprise:1,pubflag:1};
 function valRacine(o){if(!o)return null;if(String(o.id).indexOf('cv_')===0)return single('pub_comm','pubflag');if(VAL_TYPES[o.type])return o;if(o.type==='poste')return S.O[o.pole]||null;if(o.livrable&&S.O[o.livrable])return S.O[o.livrable];if(o.etape&&S.O[o.etape])return valRacine(S.O[o.etape]);return null}
@@ -1072,7 +1088,136 @@ function carteHtml(){var ps=list('pole');if(!ps.length)return '';var all=calcTra
   aConf(all)+(an.length?'<div class="warn"><strong>À regarder</strong> (rien n\'est corrigé d\'office, la décision te revient) :<ul style="margin:6px 0 0 18px;padding:0">'+an.map(function(a){return '<li><span class="muted small">'+G_LAB[a.g]+' · </span>'+esc(a.t)+(a.pole?' <button type="button" class="link" data-act="goto" data-s="r" data-pole="'+a.pole+'" data-step="'+a.step+'">Aller à cet écran</button>':'')+'</li>'}).join('')+'</ul></div>':'<div class="note">Tous les liens sont cohérents.</div>')}
 
 /* ---------- vue récap : branchement ---------- */
-var _render=render;render=function(){if(S.view==='fiche'){var hd='<div class="bar noprint"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=hd+'<main>'+ficheHtml()+'</main>';updBar()}else if(S.view==='recap'){var head='<div class="bar"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=head+'<main>'+recapHtml()+'</main>';updBar()}else _render()};
+var _render=render;render=function(){if(S.view==='resti'){var hr='<div class="bar noprint"><div class="bar-in"><span class="t">'+titre()+'</span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=hr+'<main class="wide">'+restitHtml(true)+'</main>'}else if(S.view==='fiche'){var hd='<div class="bar noprint"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=hd+'<main>'+ficheHtml()+'</main>';updBar()}else if(S.view==='recap'){var head='<div class="bar"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=head+'<main>'+recapHtml()+'</main>';updBar()}else _render()};
+/* ---------- restitution : la version consultable par toute l'équipe ---------- */
+var RS={tab:'cap',niv:'ent',crit:false,types:{liv:1,comp:1,rem:1,val:1},fiche:'',pole:''};
+var RS_TABS=[['cap','Le cap'],['carte','La carte'],['poles','Les pôles'],['decide','Qui décide'],['fiches','Fiches de poste'],['fonct','Fonctionnement']];
+/* même règle de visibilité que le serveur : seul ce que le dirigeant a validé */
+function visLecteur(all){var JAM={journal:1,arbcfg:1,fichecfg:1,flags:1,contact:1,seance:1,decinfo:1,nrinfo:1,relinfo:1,escinfo:1,arbitrage:1},VT={pole:1,livrable:1,rituel:1,principe:1,principe_rel:1,regle:1,tension:1,charterev:1,entreprise:1,pubflag:1},CC={outil:1,client:1,objectif:1,contrainte:1,indicateur:1};
+ function racine(o){if(!o)return null;if(String(o.id).indexOf('cv_')===0)return all.pub_comm||null;if(VT[o.type])return o;if(o.type==='poste')return all[o.pole]||null;
+  if(o.livrable&&all[o.livrable])return all[o.livrable];if(o.etape&&all[o.etape])return racine(all[o.etape]);if(o.cible&&all[o.cible]&&all[o.cible]!==o)return racine(all[o.cible]);
+  if(o.pole&&all[o.pole])return all[o.pole];if(o.pole_a&&all[o.pole_a])return all[o.pole_a];return null}
+ var out={};Object.keys(all).forEach(function(k){var o=all[k],t=String(o.id||'').indexOf('cv_')===0?'conv':o.type;if(JAM[t])return;
+  if(t==='prop_fiche'){if(o.statut==='valide')out[k]=o;return}
+  if(CC[t]||(t==='principe'&&o.texte!==undefined)){if(all.entreprise&&all.entreprise.statut==='valide')out[k]=o;return}
+  var r=racine(o);if(r&&r.statut==='valide')out[k]=o});return out}
+function withVisible(fn){var keepO=S.O,keepSave=save,keepRole=S.role,res;S.O=visLecteur(S.O);save=function(){};S.role='lecteur';
+ try{res=fn()}finally{S.O=keepO;save=keepSave;S.role=keepRole}return res}
+function rsLines(a,empty){return a.length?'<ul class="rl">'+a.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>':'<p class="muted small" style="margin:4px 0 0">'+(empty||'Rien de validé pour l\'instant.')+'</p>'}
+/* --- le cap --- */
+function rsCap(){var e=S.O.entreprise;if(!e)return '<div class="note">Le cap de l\'entreprise n\'est pas encore validé.</div>';
+ var h='<div class="card"><dl class="sum"><dt>Mission</dt><dd>'+esc(e.mission||'')+'</dd><dt>Vision</dt><dd>'+esc(e.vision||'')+'</dd><dt>Ce que les clients trouvent chez nous</dt><dd>'+esc(e.valeur||'')+'</dd></dl></div>';
+ var cl=list('client');if(cl.length)h+='<div class="card"><h3>Nos clients prioritaires</h3>'+rsLines(cl.map(function(c){return '<strong>'+esc(c.type_client||'')+'</strong>'+(c.cherche?' <span class="muted small">· il cherche : '+esc(c.cherche)+'</span>':'')+(c.place?' <span class="muted small">· '+esc(lab2(L_PLACE,c.place).toLowerCase())+'</span>':'')}))+'</div>';
+ var ob=list('objectif');if(ob.length)h+='<div class="card"><h3>Nos objectifs</h3><table class="t"><tr><th>Objectif</th><th>Échéance</th><th>Comment on le mesure</th><th>Pôles</th></tr>'+ob.map(function(o){return '<tr><td><strong>'+esc(o.intitule||'')+'</strong><br><span class="small muted">'+esc(o.resultat||'')+'</span></td><td>'+esc(lab2(L_ECH,o.horizon))+'</td><td>'+esc(o.ind_nom||'')+(o.ind_cible?' : cible '+esc(o.ind_cible)+(o.ind_actuelle?', aujourd\'hui '+esc(o.ind_actuelle):''):'')+'</td><td>'+esc((o.poles||[]).map(poleNom).join(', '))+'</td></tr>'}).join('')+'</table></div>';
+ var co=list('contrainte');if(co.length)h+='<div class="card"><h3>Ce qui encadre notre action</h3>'+rsLines(co.map(function(c){return '<strong>'+esc(lab2(L_CTR,c.ctype))+'</strong> : '+esc(c.desc||'')}))+'</div>';
+ var pr=list('principe').filter(function(p){return p.texte});
+ if(pr.length)h+='<div class="card"><h3>Nos principes de gestion</h3>'+rsLines(pr.map(function(p){return esc(p.texte)+(p.situation?' <span class="muted small">· '+esc(p.situation)+'</span>':'')}))+'</div>';
+ var ou=list('outil');if(ou.length)h+='<div class="card"><h3>Nos outils</h3><p class="small" style="margin:0">'+ou.map(function(o){return esc(o.nom)}).join(' · ')+'</p></div>';
+ return h}
+/* --- la carte --- */
+var RS_T={liv:['Livrables et échanges','#liv'],comp:['Compétences sollicitées','#comp'],rem:['Remontées','#rem'],val:['Validations','#val']};
+function critSet(){var set={};function up(l){if(!l||set[l.id])return;set[l.id]=1;etapesDe(l).forEach(function(e){intrantsDe(e).forEach(function(i){if(i.prov_type==='livrable'&&S.O[i.prov_src])up(S.O[i.prov_src])})})}
+ list('livrable').filter(function(l){return l.nom&&critique(l)}).forEach(up);return set}
+function polesCrit(cs){var m={};Object.keys(cs).forEach(function(id){var l=S.O[id];if(l&&l.pole)m[l.pole]=1});return m}
+/* flux : {de,vers,type,nom,liv} ; de/vers = id de pôle, id de poste ou 'dirigeant' */
+function rsFlux(){var cs=critSet(),pc=polesCrit(cs),out=[];
+ calcTrans().forEach(function(t){out.push({de:t.de,vers:t.vers,type:'liv',nom:t.nom,liv:t.livrable,bloq:trObj(t).bloq==='oui'})});
+ calcComp().forEach(function(c){out.push({de:c.de,vers:c.vers,type:'comp',nom:c.nom,liv:c.livrable})});
+ list('pole').forEach(function(p){escPole(p.id).forEach(function(e){out.push({de:respPoste(p.id)||'pole:'+p.id,vers:e.vers,type:'rem',nom:'Remontée : '+((L_SIT.filter(function(x){return x[0]===e.sit})[0]||[0,e.sit_txt||'situation'])[1]),pole:p.id})});
+  validsPole(p.id).forEach(function(v){var o=S.O[v.key];var val=o&&o.validateur||(v.resp?posteSup(v.resp):'dirigeant');out.push({de:val,vers:v.resp||('pole:'+p.id),type:'val',nom:v.label,liv:v.lid,pole:p.id})})});
+ out=out.filter(function(f){return f.de&&f.vers&&f.de!==f.vers});
+ if(RS.crit)out=out.filter(function(f){return f.liv?!!cs[f.liv]:!!pc[f.pole||trPole(f.de)||trPole(f.vers)]});
+ return out.filter(function(f){return RS.types[f.type]})}
+function nodeOf(id){return id==='dirigeant'?'dirigeant':(trPole(id)||null)}
+function wrapTxt(t,max){var w=String(t).split(' '),ls=[],c='';w.forEach(function(x){if(c&&(c+' '+x).length>max){ls.push(c);c=x}else c=c?c+' '+x:x});if(c)ls.push(c);return ls.slice(0,3)}
+function nodeTxt(x,y,name,sub){var ls=wrapTxt(name,15),y0=y-(ls.length*7)+(sub?-2:5);return ls.map(function(l,i){return '<text x="'+x+'" y="'+(y0+i*13)+'" text-anchor="middle">'+esc(l)+'</text>'}).join('')+(sub?'<text x="'+x+'" y="'+(y0+ls.length*13+1)+'" text-anchor="middle" class="sub">'+esc(sub)+'</text>':'')}
+function arcPath(x1,y1,x2,y2,cy){return 'M'+x1+','+y1+' Q'+((x1+x2)/2)+','+cy+' '+x2+','+y2}
+function rsSvgEnt(){var ps=list('pole');if(!ps.length)return '';var fl=rsFlux();var W=Math.max(560,ps.length*210+40),gap=(W-40)/ps.length,Y=200;
+ var pos={};ps.forEach(function(p,i){var n=list('livrable').filter(function(l){return l.pole===p.id&&l.nom}).length;pos[p.id]={x:20+gap*i+gap/2,y:Y,r:Math.min(70,58+n*2),n:n,p:p}});pos.dirigeant={x:W/2,y:46,w:130,h:34};
+ var by={};fl.forEach(function(f){var a=nodeOf(f.de),b=nodeOf(f.vers);if(!a||!b||a===b||!pos[a]||!pos[b])return;var k=a+'>'+b+'>'+f.type;(by[k]=by[k]||{a:a,b:b,type:f.type,items:[]}).items.push(f)});
+ var svg='<svg viewBox="0 0 '+W+' 380" style="width:'+W+'px" role="img" aria-label="Carte de l\'entreprise" class="map"><defs>'+Object.keys(RS_T).map(function(k){return '<marker id="ah-'+k+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-'+k+'"/></marker>'}).join('')+'</defs>';
+ ps.forEach(function(p){var q=pos[p.id];svg+='<line x1="'+pos.dirigeant.x+'" y1="'+(pos.dirigeant.y+17)+'" x2="'+q.x+'" y2="'+(q.y-q.r)+'" class="hier"/>'});
+ var idx={};Object.keys(by).forEach(function(k){var e=by[k],A=pos[e.a],B=pos[e.b],n=(idx[e.a+'|'+e.b]=(idx[e.a+'|'+e.b]||0)+1);var cls='e-'+e.type;var d,mx,my;
+  if(e.a==='dirigeant'||e.b==='dirigeant'){var P=e.a==='dirigeant'?B:A,sgn=e.a==='dirigeant'?-1:1;var off=(e.type==='rem'?-1:1)*(28+n*10);var x1=pos.dirigeant.x+off,y1=pos.dirigeant.y+17,x2=P.x+off/3,y2=P.y-P.r;
+   if(e.a==='dirigeant'){d='M'+x1+','+y1+' L'+x2+','+y2}else{d='M'+x2+','+y2+' L'+x1+','+y1}mx=(x1+x2)/2;my=(y1+y2)/2}
+  else{var dist=Math.abs(A.x-B.x),cy=Y+Math.max(A.r,B.r)+34+dist*0.12+n*13;d=arcPath(A.x,A.y+A.r,B.x,B.y+B.r,cy);mx=(A.x+B.x)/2;my=(A.y+A.r+2*cy+B.y+B.r)/4}
+  svg+='<g class="edge '+cls+'"><title>'+esc(e.items.map(function(f){return f.nom}).filter(function(v,i,a){return a.indexOf(v)===i}).join(' · '))+'</title><path d="'+d+'" marker-end="url(#ah-'+e.type+')"/><circle cx="'+mx+'" cy="'+my+'" r="9"/><text x="'+mx+'" y="'+(my+3.5)+'" text-anchor="middle">'+e.items.length+'</text></g>'});
+ svg+='<g class="nd"><rect x="'+(pos.dirigeant.x-65)+'" y="'+(pos.dirigeant.y-17)+'" width="130" height="34" rx="8"/><text x="'+pos.dirigeant.x+'" y="'+(pos.dirigeant.y+4)+'" text-anchor="middle">Le dirigeant</text></g>';
+ ps.forEach(function(p){var q=pos[p.id];svg+='<g class="nd pole" data-act="rniv" data-id="'+p.id+'" tabindex="0" role="button" aria-label="Ouvrir le pôle '+esc(p.nom)+'"><circle cx="'+q.x+'" cy="'+q.y+'" r="'+q.r+'"/>'+nodeTxt(q.x,q.y,p.nom,q.n+' livrable'+(q.n>1?'s':''))+'</g>'});
+ return svg+'</svg>'}
+function rsSvgPole(pid){var p=S.O[pid];if(!p)return '';var fl=rsFlux();var postes=list('poste').filter(function(x){return x.pole===pid&&x.intitule});
+ var ext=['dirigeant'].concat(list('pole').filter(function(x){return x.id!==pid}).map(function(x){return x.id}));var W=Math.max(560,Math.max(postes.length,ext.length)*210+40);var pos={};
+ ext.forEach(function(id,i){var g=(W-40)/ext.length;pos[id]={x:20+g*i+g/2,y:44,w:Math.min(150,g-14),h:34}});
+ postes.forEach(function(x,i){var g=(W-40)/postes.length;var n=list('livrable').filter(function(l){return l.nom&&(respDe(l)===x.id||(l.producteurs||[]).indexOf(x.id)>-1)}).length;pos[x.id]={x:20+g*i+g/2,y:240,r:Math.min(64,54+n*3),n:n,p:x}});
+ var by={};fl.forEach(function(f){var a=pos[f.de]?f.de:nodeOf(f.de),b=pos[f.vers]?f.vers:nodeOf(f.vers);if(!a||!b||a===b||!pos[a]||!pos[b])return;if(!(postes.some(function(x){return x.id===a||x.id===b})))return;var k=a+'>'+b+'>'+f.type;(by[k]=by[k]||{a:a,b:b,type:f.type,items:[]}).items.push(f)});
+ var svg='<svg viewBox="0 0 '+W+' 380" style="width:'+W+'px" role="img" aria-label="Carte du pôle '+esc(p.nom)+'" class="map"><defs>'+Object.keys(RS_T).map(function(k){return '<marker id="ah-'+k+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-'+k+'"/></marker>'}).join('')+'</defs>';
+ var cnt={};Object.keys(by).forEach(function(k){var e=by[k],A=pos[e.a],B=pos[e.b];var d,mx,my;cnt[e.a+e.b]=(cnt[e.a+e.b]||0)+1;var n=cnt[e.a+e.b];
+  var aIn=!!A.r,bIn=!!B.r;
+  if(aIn&&bIn){var cy=240+Math.max(A.r,B.r)+34+Math.abs(A.x-B.x)*0.1+n*13;d=arcPath(A.x,A.y+A.r,B.x,B.y+B.r,cy);mx=(A.x+B.x)/2;my=(A.y+A.r+2*cy+B.y+B.r)/4}
+  else{var o=(n-1)*14-6;var x1=(aIn?A.x:A.x)+o,y1=aIn?A.y-A.r:A.y+17,x2=(bIn?B.x:B.x)+o,y2=bIn?B.y-B.r:B.y+17;d='M'+x1+','+y1+' L'+x2+','+y2;mx=(x1+x2)/2;my=(y1+y2)/2}
+  svg+='<g class="edge e-'+e.type+'"><title>'+esc(e.items.map(function(f){return f.nom}).filter(function(v,i,a){return a.indexOf(v)===i}).join(' · '))+'</title><path d="'+d+'" marker-end="url(#ah-'+e.type+')"/><circle cx="'+mx+'" cy="'+my+'" r="9"/><text x="'+mx+'" y="'+(my+3.5)+'" text-anchor="middle">'+e.items.length+'</text></g>'});
+ ext.forEach(function(id){var q=pos[id];var nm=id==='dirigeant'?'Le dirigeant':'Pôle '+poleNom(id);svg+='<g class="nd ext"'+(id!=='dirigeant'?' data-act="rniv" data-id="'+id+'" tabindex="0" role="button"':'')+'><rect x="'+(q.x-q.w/2)+'" y="'+(q.y-17)+'" width="'+q.w+'" height="34" rx="8"/><text x="'+q.x+'" y="'+(q.y+4)+'" text-anchor="middle">'+esc(nm)+'</text></g>'});
+ postes.forEach(function(x){var q=pos[x.id];var isR=p.resp===x.id;svg+='<g class="nd pole'+(isR?' resp':'')+'"><circle cx="'+q.x+'" cy="'+q.y+'" r="'+q.r+'"/>'+nodeTxt(q.x,q.y,x.intitule,isR?'responsable du pôle':q.n+' livrable'+(q.n>1?'s':''))+'</g>'});
+ return svg+'</svg>'}
+function rsCarte(){var ps=list('pole');if(!ps.length)return '<div class="note">Aucun pôle validé pour l\'instant.</div>';
+ var h='<div class="card noprint"><div class="mapbar"><label class="q" for="rniv">Niveau</label><select id="rniv" data-r="niv"><option value="ent"'+(RS.niv==='ent'?' selected':'')+'>Toute l\'entreprise</option>'+ps.map(function(p){return '<option value="'+p.id+'"'+(RS.niv===p.id?' selected':'')+'>Pôle '+esc(p.nom)+'</option>'}).join('')+'</select>'+
+  '<label class="chk"><input type="checkbox" data-r="crit"'+(RS.crit?' checked':'')+'> Chemin critique seulement</label></div><div class="legend">'+
+  Object.keys(RS_T).map(function(k){return '<label class="chk lg-'+k+'"><input type="checkbox" data-r="type" data-k="'+k+'"'+(RS.types[k]?' checked':'')+'> <i class="sw sw-'+k+'"></i>'+RS_T[k][0]+'</label>'}).join('')+'</div></div>';
+ h+='<div class="card"><div class="mapw">'+(RS.niv==='ent'||!S.O[RS.niv]?rsSvgEnt():rsSvgPole(RS.niv))+'</div><p class="muted small" style="margin:8px 0 0">'+(RS.crit?'Chemin critique : seuls sont affichés les livrables à fort enjeu et ce dont ils dépendent. ':'')+'Sur téléphone, la carte se fait défiler horizontalement. Le chiffre sur une flèche indique le nombre d\'éléments échangés ; survoler une flèche en donne le détail. '+(RS.niv==='ent'||!S.O[RS.niv]?'Cliquer sur un pôle ouvre sa carte.':'Cliquer sur un autre pôle ouvre sa carte.')+'</p></div>';
+ return h}
+/* --- les pôles --- */
+function rsPoles(){var ps=list('pole');if(!ps.length)return '<div class="note">Aucun pôle validé pour l\'instant.</div>';
+ return ps.map(function(p){var postes=list('poste').filter(function(x){return x.pole===p.id&&x.intitule});var livs=list('livrable').filter(function(l){return l.pole===p.id&&l.nom});var d=trDuPole(p.id);
+  var h='<details class="card" '+(ps.length===1?'open':'')+'><summary><h3 style="display:inline">'+esc(p.nom)+'</h3> <span class="muted small">· responsable : '+esc(posteNom(p.resp))+' · '+livs.length+' livrable'+(livs.length>1?'s':'')+'</span></summary>';
+  h+='<div class="rb">'+(p.mission?'<p><strong>À quoi sert ce pôle.</strong> '+esc(p.mission)+'</p>':'')+(p.releve?'<p class="small"><strong>Il s\'occupe de :</strong> '+esc(p.releve)+'</p>':'')+(p.hors?'<p class="small"><strong>Il ne s\'occupe pas de :</strong> '+esc(p.hors)+'</p>':'');
+  h+='<h4>Les postes</h4>'+rsLines(postes.map(function(x){return '<strong>'+esc(x.intitule)+'</strong> <span class="muted small">· '+(Number(x.effectif)||0)+' personne(s) · rend compte à '+esc(posteNom(posteSup(x.id)))+'</span>'}));
+  if(livs.length)h+='<h4>Les livrables</h4><div class="mx"><table class="t"><tr><th>Livrable</th><th>Produit par</th><th>Pour</th><th>Rythme et délai</th><th>Il est bien fait quand</th></tr>'+livs.map(function(l){var cr=[l.crit1,l.crit2,l.crit3].filter(Boolean);
+   return '<tr><td><strong>'+esc(l.nom)+'</strong>'+(critique(l)?' <span class="pill">Fort enjeu</span>':'')+'</td><td>'+esc(prodTxt(l))+'</td><td>'+esc(destsDe(l).map(destTxt).join(', '))+'</td><td>'+esc(lab2(L_RYTHME,l.rythme))+(l.delai?' · '+esc(l.delai==='autre'?(l.delai_autre||''):lab2(L_DELAI,l.delai).toLowerCase()):'')+'</td><td>'+(cr.length?'<ul class="rl">'+cr.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ul>':'')+'</td></tr>'}).join('')+'</table></div>';
+  var real=livs.filter(function(l){return l.chaine&&etapesDe(l).length});
+  if(real.length)h+='<h4>Comment on réalise</h4>'+real.map(function(l){return '<p class="small" style="margin:6px 0 2px"><strong>'+esc(l.nom)+'</strong></p><ol class="rl">'+etapesDe(l).map(function(e){return '<li>'+esc(e.nom||'')+' <span class="muted small">· '+esc(posteNom(e.responsable))+(DUR_J[e.duree]!=null?' · '+esc(lab2(L_DUREE,e.duree).toLowerCase()):'')+'</span></li>'}).join('')+'</ol>'+(aiguillage(l)?'<p class="muted small" style="margin:2px 0">Circuits alternatifs : '+esc(aiguillage(l))+'</p>':'')}).join('');
+  var crit=livs.filter(function(l){return critique(l)&&l.consequences});if(crit.length)h+='<h4>Si un livrable à fort enjeu dérape</h4>'+rsLines(crit.map(function(l){return '<strong>'+esc(l.nom)+'</strong> : '+esc(l.consequences)}));
+  h+='<h4>Ce que le pôle reçoit</h4>'+rsLines(d.recoit.map(function(t){return esc(t.nom)+' <span class="muted small">· de '+esc(trNom(t.de))+(t.bloq||trObj(t).bloq==='oui'?' · indispensable pour avancer':'')+'</span>'}),'Rien de validé pour l\'instant.');
+  h+='<h4>Ce que le pôle envoie</h4>'+rsLines(d.envoie.map(function(t){return esc(t.nom)+' <span class="muted small">· à '+esc(trNom(t.vers))+'</span>'}));
+  var es=escListe(p.id);if(es)h+='<h4>Quand faire remonter</h4>'+es;
+  return h+'</div></details>'}).join('')}
+/* --- qui décide --- */
+function rsDecide(){var ps=list('pole');var sel=RS.pole&&S.O[RS.pole]?RS.pole:null;
+ var rows=matriceRows(sel).filter(function(x){return x.r.statut==='valide'});
+ var h='<div class="card noprint"><div class="mapbar"><label class="q" for="rpole">Afficher</label><select id="rpole" data-r="pole"><option value="">Toute l\'entreprise</option>'+ps.map(function(p){return '<option value="'+p.id+'"'+(RS.pole===p.id?' selected':'')+'>Pôle '+esc(p.nom)+'</option>'}).join('')+'</select></div></div>';
+ if(!rows.length)return h+'<div class="note">Aucune règle de décision n\'est validée pour l\'instant.</div>';
+ var niv={seul:'mx-seul',informe:'mx-inf',valide:'mx-val'};
+ h+='<div class="card"><div class="mx"><table class="t"><tr>'+(sel?'':'<th>Pôle</th>')+'<th>Livrable ou décision</th><th>Qui</th><th>Jusqu\'où il décide</th><th>Limite</th><th>Regard du dirigeant</th></tr>'+
+  rows.map(function(x){var o=x.o,r=x.r,liv=o.type==='livrable';return '<tr>'+(sel?'':'<td>'+esc(x.p.nom)+'</td>')+'<td><strong>'+esc(o.nom)+'</strong>'+(liv&&critique(o)?' <span class="pill">Fort enjeu</span>':'')+'</td><td>'+esc(posteNom(liv?respDe(o):o.poste))+'</td><td class="'+(niv[r.niveau]||'')+'">'+esc(lab2(L_NIV,r.niveau))+'</td><td>'+(r.limite?esc(r.limite):'·')+'</td><td>'+esc(lab2(L_REG,r.regard))+'</td></tr>'}).join('')+'</table></div></div>'+
+  '<p class="muted small">Décide seul : aucune autorisation à demander. Décide, puis informe : on agit puis on prévient. Propose, fait valider : on attend l\'accord avant d\'agir.</p>';
+ return h}
+/* --- fiches de poste --- */
+function rsFiches(){var ps=list('poste').filter(function(p){return p.intitule});
+ if(RS.fiche&&S.O[RS.fiche]){S.fiche=RS.fiche;S.fVue='titulaire';var h=ficheHtml().replace(/^<div class="noprint"[^>]*>[\s\S]*?<\/div>/,'');
+  return '<div class="noprint" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><button type="button" data-act="rfiche" data-id="">Toutes les fiches</button><button type="button" data-act="fprint">Exporter en PDF</button></div>'+h}
+ if(!ps.length)return '<div class="note">Aucune fiche de poste n\'est disponible pour l\'instant.</div>';
+ return '<p class="muted small">Chaque fiche décrit un poste, pas la personne. Si vous tenez ce poste et que quelque chose est inexact, vous pouvez proposer une correction depuis la fiche : le dirigeant la valide ou l\'écarte.</p>'+
+  ps.map(function(p){return '<div class="card seance"><div><h3>'+esc(p.intitule)+'</h3><span class="muted small">Pôle '+esc(poleNom(p.pole))+'</span></div><div class="noprint"><button class="primary" data-act="rfiche" data-id="'+p.id+'">Voir la fiche</button></div></div>'}).join('')}
+/* --- fonctionnement --- */
+function rsFonct(){var h='';var rs=rituelsRetenus();
+ h+='<div class="card"><h3>Nos rendez-vous réguliers</h3>'+(rs.length?'<table class="t"><tr><th>Rendez-vous</th><th>Fréquence</th><th>Animé par</th></tr>'+rs.map(function(r){return '<tr><td><strong>'+esc(r.nom||'')+'</strong><br><span class="small">'+esc(r.objectif||'')+'</span></td><td>'+esc(lab2(L_FREQ,r.freq))+'</td><td>'+esc(animeTxt(r))+'</td></tr>'}).join('')+'</table>':'<p class="muted small">Rien de validé pour l\'instant.</p>')+'</div>';
+ var pr=principesListe().filter(function(o){return (o.etat==='retenu'||o.etat==='reformule')&&o.txt});if(pr.length)h+='<div class="card"><h3>Nos principes de réunion</h3>'+rsLines(pr.map(function(o){return esc(o.txt)}))+'</div>';
+ if(S.O.pub_comm)h+='<div class="card"><h3>Comment nous communiquons</h3><table class="t"><tr><th>Échange</th><th>Canal</th><th>Délai</th></tr>'+CONV.map(function(c){var o=convObj(c);var d=c.ro==='urgence'?(delaiUrgence()||'à préciser'):c.ro==='valid'?(delaiValid()||'à préciser'):lab2(c.opt||L_DELAI,o.delai);return '<tr><td>'+esc(c.t)+'</td><td>'+esc(o.canal||'à préciser')+'</td><td>'+esc(d)+'</td></tr>'}).join('')+'</table></div>';
+ var tv=list('pole').map(function(p){var a=tensActives(p.id).filter(function(o){return o.statut==='valide'});var hum=S.O['th_'+p.id];if(!a.length&&!hum)return '';
+  return '<div class="card"><h3>Quand ça coince : pôle '+esc(p.nom)+'</h3>'+a.map(function(o){return '<p class="small" style="margin:8px 0 2px"><strong>'+esc(o.titre)+'</strong></p>'+tensResume(o)}).join('')+(hum?'<p class="small" style="margin:10px 0 2px"><strong>Le côté humain</strong></p>'+humResume(p.id):'')+'</div>'}).join('');
+ h+=tv;if(tv)h+='<div class="note small">Les situations graves (harcèlement, discrimination, atteinte à la santé) ne relèvent pas de ces procédures internes. Elles se traitent selon le cadre légal, avec un interlocuteur extérieur à l\'équipe.</div>';
+ var rr=relRetenus();if(rr.length)h+='<div class="card"><h3>Nos principes de relation</h3>'+rsLines(rr.map(function(o){return esc(o.txt)}))+'</div>';
+ var rv=S.O.ch_rev;if(rv&&rv.statut==='valide')h+='<div class="card"><h3>Révision de la charte</h3><p class="small" style="margin:0">Relue '+esc(lab2([['6m','tous les six mois'],['an','une fois par an'],['chg','à chaque changement important d\'organisation']],rv.freq))+'. Peut être demandée à tout moment par : '+esc(posteNom(rv.qui))+'.</p></div>';
+ return h||'<div class="note">Rien de validé pour l\'instant.</div>'}
+function restitInner(prev){var body={cap:rsCap,carte:rsCarte,poles:rsPoles,decide:rsDecide,fiches:rsFiches,fonct:rsFonct};
+ var h='<div class="rhead"><h1>'+esc(S.nom||'')+'</h1><p class="muted">Comment nous fonctionnons. Cette page se met à jour à chaque validation du dirigeant.</p></div>';
+ if(prev)h+='<div class="warn noprint"><strong>Aperçu de la version de l\'équipe.</strong> Seul ce qui est validé apparaît ici. <button type="button" class="link" data-act="home">Revenir à mon espace</button></div>';
+ h+='<nav class="rtabs noprint" aria-label="Rubriques">'+RS_TABS.map(function(t){return '<button type="button" data-act="rtab" data-t="'+t[0]+'"'+(RS.tab===t[0]?' class="on" aria-current="true"':'')+'>'+t[1]+'</button>'}).join('')+'<button type="button" class="pdf" data-act="fprint">Exporter en PDF</button></nav>';
+ RS_TABS.forEach(function(t){h+='<section class="rs'+(RS.tab===t[0]?' on':'')+'" aria-label="'+t[1]+'"><h2 class="ptitle">'+t[1]+'</h2>'+body[t[0]]()+'</section>'});
+ return h}
+window.addEventListener('beforeprint',function(){document.querySelectorAll('details').forEach(function(d){d.open=true})});
+function restitHtml(prev){return withVisible(function(){return restitInner(prev)})}
+function lecteurHtml(){return restitHtml(false)}
+
 render();
 </script>
 </html>
