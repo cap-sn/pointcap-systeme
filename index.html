@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17222C" media="(prefers-color-scheme: dark)">
 <meta name="robots" content="noindex, nofollow">
 <title>Le système de fonctionnement</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -159,6 +162,47 @@ table.t{width:100%;border-collapse:collapse;font-size:14.5px;display:block;overf
 .lghead+.login{margin-top:24px}
 .hero{padding:4px 0 6px}.hero .rhk{margin:0}.hero h1.hn{font-size:34px;margin:2px 0 4px;color:var(--brand-blue)}.hero .rule{margin:10px 0 10px;width:84px}.hero .slogan{white-space:normal}
 .band{display:block;height:2px;max-width:110px;border-radius:2px;overflow:hidden;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 22%,transparent))}.band i{display:none}
+
+/* ---- v8 : bandeau sobre, alignements, échelle typographique, mobile ---- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body::before{background:var(--bg)}
+.bar{background:var(--bg);background:color-mix(in srgb,var(--bg) 94%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);border-bottom-color:color-mix(in srgb,var(--line) 60%,transparent);padding-top:6px;padding-bottom:6px}
+.bar .t{font-size:13.5px;font-weight:600}.bar .sf{color:var(--muted);font-weight:500}.bar .nm{color:var(--ink)}
+.barbtns{gap:16px}.barbtns .link{font-size:12.5px;color:var(--muted);text-decoration:none}.barbtns .link:hover,.barbtns .link:focus-visible{color:var(--accent);text-decoration:underline}
+.bar .back{padding:2px 10px;font-size:13px;font-weight:500;border-color:var(--line);color:var(--muted);margin-right:8px}
+.rs .card>h3{font-size:18px}.pph h3{font-size:24px}
+.sub{font:600 15.5px/1.35 var(--display);margin:0 0 8px;color:var(--ink)}
+.k{font-size:13px}
+.tvn{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.tvn:first-of-type{margin-top:8px}
+.tvd{display:grid;grid-template-columns:minmax(120px,32%) 1fr;gap:8px 16px;margin:0}
+.tvd dt,.rs .tvd dt{margin:0;font:600 13px/1.4 var(--body);letter-spacing:0;text-transform:none;color:var(--muted)}
+.tvd dd,.rs .tvd dd{margin:0;font-size:15px;line-height:1.45}
+.fxbox{-webkit-overflow-scrolling:touch}
+@media screen and (max-width:640px){
+ h1,.rhead h1{font-size:27px}h2{font-size:20px}h3,.rs .card>h3{font-size:17px}.pph h3{font-size:21px}.pph{padding:12px 14px}.card,.pb{padding:14px}.sub{font-size:15px}
+ .rtabs,.chips,.fxpoles,.fxbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .rtabs button,.chips button,.fxpoles button,.fxbar .fxchip{width:100%;justify-content:center;text-align:center;white-space:normal;min-height:44px;line-height:1.25}
+ .rtabs{position:static!important;padding:10px 0}.rtabs .pdf{grid-column:1/-1;margin-left:0}
+ .chips button:last-child:nth-child(odd),.fxpoles button:last-child:nth-child(odd){grid-column:1/-1}
+ .fxbar .lbl{grid-column:1/-1;margin:0 0 2px}
+ .mapbar{display:grid;grid-template-columns:1fr;gap:6px}.mapbar select{width:100%}
+ .bar .sf{display:none}.bar .t{font-size:14px}
+ input,select,textarea{font-size:16px}
+ .tvd{grid-template-columns:1fr;gap:0}.rs .tvd dt,.tvd dt{margin-top:12px}.rs .tvd dt:first-child,.tvd dt:first-child{margin-top:0}
+ table.t{display:block;overflow:visible}table.t tbody{display:block}
+ table.t tr{display:block;padding:10px 0;border-bottom:1px solid var(--line)}table.t tr:last-child{border-bottom:0}
+ table.t tr.th-row{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);padding:0;border:0}
+ table.t td{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;border:0;padding:3px 0}
+ table.t td::before{content:attr(data-l);font:600 12px/1.5 var(--body);color:var(--muted)}
+ table.t td:first-child{display:block;font-size:16px;padding-bottom:4px}table.t td:first-child::before,table.t td[data-l=""]::before{content:none}
+ table.t td:empty{display:none}
+ svg.fxm{min-width:600px}.fxbox::before{content:"Faire glisser pour parcourir la carte";display:block;position:sticky;left:0;font-size:12px;color:var(--muted);padding:2px 8px 4px}
+}
+@media screen and (max-width:380px){.pph h3{font-size:20px}.rtabs button,.chips button{font-size:14px;padding-inline:8px}}
+.prog{height:2px;background:var(--line);background:color-mix(in srgb,var(--line) 50%,transparent)}
+.btnrow{align-items:center}
+@media screen and (max-width:640px){.bar .back~.nm{display:none}.btnrow{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.btnrow>*{width:100%;min-height:44px}}
+.hero{margin-bottom:22px}
 </style>
 <div id="app"></div>
 <script>
@@ -333,6 +377,8 @@ function histPush(){if(HIST.restoring||S.view==='login')return;var sn=histSnap()
  try{if(HIST.last==='')history.replaceState({sfo:sn},'');else{history.pushState({sfo:sn},'');HIST.depth++}}catch(e){}HIST.last=k}
 window.addEventListener('popstate',function(ev){var st=ev.state&&ev.state.sfo;if(!st||S.view==='login')return;
  flushAll();HIST.restoring=true;S.view=st.view;S.seance=st.seance;S.pole=st.pole;S.step=st.step;S.sub=st.sub;if(st.rs){RS.tab=st.rs.tab;RS.niv=st.rs.niv;RS.sel=st.rs.sel||null;RS.fiche=st.rs.fiche;RS.pp=st.rs.pp;RS.pole=st.rs.pole}HIST.last=JSON.stringify(st);HIST.depth=Math.max(0,HIST.depth-1);render();HIST.restoring=false;window.scrollTo(0,0)});
+function tblLabels(){var ts=document.querySelectorAll('table.t:not([data-lb])');for(var i=0;i<ts.length;i++){var t=ts[i],rows=t.rows;t.setAttribute('data-lb','1');if(!rows.length)continue;var ths=rows[0].querySelectorAll('th');if(!ths.length)continue;rows[0].className+=' th-row';var lab=[];for(var j=0;j<ths.length;j++)lab.push((ths[j].textContent||'').trim());for(var r=1;r<rows.length;r++){var cs=rows[r].cells;for(var c=0;c<cs.length;c++)cs[c].setAttribute('data-l',lab[c]||'')}}}
+if(window.MutationObserver){new MutationObserver(tblLabels).observe(document.getElementById('app'),{childList:true,subtree:true})}
 function setBarH(){var b=document.querySelector('.bar');if(b)document.documentElement.style.setProperty('--barh',b.offsetHeight+'px')}
 function render(){
  if(S.view==='login'){HIST.last='';return renderLogin()}
@@ -905,9 +951,11 @@ STEPS.t=[
 function lab2(L,v){return (L.filter(function(x){return x[0]===v})[0]||[0,'à préciser'])[1]}
 function tiersTxt(v){return v==='externe'?'Un accompagnant externe':posteNom(v)}
 function tensResume(o){return '<p class="small" style="margin:0 0 4px">'+esc(lab2(L_TPREM,o.premier))+'. '+esc(lab2(L_TDEL,o.delai))+', sollicitation de : <strong>'+esc(tiersTxt(o.tiers))+'</strong>. Tranche en dernier : <strong>'+esc(tiersTxt(o.final))+'</strong>.</p><p class="muted small" style="margin:0 0 8px">'+esc(lab2(L_TCONF,o.confid))+'.</p>'}
+function solTxt(v){return v==='dirigeant'?'du dirigeant':v==='externe'?'d\'un accompagnant externe':'de '+posteNom(v)}
+function tensDl(o){return '<dl class="tvd"><dt>Premier pas</dt><dd>'+esc(lab2(L_TPREM,o.premier))+'</dd><dt>Sans accord</dt><dd>'+esc(lab2(L_TDEL,o.delai))+', sollicitation '+esc(solTxt(o.tiers))+'</dd><dt>Tranche en dernier</dt><dd>'+esc(tiersTxt(o.final))+'</dd><dt>Confidentialité</dt><dd>'+esc(lab2(L_TCONF,o.confid))+'</dd></dl>'}
 function tensActives(pid){return tensListe(pid).filter(function(o){return o.ret!=='non'})}
 function humResume(pid){var o=humObj(pid);var rt=(o.retour||[]).map(function(k){return lab2(L_HRET,k)});
- return '<dl class="sum"><dt>Surcharge ou frustration</dt><dd>'+esc(lab2(L_HSIG,o.signal))+'</dd><dt>Erreur commise</dt><dd>'+esc(lab2(L_HERR,o.erreur))+'</dd><dt>Reconnaissance</dt><dd>'+esc(lab2(L_HREC,o.reco))+'</dd><dt>Retour difficile</dt><dd>'+(rt.length?esc(rt.join(' ; ')):'à préciser')+'</dd>'+(o.autre?'<dt>Autre principe</dt><dd>'+esc(o.autre)+'</dd>':'')+'</dl>'}
+ return '<dl class="sum tvd"><dt>Surcharge ou frustration</dt><dd>'+esc(lab2(L_HSIG,o.signal))+'</dd><dt>Erreur commise</dt><dd>'+esc(lab2(L_HERR,o.erreur))+'</dd><dt>Reconnaissance</dt><dd>'+esc(lab2(L_HREC,o.reco))+'</dd><dt>Retour difficile</dt><dd>'+(rt.length?esc(rt.join(' ; ')):'à préciser')+'</dd>'+(o.autre?'<dt>Autre principe</dt><dd>'+esc(o.autre)+'</dd>':'')+'</dl>'}
 function pointsTens(){var pts=[];tensActives(S.pole).forEach(function(o){var n='« '+o.titre+' » : ';if(!o.premier||!o.delai||!o.tiers||!o.final)pts.push(n+'procédure à compléter (premier pas, délai, tiers ou personne qui tranche).');if(o.perso&&!o.nom)pts.push(n+'la nature de tension n\'est pas nommée.');if(o.tiers&&o.tiers!=='externe'&&o.tiers===o.final&&o.nat!=='dirig'&&o.tiers!=='dirigeant')pts.push(n+'le tiers et la personne qui tranche sont les mêmes : prévoir un niveau au-dessus ?')});return pts}
 function recapT(){var dir=S.role!=='responsable';var pid=S.pole;var act=tensActives(pid);
  var h='<h2>Récapitulatif : quand ça coince, pôle '+esc(poleActuel().nom)+'</h2><p class="muted small">'+(dir?'Une procédure n\'entre dans la charte qu\'une fois validée.':'Le dirigeant valide ces procédures. Tant qu\'elles ne sont pas validées, elles restent « proposées ».')+'</p>';
@@ -951,11 +999,17 @@ function ficheCfg(){var o=single('fiche_cfg','fichecfg');if(!o.postes)o.postes=[
 function fichePeut(){if(S.role!=='responsable')return true;var rp=respPoste(S.pole);return !!rp&&ficheCfg().postes.indexOf(rp)>-1}
 function ficheProps(pid){return list('prop_fiche').filter(function(x){return !pid||x.poste===pid})}
 function ficheEnAttente(){return list('prop_fiche').filter(function(x){return x.statut==='propose'})}
+function ficheEch(pid){var out={recoit:[],envoie:[]},seen={};
+ function add(side,nom,txt,bloq){var k=side+'|'+nom+'|'+txt;if(seen[k])return;seen[k]=1;out[side].push({nom:nom,txt:txt,bloq:bloq})}
+ calcTrans().forEach(function(t){if(t.vers===pid)add('recoit',t.nom,trNom(t.de),t.bloq);if(t.de===pid)add('envoie',t.nom,trNom(t.vers),false)});
+ list('etape').forEach(function(e){if(e.responsable!==pid||!S.O[e.livrable]||!S.O[e.livrable].nom)return;intrantsDe(e).forEach(function(i){if(i.prov_type==='ext'||i.prov_type==='autre')add('recoit',i.nom||'(sans nom)',i.prov_txt||(i.prov_type==='ext'?'un externe':'origine à préciser'),i.oblig==='non')})});
+ list('livrable').forEach(function(l){if(!l.nom||!((l.producteurs||[]).indexOf(pid)>-1||respDe(l)===pid))return;destsDe(l).forEach(function(d){add('envoie',l.nom,destTxt(d),false)})});
+ return out}
 function ficheDonnees(pid){var p=S.O[pid];if(!p)return null;
  var livs=list('livrable').filter(function(l){return l.nom&&((l.producteurs||[]).indexOf(pid)>-1||respDe(l)===pid)});
  var ets=list('etape').filter(function(e){return e.responsable===pid&&S.O[e.livrable]&&S.O[e.livrable].nom});
  var contrib=list('etape').filter(function(e){return (e.contrib||[]).indexOf(pid)>-1&&S.O[e.livrable]&&S.O[e.livrable].nom});
- var tr=calcTrans();var recoit=tr.filter(function(t){return t.vers===pid}),envoie=tr.filter(function(t){return t.de===pid});
+ var ech=ficheEch(pid),recoit=ech.recoit,envoie=ech.envoie;
  var comp=calcComp();var sollicite=comp.filter(function(c){return c.vers===pid}),sollicitePar=comp.filter(function(c){return c.de===pid});
  var regles=livs.map(function(l){return {nom:l.nom,r:regleObj(l)}}).concat(decisionsPole(p.pole).filter(function(d){return d.poste===pid&&d.nom}).map(function(d){return {nom:d.nom,r:regleObj(d)}})).filter(function(x){return x.r.niveau});
  var rdv=rituelsRetenus().filter(function(r){return r.anime===pid||(r.participants||[]).indexOf(pid)>-1});
@@ -965,16 +1019,16 @@ function ficheSect(id,d){var ul=function(a){return a.length?'<ul style="margin:4
  var p=d.p;
  if(id==='mission')return ul(d.livs.map(function(l){return '<strong>'+esc(l.nom)+'</strong>'+(l.finalite?' <span class="muted small">· '+esc(l.finalite)+'</span>':'')}).concat(d.contrib.map(function(e){return 'Contribue à « '+esc(S.O[e.livrable].nom)+' » (étape « '+esc(e.nom||'')+' »)'})));
  if(id==='etapes')return ul(d.ets.map(function(e){return esc(e.nom||'étape sans nom')+' <span class="muted small">· livrable « '+esc(S.O[e.livrable].nom)+'»'+(DUR_J[e.duree]!=null?' · '+esc(lab2(L_DUREE,e.duree).toLowerCase()):'')+'</span>'}));
- if(id==='echanges')return '<p class="small" style="margin:6px 0 0"><strong>Reçoit</strong></p>'+ul(d.recoit.map(function(t){return esc(t.nom)+' <span class="muted small">· de '+esc(trNom(t.de))+(t.bloq?' · indispensable pour avancer':'')+'</span>'}))+'<p class="small" style="margin:10px 0 0"><strong>Envoie</strong></p>'+ul(d.envoie.map(function(t){return esc(t.nom)+' <span class="muted small">· à '+esc(trNom(t.vers))+'</span>'}));
+ if(id==='echanges')return '<p class="small" style="margin:6px 0 0"><strong>Reçoit</strong></p>'+ul(d.recoit.map(function(t){return esc(t.nom)+' <span class="muted small">· de '+esc(t.txt)+(t.bloq?' · indispensable pour avancer':'')+'</span>'}))+'<p class="small" style="margin:10px 0 0"><strong>Envoie</strong></p>'+ul(d.envoie.map(function(t){return esc(t.nom)+' <span class="muted small">· à '+esc(t.txt)+'</span>'}))+'<p class="muted small" style="margin:10px 0 0">Rempli automatiquement d\'après les liens décrits dans le système.</p>';
  if(id==='competences')return '<p class="small" style="margin:6px 0 0"><strong>Sollicité pour</strong></p>'+ul(d.sollicite.map(function(c){return esc(c.nom)+' <span class="muted small">· par '+esc(trNom(c.de))+'</span>'}))+'<p class="small" style="margin:10px 0 0"><strong>Sollicite</strong></p>'+ul(d.sollicitePar.map(function(c){return esc(c.nom)+' <span class="muted small">· '+esc(trNom(c.vers))+'</span>'}));
  if(id==='decisions')return ul(d.regles.map(function(x){var r=x.r;return '<strong>'+esc(x.nom)+'</strong> : '+esc(lab2(L_NIV,r.niveau).toLowerCase())+(r.limite?' jusqu\'à '+esc(r.limite):'')+(r.statut!=='valide'?' <span class="muted small">(proposé, pas encore validé)</span>':'')}));
  if(id==='rdv')return ul(d.rdv.map(function(r){return esc(r.nom||'')+' <span class="muted small">· '+esc(lab2(L_FREQ,r.freq))+(r.anime===p.id?' · animé par ce poste':'')+'</span>'}));
- if(id==='tensions'){var l=d.tens.map(function(o){return esc(o.titre)+' : '+esc(lab2(L_TPREM,o.premier).toLowerCase())+' ; '+esc(lab2(L_TDEL,o.delai).toLowerCase())+', sollicitation de '+esc(tiersTxt(o.tiers))});
+ if(id==='tensions'){var l=d.tens.map(function(o){return '<strong>'+esc(o.titre)+'</strong><br><span class="muted small">'+esc(lab2(L_TPREM,o.premier))+'. '+esc(lab2(L_TDEL,o.delai))+', sollicitation '+esc(solTxt(o.tiers))+'.</span>'});
   list('tension').concat([]).forEach(function(){});var hum=humObj(p.pole);return ul(l)+'<p class="muted small" style="margin:8px 0 0">Principe de pôle : '+esc(lab2(L_HSIG,hum.signal).toLowerCase())+'.</p>'}
  if(id==='rattach'){var sup=posteSup(p.id);return '<p class="small" style="margin:4px 0 0">Rend compte à : <strong>'+esc(posteNom(sup))+'</strong>. Remplaçant : <strong>'+esc(p.remplacant==='meme'?'une autre personne du même poste':!p.remplacant||p.remplacant==='aucun'?'personne aujourd\'hui':posteNom(p.remplacant))+'</strong>. Pôle : '+esc(poleNom(p.pole))+'.</p>'}
  return ''}
 function ficheHtml(){var pid=S.fiche;var d=ficheDonnees(pid);if(!d)return '<p>Poste introuvable.</p>';var tit=S.fVue==='titulaire';var pr=ficheProps(pid);
- var h='<div class="noprint" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><button type="button" data-act="fichehome">Retour</button><button type="button" data-act="fprint">Exporter (PDF)</button><button type="button" data-act="fvue">'+(tit?'Revenir à la vue du dirigeant':'Voir comme le titulaire')+'</button></div>';
+ var h='<div class="noprint btnrow" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><button type="button" data-act="fichehome">Retour</button><button type="button" data-act="fprint">Exporter (PDF)</button><button type="button" data-act="fvue">'+(tit?'Revenir à la vue du dirigeant':'Voir comme le titulaire')+'</button></div>';
  h+='<h1>'+esc(d.p.intitule)+'</h1><p class="muted small">Pôle '+esc(poleNom(d.p.pole))+' · Fiche de poste générée d\'après le système de fonctionnement. Elle décrit le poste, pas la personne.</p>';
  h+=F_SECT.map(function(s){var n=pr.filter(function(x){return x.section===s[0]&&x.statut==='valide'});
   return '<div class="card"><h3 style="margin-bottom:4px">'+s[1]+'</h3>'+ficheSect(s[0],d)+(n.length?'<div class="note small" style="margin:10px 0 0"><strong>Précisions validées</strong><ul style="margin:4px 0 0 18px;padding:0">'+n.map(function(x){return '<li>'+esc(x.txt)+'</li>'}).join('')+'</ul></div>':'')+'</div>'}).join('');
@@ -1456,8 +1510,8 @@ function rsDecide(){var ps=list('pole');var sel=RS.pole&&S.O[RS.pole]?RS.pole:nu
  return h}
 /* --- fiches de poste --- */
 function rsFiches(){var ps=list('poste').filter(function(p){return p.intitule});
- if(RS.fiche&&S.O[RS.fiche]){S.fiche=RS.fiche;S.fVue='titulaire';var h=ficheHtml().replace(/^<div class="noprint"[^>]*>[\s\S]*?<\/div>/,'');
-  return '<div class="noprint" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><button type="button" data-act="rfiche" data-id="">Toutes les fiches</button><button type="button" data-act="fprint">Exporter en PDF</button></div>'+h}
+ if(RS.fiche&&S.O[RS.fiche]){S.fiche=RS.fiche;S.fVue='titulaire';var h=ficheHtml().replace(/^<div class="noprint[^"]*"[^>]*>[\s\S]*?<\/div>/,'');
+  return '<div class="noprint btnrow" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"><button type="button" data-act="rfiche" data-id="">Toutes les fiches</button><button type="button" data-act="fprint">Exporter en PDF</button></div>'+h}
  if(!ps.length)return '<div class="note">Aucune fiche de poste n\'est disponible pour l\'instant.</div>';
  return '<p class="muted small">Chaque fiche décrit un poste, pas la personne. Si vous tenez ce poste et que quelque chose est inexact, vous pouvez proposer une correction depuis la fiche : le dirigeant la valide ou l\'écarte.</p>'+
   ps.map(function(p){return '<div class="card seance"><div><h3>'+esc(p.intitule)+'</h3><span class="muted small">Pôle '+esc(poleNom(p.pole))+'</span></div><div class="noprint"><button class="primary" data-act="rfiche" data-id="'+p.id+'">Voir la fiche</button></div></div>'}).join('')}
@@ -1467,7 +1521,7 @@ function rsFonct(){var h='';var rs=rituelsRetenus();
  var pr=principesListe().filter(function(o){return (o.etat==='retenu'||o.etat==='reformule')&&o.txt});if(pr.length)h+='<div class="card"><h3>Nos principes de réunion</h3>'+rsLines(pr.map(function(o){return esc(o.txt)}))+'</div>';
  if(S.O.pub_comm)h+='<div class="card"><h3>Comment nous communiquons</h3><table class="t"><tr><th>Échange</th><th>Canal</th><th>Délai</th></tr>'+CONV.map(function(c){var o=convObj(c);var d=c.ro==='urgence'?(delaiUrgence()||'à préciser'):c.ro==='valid'?(delaiValid()||'à préciser'):lab2(c.opt||L_DELAI,o.delai);return '<tr><td>'+esc(c.t)+'</td><td>'+esc(o.canal||'à préciser')+'</td><td>'+esc(d)+'</td></tr>'}).join('')+'</table></div>';
  var tv=list('pole').map(function(p){var a=tensActives(p.id).filter(function(o){return o.statut==='valide'});var hum=S.O['th_'+p.id];if(!a.length&&!hum)return '';
-  return '<div class="card"><h3>Quand ça coince : pôle '+esc(p.nom)+'</h3>'+a.map(function(o){return '<p class="small" style="margin:8px 0 2px"><strong>'+esc(o.titre)+'</strong></p>'+tensResume(o)}).join('')+(hum?'<p class="small" style="margin:10px 0 2px"><strong>Le côté humain</strong></p>'+humResume(p.id):'')+'</div>'}).join('');
+  return '<div class="card"><h3>Quand ça coince : pôle '+esc(p.nom)+'</h3>'+a.map(function(o){return '<section class="tvn"><h4 class="sub">'+esc(o.titre)+'</h4>'+tensDl(o)+'</section>'}).join('')+(hum?'<section class="tvn"><h4 class="sub">Le côté humain</h4>'+humResume(p.id)+'</section>':'')+'</div>'}).join('');
  h+=tv;if(tv)h+='<div class="note small">Les situations graves (harcèlement, discrimination, atteinte à la santé) ne relèvent pas de ces procédures internes. Elles se traitent selon le cadre légal, avec un interlocuteur extérieur à l\'équipe.</div>';
  var rr=relRetenus();if(rr.length)h+='<div class="card"><h3>Nos principes de relation</h3>'+rsLines(rr.map(function(o){return esc(o.txt)}))+'</div>';
  var rv=S.O.ch_rev;if(rv&&rv.statut==='valide')h+='<div class="card"><h3>Révision de la charte</h3><p class="small" style="margin:0">Relue '+esc(lab2([['6m','tous les six mois'],['an','une fois par an'],['chg','à chaque changement important d\'organisation']],rv.freq))+'. Peut être demandée à tout moment par : '+esc(posteNom(rv.qui))+'.</p></div>';
