@@ -1,3 +1,12 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17222C" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="noindex, nofollow">
 <title>Le système de fonctionnement</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700&display=swap">
@@ -236,7 +245,7 @@ body::before{background:var(--bg)}
 <script>
 'use strict';
 /* ---------- configuration ---------- */
-var CFG={API_URL:'',NOM_AFFICHE:'PointCap'}; // vide = mode démonstration (données dans le navigateur)
+var CFG={API_URL:'https://script.google.com/macros/s/AKfycbzIS-xIrJLjSS14PAyBujl1qA2jJlJrp15G72DedlXyRwdRsOd_SBWUB0OHq12-XYJ5/exec',NOM_AFFICHE:'PointCap'}; // vide = mode démonstration (données dans le navigateur)
 /* ---------- utilitaires ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function uid(p){return p+'_'+Math.random().toString(36).slice(2,9)}
@@ -1648,3 +1657,4 @@ function lecteurHtml(){return restitHtml(false)}
   HIST.restoring=true;try{render()}catch(e){S.view='home';S.seance=null;render()}HIST.restoring=false;
   var y=s.y||0;window.scrollTo(0,y);requestAnimationFrame(function(){window.scrollTo(0,y);setTimeout(function(){window.scrollTo(0,y)},150)})})})();
 </script>
+</html>
