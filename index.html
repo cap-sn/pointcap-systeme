@@ -78,6 +78,43 @@ button.chip{border-radius:99px;padding:7px 14px;display:inline-flex;gap:8px;alig
 details.multi-d summary{cursor:pointer;color:var(--accent);font-size:14.5px}
 table.t{width:100%;border-collapse:collapse;font-size:14.5px;display:block;overflow-x:auto}table.t td,table.t th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 @media (prefers-reduced-motion:no-preference){.prog i{transition:width .3s}}
+/* restitution : hiérarchie, couleurs de la charte, carte des flux, impression */
+.pc0{--pc:var(--t1)}.pc1{--pc:var(--t2)}.pc2{--pc:var(--t3)}.pc3{--pc:var(--t5)}.pc4{--pc:var(--t6)}.pc5{--pc:var(--t4)}
+.bar .back{border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:4px 12px;font-weight:600;margin-right:10px;white-space:nowrap}.bar .back:hover{background:var(--accent);color:var(--accent-ink)}
+.bar .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.rhead{padding:6px 0 4px}.rhk{font:600 12px var(--fd);letter-spacing:.14em;text-transform:uppercase;color:var(--warn)}.rhead h1{font-size:34px;margin:2px 0 6px;color:var(--brand-blue)}.rhs{margin:0 0 10px}
+.band{display:flex;height:5px;border-radius:3px;overflow:hidden;max-width:240px}.band i{flex:1}.band i:nth-child(1){background:var(--t1)}.band i:nth-child(2){background:var(--t3)}.band i:nth-child(3){background:var(--t4)}
+.rtabs{top:var(--barh,56px)!important}.rtabs button{font-weight:500}
+.ptitle{display:none;font:700 24px var(--fd);margin:8px 0 16px;color:var(--accent)}
+.rs .card>h3{font-size:19px;color:var(--accent);margin:0 0 8px}.rs dt{color:var(--warn);font:600 12.5px var(--fd);letter-spacing:.08em;text-transform:uppercase;margin-top:12px}.rs dd{margin:2px 0 0;font-size:16px}
+.rs .t th{color:var(--accent);background:var(--accent-soft)}
+.wip{min-height:60vh;display:flex;flex-direction:column;justify-content:center}.wipc{border-left:6px solid var(--warn);padding:8px 20px;margin-top:20px}.wipt{font:700 22px var(--fd);color:var(--accent);margin:0 0 6px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}.chips button{border:2px solid var(--pc);color:var(--pc);background:transparent;border-radius:999px;font-weight:600}.chips button.on,.chips button:hover{background:var(--pc);color:var(--surface)}
+.pp{display:none}.pp.on{display:block}
+.pph{background:color-mix(in srgb,var(--pc) 13%,var(--surface));border-left:6px solid var(--pc);border-radius:10px;padding:14px 18px;margin-bottom:14px}.pph h3{font-size:26px;color:var(--pc);margin:0 0 6px}
+.ppm{display:flex;gap:4px 22px;flex-wrap:wrap;margin:0;font-size:14px}.ppm b{color:var(--pc)}
+.pb{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:12px}.pb h4{margin:0 0 10px;font:600 12.5px var(--fd);letter-spacing:.09em;text-transform:uppercase;color:var(--pc)}
+.lead2{font-size:17px;margin:0 0 10px}.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 28px}.two p{margin:0 0 4px}.k{font:600 13px var(--fb);margin:0 0 4px!important;color:var(--muted)}
+.postes{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.poste{border:1px solid var(--line);border-top:3px solid var(--pc);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;font-size:14.5px}.poste span{color:var(--muted);font-size:12.5px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}.stp{background:color-mix(in srgb,var(--pc) 8%,transparent);border-radius:8px;padding:10px 14px}
+.pb .t th{background:color-mix(in srgb,var(--pc) 14%,transparent);color:var(--ink)}.warnb{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 10%,var(--surface))}.warnb h4{color:var(--warn)}
+.map.flux{min-width:720px;width:100%;max-width:960px;height:auto;display:block;margin:0 auto}
+.flux text{font:500 13px var(--fb);fill:var(--ink)}.flux .lb{font-weight:600;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.flux .fn circle{fill:color-mix(in srgb,var(--pc) 22%,var(--surface));stroke:var(--pc);stroke-width:2.5}.flux .fn.dir circle{fill:var(--brand-blue);stroke:var(--brand-blue)}
+.flux .fn .n{font-weight:700;fill:var(--pc);stroke:none}.flux .fn.out{opacity:.5}.flux .fn[data-act]{cursor:pointer}.flux .fn[data-act]:hover circle{stroke-width:4}
+.flux .edge polyline{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}.flux .edge polygon{fill:currentColor;stroke:none}
+.t-info{color:var(--t1)}.t-dec{color:var(--t3)}.t-comp{color:var(--t2)}
+.flux .pill rect{fill:var(--surface);stroke:currentColor;stroke-width:1.3}.flux .pill text{font-size:11px;font-weight:700;fill:currentColor;stroke:none}
+.sw-info{border-color:var(--t1)!important;border-top-style:solid!important}.sw-dec{border-color:var(--t3)!important;border-top-style:solid!important}.sw-comp{border-color:var(--t2)!important;border-top-style:solid!important}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--pc);margin-right:2px}.dot.dirk{background:var(--brand-blue)}.lgp{margin:0 0 8px}
+.pfoot{display:none}
+@page{size:A4;margin:14mm}
+@media print{.ptitle{display:block}.toast,#toast,[class*=toast]{display:none!important}}
+@media print{:root{--bg:#fff;--surface:#fff;--ink:#1E2B37;--muted:#5B666F;--line:#D8D2C2;--brand-blue:#1E2B37;--accent:#3B5B4C;--accent-ink:#fff;--accent-soft:#E6ECE5;--warn:#C98A4B;--t1:#3B5B4C;--t2:#2F6DB5;--t3:#C98A4B;--t4:#1E2B37;--t5:#B0437F;--t6:#2A7F86;color-scheme:light}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}body{background:#fff!important;font-size:12px}.bar,.rtabs,.noprint,.chips{display:none!important}main.wide{max-width:none;padding-top:0}
+ .rs{display:block!important;break-before:page}.rs-cap{break-before:auto}.pp{display:block!important;break-before:page}.rs-poles .pp:first-of-type{break-before:auto}
+ .pb,.card,.stp,.poste,tr{break-inside:avoid}.mapw{overflow:visible}.map.flux{min-width:0;max-width:100%}.rhead h1{font-size:28px}
+ .pfoot{display:block;position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:10px;color:var(--muted)}}
 </style>
 <div id="app"></div>
 <script>
@@ -87,7 +124,7 @@ var CFG={API_URL:'https://script.google.com/macros/s/AKfycbzIS-xIrJLjSS14PAyBujl
 /* ---------- utilitaires ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function uid(p){return p+'_'+Math.random().toString(36).slice(2,9)}
-function titre(nom){return '<span class="sf">Le système de fonctionnement</span> <span class="nm">'+esc(nom==null?S.nom:nom)+'</span>'}
+function titre(nom){return (HIST.depth>0&&S.view!=='login'&&nom==null?'<button type="button" class="back" data-act="back" aria-label="Revenir à l\'écran précédent">← Retour</button>':'')+'<span class="sf">Le système de fonctionnement</span> <span class="nm">'+esc(nom==null?S.nom:nom)+'</span>'}
 var $app=document.getElementById('app');
 var S={code:'',token:'',nom:'',O:{},view:'login',seance:null,step:0,sub:0,role:'dirigeant',pole:null,lastAct:Date.now(),secs:{},saving:0};
 var mem={};
@@ -246,17 +283,18 @@ function pointsAPreciser(){var pts=[];
  list('objectif').forEach(function(o){if(!o.ind_cible)pts.push('L\'objectif « '+(o.intitule||'')+' » n\'a pas de cible chiffrée.')});
  return pts}
 /* ---------- vues ---------- */
-var HIST={restoring:false,last:''};
-function histSnap(){return {view:S.view,seance:S.seance,pole:S.pole,step:S.step,sub:S.sub}}
+var HIST={restoring:false,last:'',depth:0};
+function histSnap(){return {view:S.view,seance:S.seance,pole:S.pole,step:S.step,sub:S.sub,rs:{tab:RS.tab,niv:RS.niv,crit:RS.crit,fiche:RS.fiche,pp:RS.pp,pole:RS.pole}}}
 function histPush(){if(HIST.restoring||S.view==='login')return;var sn=histSnap(),k=JSON.stringify(sn);if(k===HIST.last)return;
- try{if(HIST.last==='')history.replaceState({sfo:sn},'');else history.pushState({sfo:sn},'')}catch(e){}HIST.last=k}
+ try{if(HIST.last==='')history.replaceState({sfo:sn},'');else{history.pushState({sfo:sn},'');HIST.depth++}}catch(e){}HIST.last=k}
 window.addEventListener('popstate',function(ev){var st=ev.state&&ev.state.sfo;if(!st||S.view==='login')return;
- flushAll();HIST.restoring=true;S.view=st.view;S.seance=st.seance;S.pole=st.pole;S.step=st.step;S.sub=st.sub;HIST.last=JSON.stringify(st);render();HIST.restoring=false;window.scrollTo(0,0)});
+ flushAll();HIST.restoring=true;S.view=st.view;S.seance=st.seance;S.pole=st.pole;S.step=st.step;S.sub=st.sub;if(st.rs){RS.tab=st.rs.tab;RS.niv=st.rs.niv;RS.crit=st.rs.crit;RS.fiche=st.rs.fiche;RS.pp=st.rs.pp;RS.pole=st.rs.pole}HIST.last=JSON.stringify(st);HIST.depth=Math.max(0,HIST.depth-1);render();HIST.restoring=false;window.scrollTo(0,0)});
+function setBarH(){var b=document.querySelector('.bar');if(b)document.documentElement.style.setProperty('--barh',b.offsetHeight+'px')}
 function render(){
  if(S.view==='login'){HIST.last='';return renderLogin()}
  var head='<div class="bar"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';
  var body=S.role==='lecteur'?lecteurHtml():S.view==='home'?homeHtml():stepHtml();
- $app.innerHTML=head+'<main'+(S.role==='lecteur'?' class="wide"':'')+'>'+body+'</main>';updBar();histPush()}
+ $app.innerHTML=head+'<main'+(S.role==='lecteur'?' class="wide"':'')+'>'+body+'</main>';updBar();histPush();setBarH()}
 function renderLogin(){$app.innerHTML='<main><div class="login card"><h1 style="margin-bottom:6px">'+titre(CFG.NOM_AFFICHE)+'</h1><p class="muted">Saisis le code et le mot de passe reçus.</p><div id="lerr"></div>'+
  '<div class="field"><label class="q" for="lc">Code entreprise</label><input type="text" id="lc" autocomplete="username"></div><div class="field"><label class="q" for="lp">Mot de passe</label><input type="password" id="lp" autocomplete="current-password" style="width:100%;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 11px"></div><button class="primary" id="lgo" type="button">Entrer</button>'+(CFG.API_URL?'':'<p class="muted small" style="margin-top:14px">Mode démonstration : mot de passe demo. Code DEMO (dirigeant), ou DEMO-COM, DEMO-LIV, DEMO-ADM (responsables de pôle).</p>')+'</div></main>';
  var go=function(){var c=document.getElementById('lc').value.trim(),p=document.getElementById('lp').value;S.code=c;api('login',{code:c,pwd:p}).then(function(r){if(!r||!r.ok){document.getElementById('lerr').innerHTML='<div class="err">'+esc((r&&r.erreur)||'Connexion impossible.')+'</div>';return}S.token=r.token;S.nom=r.nom;S.O=r.objets||{};S.role=r.role||'dirigeant';S.pole=r.pole||null;S.view='home';render()})};
@@ -336,6 +374,8 @@ document.addEventListener('click',function(ev){var b=ev.target.closest('[data-ac
  else if(a==='vstat'){var r=S.O[b.dataset.id];if(!r)return;r.statut=b.dataset.v;save(r.id,true);jlog((L_STAT[r.statut]||r.statut)+' : '+valNom(r));render()}
  else if(a==='vall'){var ids=b.dataset.ids.split(',');ids.forEach(function(id){var r=S.O[id];if(r){r.statut='valide';save(r.id,true)}});jlog('Validé : '+ids.length+' éléments');render()}
  else if(a==='rtab'){RS.tab=b.dataset.t;RS.fiche='';render();window.scrollTo(0,0)}
+ else if(a==='rpole'){RS.pp=b.dataset.id;render()}
+ else if(a==='back'){history.back()}
  else if(a==='rniv'){RS.niv=b.dataset.id;RS.tab='carte';render();window.scrollTo(0,0)}
  else if(a==='rfiche'){RS.fiche=b.dataset.id;RS.tab='fiches';render();window.scrollTo(0,0)}
  else if(a==='resti'){S.view='resti';RS.fiche='';render();window.scrollTo(0,0)}
@@ -911,7 +951,7 @@ function valCard(titre,rows,note){rows=rows.filter(function(r){return r&&r.o});i
   (ids.length>1?'<div style="margin-top:10px"><button type="button" data-act="vall" data-ids="'+ids.join(',')+'">Tout valider ('+ids.length+')</button></div>':'')+'</div>'}
 function pubHome(){var cat=[['Pôles',list('pole')],['Livrables',list('livrable').filter(function(l){return l.nom})],['Règles de décision',list('regle')],['Rendez-vous réguliers',rituelsRetenus()],['Procédures « Quand ça coince »',list('tension').filter(function(o){return o.init&&o.ret!=='non'})],['Principes de relation',relRetenus()]];
  var e=single('entreprise','entreprise');
- var h='<h3 style="margin:22px 0 10px">Ce que l\'équipe verra</h3><div class="card"><p class="muted small" style="margin:0 0 8px">La version consultable par l\'équipe ne montre que les éléments validés. Chaque validation se fait dans le récapitulatif concerné.</p><table class="t"><tr><th>Rubrique</th><th>Validés</th></tr>'+cat.map(function(c){var v=c[1].filter(function(o){return o.statut==='valide'}).length;return '<tr><td>'+esc(c[0])+'</td><td>'+v+' sur '+c[1].length+'</td></tr>'}).join('')+'</table>'+valRow(e,'Cap de l\'entreprise (mission, vision)')+'</div>';return h}
+ var h='<h3 style="margin:22px 0 10px">Ce que l\'équipe verra</h3><div class="card"><p class="muted small" style="margin:0 0 8px">La version consultable par l\'équipe ne montre que les éléments validés. Chaque validation se fait dans le récapitulatif concerné.</p><table class="t"><tr><th>Rubrique</th><th>Validés</th></tr>'+cat.map(function(c){var v=c[1].filter(function(o){return o.statut==='valide'}).length;return '<tr><td>'+esc(c[0])+'</td><td>'+v+' sur '+c[1].length+'</td></tr>'}).join('')+'</table>'+valRow(e,'Cap de l\'entreprise (mission, vision)')+(function(){var o=invListe();return o.length?'<div style="margin-top:12px"><button type="button" class="primary" data-act="vall" data-ids="'+o.map(function(x){return x.id}).join(',')+'">Tout valider ('+o.length+')</button> <span class="muted small">Les éléments modifiés après leur validation repassent « À revoir » et disparaissent de la version de l\'équipe.</span></div>':''})()+'</div>';return h}
 /* ---------- rendez-vous réguliers et communication (module 11), pour toute l'entreprise ---------- */
 var L_FREQ=[['hebdo','Chaque semaine'],['bimensuelle','Toutes les deux semaines'],['mensuelle','Chaque mois'],['trimestrielle','Chaque trimestre'],['demande','À la demande']];
 var L_RDUREE=[['15','15 minutes'],['30','30 minutes'],['60','1 heure'],['120','2 heures'],['demi','Une demi-journée']];
@@ -1088,10 +1128,10 @@ function carteHtml(){var ps=list('pole');if(!ps.length)return '';var all=calcTra
   aConf(all)+(an.length?'<div class="warn"><strong>À regarder</strong> (rien n\'est corrigé d\'office, la décision te revient) :<ul style="margin:6px 0 0 18px;padding:0">'+an.map(function(a){return '<li><span class="muted small">'+G_LAB[a.g]+' · </span>'+esc(a.t)+(a.pole?' <button type="button" class="link" data-act="goto" data-s="r" data-pole="'+a.pole+'" data-step="'+a.step+'">Aller à cet écran</button>':'')+'</li>'}).join('')+'</ul></div>':'<div class="note">Tous les liens sont cohérents.</div>')}
 
 /* ---------- vue récap : branchement ---------- */
-var _render=render;render=function(){if(S.view==='resti'){var hr='<div class="bar noprint"><div class="bar-in"><span class="t">'+titre()+'</span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=hr+'<main class="wide">'+restitHtml(true)+'</main>'}else if(S.view==='fiche'){var hd='<div class="bar noprint"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=hd+'<main>'+ficheHtml()+'</main>';updBar()}else if(S.view==='recap'){var head='<div class="bar"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=head+'<main>'+recapHtml()+'</main>';updBar()}else _render()};
+var _render=render;render=function(){if(S.view==='resti'){var hr='<div class="bar noprint"><div class="bar-in"><span class="t">'+titre()+'</span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=hr+'<main class="wide">'+restitHtml(true)+'</main>';updBar();setBarH();histPush()}else if(S.view==='fiche'){var hd='<div class="bar noprint"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=hd+'<main>'+ficheHtml()+'</main>';updBar()}else if(S.view==='recap'){var head='<div class="bar"><div class="bar-in"><span class="t">'+titre()+'</span><span class="meta" id="saved"></span><span class="meta" id="rest"></span><span class="barbtns">'+barBtns()+'</span><div class="prog"><i id="progi" style="width:0"></i></div></div></div>';$app.innerHTML=head+'<main>'+recapHtml()+'</main>';updBar()}else _render()};
 /* ---------- restitution : la version consultable par toute l'équipe ---------- */
-var RS={tab:'cap',niv:'ent',crit:false,types:{liv:1,comp:1,rem:1,val:1},fiche:'',pole:''};
-var RS_TABS=[['cap','Le cap'],['carte','La carte'],['poles','Les pôles'],['decide','Qui décide'],['fiches','Fiches de poste'],['fonct','Fonctionnement']];
+var RS={tab:'cap',niv:'ent',crit:false,types:{info:1,dec:1,comp:1},fiche:'',pole:'',pp:''};
+var RS_TABS=[['cap','Le cap'],['carte','Les flux du système'],['poles','Les pôles'],['decide','Qui décide'],['fiches','Fiches de poste'],['fonct','Fonctionnement']];
 /* même règle de visibilité que le serveur : seul ce que le dirigeant a validé */
 function visLecteur(all){var JAM={journal:1,arbcfg:1,fichecfg:1,flags:1,contact:1,seance:1,decinfo:1,nrinfo:1,relinfo:1,escinfo:1,arbitrage:1},VT={pole:1,livrable:1,rituel:1,principe:1,principe_rel:1,regle:1,tension:1,charterev:1,entreprise:1,pubflag:1},CC={outil:1,client:1,objectif:1,contrainte:1,indicateur:1};
  function racine(o){if(!o)return null;if(String(o.id).indexOf('cv_')===0)return all.pub_comm||null;if(VT[o.type])return o;if(o.type==='poste')return all[o.pole]||null;
@@ -1114,72 +1154,86 @@ function rsCap(){var e=S.O.entreprise;if(!e)return '<div class="note">Le cap de 
  if(pr.length)h+='<div class="card"><h3>Nos principes de gestion</h3>'+rsLines(pr.map(function(p){return esc(p.texte)+(p.situation?' <span class="muted small">· '+esc(p.situation)+'</span>':'')}))+'</div>';
  var ou=list('outil');if(ou.length)h+='<div class="card"><h3>Nos outils</h3><p class="small" style="margin:0">'+ou.map(function(o){return esc(o.nom)}).join(' · ')+'</p></div>';
  return h}
-/* --- la carte --- */
-var RS_T={liv:['Livrables et échanges','#liv'],comp:['Compétences sollicitées','#comp'],rem:['Remontées','#rem'],val:['Validations','#val']};
+/* --- les flux du système --- */
+var RS_T={info:['Information','info'],dec:['Décision','dec'],comp:['Compétences','comp']};
+var PCOL=['--t1','--t2','--t3','--t5','--t6','--t4'];
 function critSet(){var set={};function up(l){if(!l||set[l.id])return;set[l.id]=1;etapesDe(l).forEach(function(e){intrantsDe(e).forEach(function(i){if(i.prov_type==='livrable'&&S.O[i.prov_src])up(S.O[i.prov_src])})})}
  list('livrable').filter(function(l){return l.nom&&critique(l)}).forEach(up);return set}
 function polesCrit(cs){var m={};Object.keys(cs).forEach(function(id){var l=S.O[id];if(l&&l.pole)m[l.pole]=1});return m}
-/* flux : {de,vers,type,nom,liv} ; de/vers = id de pôle, id de poste ou 'dirigeant' */
+function posteDe(id){if(!id)return null;if(id==='dirigeant')return 'dirigeant';if(S.O[id]&&S.O[id].type==='poste')return id;if(String(id).indexOf('pole:')===0)return respPoste(String(id).slice(5))||null;return null}
+/* flux entre postes : {de,vers,type:info|dec|comp,nom,liv} */
 function rsFlux(){var cs=critSet(),pc=polesCrit(cs),out=[];
- calcTrans().forEach(function(t){out.push({de:t.de,vers:t.vers,type:'liv',nom:t.nom,liv:t.livrable,bloq:trObj(t).bloq==='oui'})});
+ calcTrans().forEach(function(t){out.push({de:t.de,vers:t.vers,type:'info',nom:t.nom,liv:t.livrable})});
  calcComp().forEach(function(c){out.push({de:c.de,vers:c.vers,type:'comp',nom:c.nom,liv:c.livrable})});
- list('pole').forEach(function(p){escPole(p.id).forEach(function(e){out.push({de:respPoste(p.id)||'pole:'+p.id,vers:e.vers,type:'rem',nom:'Remontée : '+((L_SIT.filter(function(x){return x[0]===e.sit})[0]||[0,e.sit_txt||'situation'])[1]),pole:p.id})});
-  validsPole(p.id).forEach(function(v){var o=S.O[v.key];var val=o&&o.validateur||(v.resp?posteSup(v.resp):'dirigeant');out.push({de:val,vers:v.resp||('pole:'+p.id),type:'val',nom:v.label,liv:v.lid,pole:p.id})})});
- out=out.filter(function(f){return f.de&&f.vers&&f.de!==f.vers});
- if(RS.crit)out=out.filter(function(f){return f.liv?!!cs[f.liv]:!!pc[f.pole||trPole(f.de)||trPole(f.vers)]});
+ list('pole').forEach(function(p){escPole(p.id).forEach(function(e){out.push({de:respPoste(p.id),vers:e.vers,type:'dec',nom:'Remontée : '+((L_SIT.filter(function(x){return x[0]===e.sit})[0]||[0,e.sit_txt||'situation'])[1]),pole:p.id})});
+  validsPole(p.id).forEach(function(v){var o=S.O[v.key];var val=o&&o.validateur||(v.resp?posteSup(v.resp):'dirigeant');out.push({de:val,vers:v.resp,type:'dec',nom:v.label,liv:v.lid,pole:p.id})})});
+ out=out.map(function(f){return {de:posteDe(f.de),vers:posteDe(f.vers),type:f.type,nom:f.nom,liv:f.liv,pole:f.pole}}).filter(function(f){return f.de&&f.vers&&f.de!==f.vers});
+ if(RS.crit)out=out.filter(function(f){return f.liv?!!cs[f.liv]:!!pc[f.pole||poleOf(f.de)||poleOf(f.vers)]});
  return out.filter(function(f){return RS.types[f.type]})}
-function nodeOf(id){return id==='dirigeant'?'dirigeant':(trPole(id)||null)}
+function sujetsPoste(pid){var s={};list('livrable').forEach(function(l){if(!l.nom)return;if(respDe(l)===pid||(l.producteurs||[]).indexOf(pid)>-1)s[l.id]=1;etapesDe(l).forEach(function(e){if(e.responsable===pid)s[l.id]=1})});return Object.keys(s).length}
 function wrapTxt(t,max){var w=String(t).split(' '),ls=[],c='';w.forEach(function(x){if(c&&(c+' '+x).length>max){ls.push(c);c=x}else c=c?c+' '+x:x});if(c)ls.push(c);return ls.slice(0,3)}
-function nodeTxt(x,y,name,sub){var ls=wrapTxt(name,15),y0=y-(ls.length*7)+(sub?-2:5);return ls.map(function(l,i){return '<text x="'+x+'" y="'+(y0+i*13)+'" text-anchor="middle">'+esc(l)+'</text>'}).join('')+(sub?'<text x="'+x+'" y="'+(y0+ls.length*13+1)+'" text-anchor="middle" class="sub">'+esc(sub)+'</text>':'')}
-function arcPath(x1,y1,x2,y2,cy){return 'M'+x1+','+y1+' Q'+((x1+x2)/2)+','+cy+' '+x2+','+y2}
-function rsSvgEnt(){var ps=list('pole');if(!ps.length)return '';var fl=rsFlux();var W=Math.max(560,ps.length*210+40),gap=(W-40)/ps.length,Y=200;
- var pos={};ps.forEach(function(p,i){var n=list('livrable').filter(function(l){return l.pole===p.id&&l.nom}).length;pos[p.id]={x:20+gap*i+gap/2,y:Y,r:Math.min(70,58+n*2),n:n,p:p}});pos.dirigeant={x:W/2,y:46,w:130,h:34};
- var by={};fl.forEach(function(f){var a=nodeOf(f.de),b=nodeOf(f.vers);if(!a||!b||a===b||!pos[a]||!pos[b])return;var k=a+'>'+b+'>'+f.type;(by[k]=by[k]||{a:a,b:b,type:f.type,items:[]}).items.push(f)});
- var svg='<svg viewBox="0 0 '+W+' 380" style="width:'+W+'px" role="img" aria-label="Carte de l\'entreprise" class="map"><defs>'+Object.keys(RS_T).map(function(k){return '<marker id="ah-'+k+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-'+k+'"/></marker>'}).join('')+'</defs>';
- ps.forEach(function(p){var q=pos[p.id];svg+='<line x1="'+pos.dirigeant.x+'" y1="'+(pos.dirigeant.y+17)+'" x2="'+q.x+'" y2="'+(q.y-q.r)+'" class="hier"/>'});
- var idx={};Object.keys(by).forEach(function(k){var e=by[k],A=pos[e.a],B=pos[e.b],n=(idx[e.a+'|'+e.b]=(idx[e.a+'|'+e.b]||0)+1);var cls='e-'+e.type;var d,mx,my;
-  if(e.a==='dirigeant'||e.b==='dirigeant'){var P=e.a==='dirigeant'?B:A,sgn=e.a==='dirigeant'?-1:1;var off=(e.type==='rem'?-1:1)*(28+n*10);var x1=pos.dirigeant.x+off,y1=pos.dirigeant.y+17,x2=P.x+off/3,y2=P.y-P.r;
-   if(e.a==='dirigeant'){d='M'+x1+','+y1+' L'+x2+','+y2}else{d='M'+x2+','+y2+' L'+x1+','+y1}mx=(x1+x2)/2;my=(y1+y2)/2}
-  else{var dist=Math.abs(A.x-B.x),cy=Y+Math.max(A.r,B.r)+34+dist*0.12+n*13;d=arcPath(A.x,A.y+A.r,B.x,B.y+B.r,cy);mx=(A.x+B.x)/2;my=(A.y+A.r+2*cy+B.y+B.r)/4}
-  svg+='<g class="edge '+cls+'"><title>'+esc(e.items.map(function(f){return f.nom}).filter(function(v,i,a){return a.indexOf(v)===i}).join(' · '))+'</title><path d="'+d+'" marker-end="url(#ah-'+e.type+')"/><circle cx="'+mx+'" cy="'+my+'" r="9"/><text x="'+mx+'" y="'+(my+3.5)+'" text-anchor="middle">'+e.items.length+'</text></g>'});
- svg+='<g class="nd"><rect x="'+(pos.dirigeant.x-65)+'" y="'+(pos.dirigeant.y-17)+'" width="130" height="34" rx="8"/><text x="'+pos.dirigeant.x+'" y="'+(pos.dirigeant.y+4)+'" text-anchor="middle">Le dirigeant</text></g>';
- ps.forEach(function(p){var q=pos[p.id];svg+='<g class="nd pole" data-act="rniv" data-id="'+p.id+'" tabindex="0" role="button" aria-label="Ouvrir le pôle '+esc(p.nom)+'"><circle cx="'+q.x+'" cy="'+q.y+'" r="'+q.r+'"/>'+nodeTxt(q.x,q.y,p.nom,q.n+' livrable'+(q.n>1?'s':''))+'</g>'});
- return svg+'</svg>'}
-function rsSvgPole(pid){var p=S.O[pid];if(!p)return '';var fl=rsFlux();var postes=list('poste').filter(function(x){return x.pole===pid&&x.intitule});
- var ext=['dirigeant'].concat(list('pole').filter(function(x){return x.id!==pid}).map(function(x){return x.id}));var W=Math.max(560,Math.max(postes.length,ext.length)*210+40);var pos={};
- ext.forEach(function(id,i){var g=(W-40)/ext.length;pos[id]={x:20+g*i+g/2,y:44,w:Math.min(150,g-14),h:34}});
- postes.forEach(function(x,i){var g=(W-40)/postes.length;var n=list('livrable').filter(function(l){return l.nom&&(respDe(l)===x.id||(l.producteurs||[]).indexOf(x.id)>-1)}).length;pos[x.id]={x:20+g*i+g/2,y:240,r:Math.min(64,54+n*3),n:n,p:x}});
- var by={};fl.forEach(function(f){var a=pos[f.de]?f.de:nodeOf(f.de),b=pos[f.vers]?f.vers:nodeOf(f.vers);if(!a||!b||a===b||!pos[a]||!pos[b])return;if(!(postes.some(function(x){return x.id===a||x.id===b})))return;var k=a+'>'+b+'>'+f.type;(by[k]=by[k]||{a:a,b:b,type:f.type,items:[]}).items.push(f)});
- var svg='<svg viewBox="0 0 '+W+' 380" style="width:'+W+'px" role="img" aria-label="Carte du pôle '+esc(p.nom)+'" class="map"><defs>'+Object.keys(RS_T).map(function(k){return '<marker id="ah-'+k+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-'+k+'"/></marker>'}).join('')+'</defs>';
- var cnt={};Object.keys(by).forEach(function(k){var e=by[k],A=pos[e.a],B=pos[e.b];var d,mx,my;cnt[e.a+e.b]=(cnt[e.a+e.b]||0)+1;var n=cnt[e.a+e.b];
-  var aIn=!!A.r,bIn=!!B.r;
-  if(aIn&&bIn){var cy=240+Math.max(A.r,B.r)+34+Math.abs(A.x-B.x)*0.1+n*13;d=arcPath(A.x,A.y+A.r,B.x,B.y+B.r,cy);mx=(A.x+B.x)/2;my=(A.y+A.r+2*cy+B.y+B.r)/4}
-  else{var o=(n-1)*14-6;var x1=(aIn?A.x:A.x)+o,y1=aIn?A.y-A.r:A.y+17,x2=(bIn?B.x:B.x)+o,y2=bIn?B.y-B.r:B.y+17;d='M'+x1+','+y1+' L'+x2+','+y2;mx=(x1+x2)/2;my=(y1+y2)/2}
-  svg+='<g class="edge e-'+e.type+'"><title>'+esc(e.items.map(function(f){return f.nom}).filter(function(v,i,a){return a.indexOf(v)===i}).join(' · '))+'</title><path d="'+d+'" marker-end="url(#ah-'+e.type+')"/><circle cx="'+mx+'" cy="'+my+'" r="9"/><text x="'+mx+'" y="'+(my+3.5)+'" text-anchor="middle">'+e.items.length+'</text></g>'});
- ext.forEach(function(id){var q=pos[id];var nm=id==='dirigeant'?'Le dirigeant':'Pôle '+poleNom(id);svg+='<g class="nd ext"'+(id!=='dirigeant'?' data-act="rniv" data-id="'+id+'" tabindex="0" role="button"':'')+'><rect x="'+(q.x-q.w/2)+'" y="'+(q.y-17)+'" width="'+q.w+'" height="34" rx="8"/><text x="'+q.x+'" y="'+(q.y+4)+'" text-anchor="middle">'+esc(nm)+'</text></g>'});
- postes.forEach(function(x){var q=pos[x.id];var isR=p.resp===x.id;svg+='<g class="nd pole'+(isR?' resp':'')+'"><circle cx="'+q.x+'" cy="'+q.y+'" r="'+q.r+'"/>'+nodeTxt(q.x,q.y,x.intitule,isR?'responsable du pôle':q.n+' livrable'+(q.n>1?'s':''))+'</g>'});
- return svg+'</svg>'}
-function rsCarte(){var ps=list('pole');if(!ps.length)return '<div class="note">Aucun pôle validé pour l\'instant.</div>';
- var h='<div class="card noprint"><div class="mapbar"><label class="q" for="rniv">Niveau</label><select id="rniv" data-r="niv"><option value="ent"'+(RS.niv==='ent'?' selected':'')+'>Toute l\'entreprise</option>'+ps.map(function(p){return '<option value="'+p.id+'"'+(RS.niv===p.id?' selected':'')+'>Pôle '+esc(p.nom)+'</option>'}).join('')+'</select>'+
+function polyLen(p){var L=0;for(var i=1;i<p.length;i++)L+=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);return L}
+function polyAt(p,t){var tot=polyLen(p)*t,L=0;for(var i=1;i<p.length;i++){var d=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);if(L+d>=tot&&d>0){var u=(tot-L)/d;return [p[i-1][0]+(p[i][0]-p[i-1][0])*u,p[i-1][1]+(p[i][1]-p[i-1][1])*u]}L+=d}return p[p.length-1]}
+/* tracé « plan de métro » : segments à 0, 45 ou 90 degrés */
+function octoRoute(A,B,variant){var dx=B[0]-A[0],dy=B[1]-A[1],sx=dx<0?-1:1,sy=dy<0?-1:1,adx=Math.abs(dx),ady=Math.abs(dy),d=Math.min(adx,ady),pts=[A];
+ if(adx<1||ady<1||Math.abs(adx-ady)<1){pts.push(B);return pts}
+ if(adx>=ady){if(variant)pts.push([A[0]+sx*(adx-d),A[1]]);else pts.push([A[0]+sx*d,A[1]+sy*d])}
+ else{if(variant)pts.push([A[0],A[1]+sy*(ady-d)]);else pts.push([A[0]+sx*d,A[1]+sy*d])}
+ pts.push(B);return pts}
+function trimPath(p,a,b){p=p.map(function(x){return x.slice()});
+ function cut(p,r,fromStart){var i=fromStart?0:p.length-1,j=fromStart?1:p.length-2;var dx=p[j][0]-p[i][0],dy=p[j][1]-p[i][1],d=Math.hypot(dx,dy)||1;if(d<=r+1){return}p[i]=[p[i][0]+dx/d*r,p[i][1]+dy/d*r]}
+ cut(p,a,true);cut(p,b,false);return p}
+function fluxLayout(ids,W,H){var n=ids.length,pos={},cx=W/2,cy=H/2+8,rx=Math.max(150,W/2-200),ry=Math.max(110,H/2-110);
+ ids.forEach(function(id,k){if(n===1){pos[id]={x:cx,y:cy,a:-Math.PI/2};return}var a=-Math.PI/2+2*Math.PI*k/n;pos[id]={x:cx+Math.cos(a)*rx,y:cy+Math.sin(a)*ry,a:a}});return pos}
+function rsSvgFlux(){var all=list('poste').filter(function(x){return x.intitule});var poles=list('pole');var pidx={};poles.forEach(function(p,i){pidx[p.id]=i%6});
+ var lvl=RS.niv!=='ent'&&S.O[RS.niv]?RS.niv:'ent';var fl=rsFlux();var inP=function(id){return id!=='dirigeant'&&S.O[id]&&S.O[id].pole===lvl};
+ if(lvl!=='ent')fl=fl.filter(function(f){return inP(f.de)||inP(f.vers)});
+ var ids;
+ if(lvl==='ent'){ids=['dirigeant'];poles.forEach(function(p){all.filter(function(x){return x.pole===p.id}).forEach(function(x){ids.push(x.id)})});all.forEach(function(x){if(ids.indexOf(x.id)<0)ids.push(x.id)})}
+ else{ids=[];if(fl.some(function(f){return f.de==='dirigeant'||f.vers==='dirigeant'})||true)ids.push('dirigeant');all.filter(function(x){return x.pole===lvl}).forEach(function(x){ids.push(x.id)});
+  fl.forEach(function(f){[f.de,f.vers].forEach(function(id){if(id&&ids.indexOf(id)<0)ids.push(id)})})}
+ var W=860,H=lvl==='ent'&&ids.length>9?640:560;var pos=fluxLayout(ids,W,H);
+ var sv={};var lo=1e9,hi=-1;ids.forEach(function(id){if(id==='dirigeant')return;sv[id]=sujetsPoste(id);lo=Math.min(lo,sv[id]);hi=Math.max(hi,sv[id])});
+ var rad=function(id){if(id==='dirigeant')return 24;if(hi===lo||hi<0)return 26;return Math.round(18+20*Math.sqrt((sv[id]-lo)/(hi-lo)))};
+ var by={},pairs={};fl.forEach(function(f){if(!pos[f.de]||!pos[f.vers])return;var k=f.de+'>'+f.vers+'>'+f.type;(by[k]=by[k]||{a:f.de,b:f.vers,type:f.type,items:[]}).items.push(f);var pk=[f.de,f.vers].sort().join('|');pairs[pk]=pairs[pk]||[];if(pairs[pk].indexOf(k)<0)pairs[pk].push(k)});
+ var svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Les flux du système" class="map flux">';var edges='',nodes='';
+ Object.keys(by).forEach(function(k){var e=by[k],A=pos[e.a],B=pos[e.b];var pk=[e.a,e.b].sort().join('|');var lanes=pairs[pk],i=lanes.indexOf(k),m=lanes.length;
+  var dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy)||1,off=(i-(m-1)/2)*9;var nx=-dy/L*off,ny=dx/L*off;
+  var rt=octoRoute([A.x+nx,A.y+ny],[B.x+nx,B.y+ny],(e.a.length+e.b.length+i)%2);var p=trimPath(rt,rad(e.a)+3,rad(e.b)+11);
+  var last=p[p.length-1],prev=p[p.length-2],ux=last[0]-prev[0],uy=last[1]-prev[1],ul=Math.hypot(ux,uy)||1;ux/=ul;uy/=ul;var bx=last[0]-ux*10,by2=last[1]-uy*10;
+  var arrow=last[0]+','+last[1]+' '+(bx-uy*5)+','+(by2+ux*5)+' '+(bx+uy*5)+','+(by2-ux*5);var mid=polyAt(p,.5);
+  edges+='<g class="edge t-'+e.type+'"><title>'+esc(e.items.map(function(f){return f.nom}).filter(function(v,i2,a){return a.indexOf(v)===i2}).join(' · '))+'</title><polyline points="'+p.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1)}).join(' ')+'"/><polygon points="'+arrow+'"/><g class="pill"><rect x="'+(mid[0]-10)+'" y="'+(mid[1]-8)+'" width="20" height="16" rx="8"/><text x="'+mid[0]+'" y="'+(mid[1]+4)+'" text-anchor="middle">'+e.items.length+'</text></g></g>'});
+ ids.forEach(function(id){var q=pos[id],r=rad(id),dir=id==='dirigeant',x=q.x,y=q.y;var nm=dir?'Le dirigeant':S.O[id].intitule;var ls=wrapTxt(nm,18);var ca=Math.cos(q.a),sa=Math.sin(q.a);
+  var pc=dir?'':'pc'+(pidx[S.O[id].pole]||0);var out=!dir&&lvl!=='ent'&&!inP(id);
+  var anchor=ca>0.35?'start':ca<-0.35?'end':'middle';var tx=x+(ca>0?1:-1)*(r+9),ty;
+  if(Math.abs(ca)<=0.35){ty=sa<0?y-r-8-(ls.length-1)*14:y+r+17;tx=x}else ty=y+sa*(r+6)+4-(ls.length-1)*7;
+  nodes+='<g class="fn '+(dir?'dir':pc)+(out?' out':'')+'"'+(!dir&&S.O[id].pole&&lvl!==S.O[id].pole?' data-act="rniv" data-id="'+S.O[id].pole+'" tabindex="0" role="button"':'')+'><circle cx="'+x+'" cy="'+y+'" r="'+r+'"/>'+(dir?'':'<text class="n" x="'+x+'" y="'+(y+5)+'" text-anchor="middle">'+sv[id]+'</text>')+
+   '<text class="lb" text-anchor="'+anchor+'">'+ls.map(function(l,i2){return '<tspan x="'+tx+'" y="'+(ty+i2*14)+'">'+esc(l)+'</tspan>'}).join('')+'</text></g>'});
+ return svg+edges+nodes+'</svg>'}
+function rsCarte(){var ps=list('pole'),po=list('poste').filter(function(x){return x.intitule});if(!po.length)return '<div class="note">Aucun poste validé pour l\'instant.</div>';
+ var lvl=RS.niv!=='ent'&&S.O[RS.niv]?RS.niv:'ent';
+ var h='<div class="card noprint"><div class="mapbar"><label class="q" for="rniv">Niveau</label><select id="rniv" data-r="niv"><option value="ent"'+(lvl==='ent'?' selected':'')+'>Toute l\'entreprise</option>'+ps.map(function(p){return '<option value="'+p.id+'"'+(lvl===p.id?' selected':'')+'>Pôle '+esc(p.nom)+'</option>'}).join('')+'</select>'+
   '<label class="chk"><input type="checkbox" data-r="crit"'+(RS.crit?' checked':'')+'> Chemin critique seulement</label></div><div class="legend">'+
-  Object.keys(RS_T).map(function(k){return '<label class="chk lg-'+k+'"><input type="checkbox" data-r="type" data-k="'+k+'"'+(RS.types[k]?' checked':'')+'> <i class="sw sw-'+k+'"></i>'+RS_T[k][0]+'</label>'}).join('')+'</div></div>';
- h+='<div class="card"><div class="mapw">'+(RS.niv==='ent'||!S.O[RS.niv]?rsSvgEnt():rsSvgPole(RS.niv))+'</div><p class="muted small" style="margin:8px 0 0">'+(RS.crit?'Chemin critique : seuls sont affichés les livrables à fort enjeu et ce dont ils dépendent. ':'')+'Sur téléphone, la carte se fait défiler horizontalement. Le chiffre sur une flèche indique le nombre d\'éléments échangés ; survoler une flèche en donne le détail. '+(RS.niv==='ent'||!S.O[RS.niv]?'Cliquer sur un pôle ouvre sa carte.':'Cliquer sur un autre pôle ouvre sa carte.')+'</p></div>';
+  Object.keys(RS_T).map(function(k){return '<label class="chk"><input type="checkbox" data-r="type" data-k="'+k+'"'+(RS.types[k]?' checked':'')+'> <i class="sw sw-'+k+'"></i>'+RS_T[k][0]+'</label>'}).join('')+'</div></div>';
+ h+='<div class="card"><div class="legend lgp">'+ps.map(function(p,i){return '<span class="chk"><i class="dot pc'+(i%6)+'"></i>'+esc(p.nom)+'</span>'}).join('')+'<span class="chk"><i class="dot dirk"></i>Le dirigeant</span></div><div class="mapw">'+rsSvgFlux()+'</div>'+
+  '<p class="muted small" style="margin:8px 0 0">Chaque cercle est un poste ; son chiffre et sa taille indiquent le nombre de sujets (livrables) où il intervient. Le chiffre sur une flèche est le nombre d\'éléments échangés ; survoler une flèche en donne le détail.'+(RS.crit?' Chemin critique : seuls sont affichés les livrables à fort enjeu et ce dont ils dépendent.':'')+' Cliquer sur un poste ouvre le niveau de son pôle. Sur téléphone, la carte se fait défiler horizontalement.</p></div>';
  return h}
 /* --- les pôles --- */
 function rsPoles(){var ps=list('pole');if(!ps.length)return '<div class="note">Aucun pôle validé pour l\'instant.</div>';
- return ps.map(function(p){var postes=list('poste').filter(function(x){return x.pole===p.id&&x.intitule});var livs=list('livrable').filter(function(l){return l.pole===p.id&&l.nom});var d=trDuPole(p.id);
-  var h='<details class="card" '+(ps.length===1?'open':'')+'><summary><h3 style="display:inline">'+esc(p.nom)+'</h3> <span class="muted small">· responsable : '+esc(posteNom(p.resp))+' · '+livs.length+' livrable'+(livs.length>1?'s':'')+'</span></summary>';
-  h+='<div class="rb">'+(p.mission?'<p><strong>À quoi sert ce pôle.</strong> '+esc(p.mission)+'</p>':'')+(p.releve?'<p class="small"><strong>Il s\'occupe de :</strong> '+esc(p.releve)+'</p>':'')+(p.hors?'<p class="small"><strong>Il ne s\'occupe pas de :</strong> '+esc(p.hors)+'</p>':'');
-  h+='<h4>Les postes</h4>'+rsLines(postes.map(function(x){return '<strong>'+esc(x.intitule)+'</strong> <span class="muted small">· '+(Number(x.effectif)||0)+' personne(s) · rend compte à '+esc(posteNom(posteSup(x.id)))+'</span>'}));
-  if(livs.length)h+='<h4>Les livrables</h4><div class="mx"><table class="t"><tr><th>Livrable</th><th>Produit par</th><th>Pour</th><th>Rythme et délai</th><th>Il est bien fait quand</th></tr>'+livs.map(function(l){var cr=[l.crit1,l.crit2,l.crit3].filter(Boolean);
-   return '<tr><td><strong>'+esc(l.nom)+'</strong>'+(critique(l)?' <span class="pill">Fort enjeu</span>':'')+'</td><td>'+esc(prodTxt(l))+'</td><td>'+esc(destsDe(l).map(destTxt).join(', '))+'</td><td>'+esc(lab2(L_RYTHME,l.rythme))+(l.delai?' · '+esc(l.delai==='autre'?(l.delai_autre||''):lab2(L_DELAI,l.delai).toLowerCase()):'')+'</td><td>'+(cr.length?'<ul class="rl">'+cr.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ul>':'')+'</td></tr>'}).join('')+'</table></div>';
+ var sel=RS.pp&&S.O[RS.pp]?RS.pp:ps[0].id;
+ var h='<div class="chips noprint">'+ps.map(function(p,i){return '<button type="button" data-act="rpole" data-id="'+p.id+'" class="pc'+(i%6)+(p.id===sel?' on':'')+'">'+esc(p.nom)+'</button>'}).join('')+'</div>';
+ return h+ps.map(function(p,i){var postes=list('poste').filter(function(x){return x.pole===p.id&&x.intitule});var livs=list('livrable').filter(function(l){return l.pole===p.id&&l.nom});var d=trDuPole(p.id);var nc=livs.filter(critique).length;
+  var s='<article class="pp pc'+(i%6)+(p.id===sel?' on':'')+'"><header class="pph"><h3>'+esc(p.nom)+'</h3><p class="ppm"><span><b>Responsable</b> '+esc(posteNom(p.resp))+'</span><span><b>'+postes.length+'</b> poste'+(postes.length>1?'s':'')+'</span><span><b>'+livs.length+'</b> livrable'+(livs.length>1?'s':'')+'</span>'+(nc?'<span><b>'+nc+'</b> à fort enjeu</span>':'')+'</p></header>';
+  if(p.mission||p.releve||p.hors)s+='<div class="pb"><h4>À quoi sert ce pôle</h4>'+(p.mission?'<p class="lead2">'+esc(p.mission)+'</p>':'')+'<div class="two">'+(p.releve?'<div><p class="k">Il s\'occupe de</p><p>'+esc(p.releve)+'</p></div>':'')+(p.hors?'<div><p class="k">Il ne s\'occupe pas de</p><p>'+esc(p.hors)+'</p></div>':'')+'</div></div>';
+  s+='<div class="pb"><h4>Les postes</h4><div class="postes">'+(postes.length?postes.map(function(x){return '<div class="poste"><b>'+esc(x.intitule)+'</b><span>'+(Number(x.effectif)||0)+' personne'+((Number(x.effectif)||0)>1?'s':'')+'</span><span>rend compte à '+esc(posteNom(posteSup(x.id)))+'</span></div>'}).join(''):'<p class="muted small">Aucun poste validé.</p>')+'</div></div>';
+  if(livs.length)s+='<div class="pb"><h4>Les livrables</h4><div class="mx"><table class="t"><tr><th>Livrable</th><th>Produit par</th><th>Pour</th><th>Rythme et délai</th><th>Il est bien fait quand</th></tr>'+livs.map(function(l){var cr=[l.crit1,l.crit2,l.crit3].filter(Boolean);
+   return '<tr><td><strong>'+esc(l.nom)+'</strong>'+(critique(l)?' <span class="pill">Fort enjeu</span>':'')+'</td><td>'+esc(prodTxt(l))+'</td><td>'+esc(destsDe(l).map(destTxt).join(', '))+'</td><td>'+esc(lab2(L_RYTHME,l.rythme))+(l.delai?' · '+esc(l.delai==='autre'?(l.delai_autre||''):lab2(L_DELAI,l.delai).toLowerCase()):'')+'</td><td>'+(cr.length?'<ul class="rl">'+cr.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ul>':'')+'</td></tr>'}).join('')+'</table></div></div>';
   var real=livs.filter(function(l){return l.chaine&&etapesDe(l).length});
-  if(real.length)h+='<h4>Comment on réalise</h4>'+real.map(function(l){return '<p class="small" style="margin:6px 0 2px"><strong>'+esc(l.nom)+'</strong></p><ol class="rl">'+etapesDe(l).map(function(e){return '<li>'+esc(e.nom||'')+' <span class="muted small">· '+esc(posteNom(e.responsable))+(DUR_J[e.duree]!=null?' · '+esc(lab2(L_DUREE,e.duree).toLowerCase()):'')+'</span></li>'}).join('')+'</ol>'+(aiguillage(l)?'<p class="muted small" style="margin:2px 0">Circuits alternatifs : '+esc(aiguillage(l))+'</p>':'')}).join('');
-  var crit=livs.filter(function(l){return critique(l)&&l.consequences});if(crit.length)h+='<h4>Si un livrable à fort enjeu dérape</h4>'+rsLines(crit.map(function(l){return '<strong>'+esc(l.nom)+'</strong> : '+esc(l.consequences)}));
-  h+='<h4>Ce que le pôle reçoit</h4>'+rsLines(d.recoit.map(function(t){return esc(t.nom)+' <span class="muted small">· de '+esc(trNom(t.de))+(t.bloq||trObj(t).bloq==='oui'?' · indispensable pour avancer':'')+'</span>'}),'Rien de validé pour l\'instant.');
-  h+='<h4>Ce que le pôle envoie</h4>'+rsLines(d.envoie.map(function(t){return esc(t.nom)+' <span class="muted small">· à '+esc(trNom(t.vers))+'</span>'}));
-  var es=escListe(p.id);if(es)h+='<h4>Quand faire remonter</h4>'+es;
-  return h+'</div></details>'}).join('')}
+  if(real.length)s+='<div class="pb"><h4>Comment on réalise</h4><div class="steps">'+real.map(function(l){return '<div class="stp"><p class="k">'+esc(l.nom)+'</p><ol class="rl">'+etapesDe(l).map(function(e){return '<li>'+esc(e.nom||'')+' <span class="muted small">· '+esc(posteNom(e.responsable))+(DUR_J[e.duree]!=null?' · '+esc(lab2(L_DUREE,e.duree).toLowerCase()):'')+'</span></li>'}).join('')+'</ol>'+(aiguillage(l)?'<p class="muted small" style="margin:2px 0 0">Circuits alternatifs : '+esc(aiguillage(l))+'</p>':'')+'</div>'}).join('')+'</div></div>';
+  s+='<div class="pb"><h4>Ce qui circule</h4><div class="two"><div><p class="k">Ce que le pôle reçoit</p>'+rsLines(d.recoit.map(function(t){return esc(t.nom)+' <span class="muted small">· de '+esc(trNom(t.de))+(trObj(t).bloq==='oui'?' · indispensable pour avancer':'')+'</span>'}))+'</div><div><p class="k">Ce que le pôle envoie</p>'+rsLines(d.envoie.map(function(t){return esc(t.nom)+' <span class="muted small">· à '+esc(trNom(t.vers))+'</span>'}))+'</div></div></div>';
+  var crit=livs.filter(function(l){return critique(l)&&l.consequences});if(crit.length)s+='<div class="pb warnb"><h4>Si un livrable à fort enjeu dérape</h4>'+rsLines(crit.map(function(l){return '<strong>'+esc(l.nom)+'</strong> : '+esc(l.consequences)}))+'</div>';
+  var es=escListe(p.id);if(es)s+='<div class="pb"><h4>Quand faire remonter</h4>'+es+'</div>';
+  return s+'</article>'}).join('')}
 /* --- qui décide --- */
 function rsDecide(){var ps=list('pole');var sel=RS.pole&&S.O[RS.pole]?RS.pole:null;
  var rows=matriceRows(sel).filter(function(x){return x.r.statut==='valide'});
@@ -1208,14 +1262,34 @@ function rsFonct(){var h='';var rs=rituelsRetenus();
  var rr=relRetenus();if(rr.length)h+='<div class="card"><h3>Nos principes de relation</h3>'+rsLines(rr.map(function(o){return esc(o.txt)}))+'</div>';
  var rv=S.O.ch_rev;if(rv&&rv.statut==='valide')h+='<div class="card"><h3>Révision de la charte</h3><p class="small" style="margin:0">Relue '+esc(lab2([['6m','tous les six mois'],['an','une fois par an'],['chg','à chaque changement important d\'organisation']],rv.freq))+'. Peut être demandée à tout moment par : '+esc(posteNom(rv.qui))+'.</p></div>';
  return h||'<div class="note">Rien de validé pour l\'instant.</div>'}
-function restitInner(prev){var body={cap:rsCap,carte:rsCarte,poles:rsPoles,decide:rsDecide,fiches:rsFiches,fonct:rsFonct};
- var h='<div class="rhead"><h1>'+esc(S.nom||'')+'</h1><p class="muted">Comment nous fonctionnons. Cette page se met à jour à chaque validation du dirigeant.</p></div>';
- if(prev)h+='<div class="warn noprint"><strong>Aperçu de la version de l\'équipe.</strong> Seul ce qui est validé apparaît ici. <button type="button" class="link" data-act="home">Revenir à mon espace</button></div>';
+function derniereMaj(){var m='';Object.keys(S.O).forEach(function(k){var x=S.O[k];if(x&&x.maj&&x.maj>m)m=x.maj});return m?new Date(m).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}):''}
+function rsVide(){var e=S.O.entreprise,p=list('pole').length;return !e&&!p}
+function restitInner(prev,inv){var body={cap:rsCap,carte:rsCarte,poles:rsPoles,decide:rsDecide,fiches:rsFiches,fonct:rsFonct};
+ if(rsVide()&&!prev)return '<div class="wip"><h1>'+esc(S.nom||'')+'</h1><div class="wipc"><p class="wipt">Système de fonctionnement en cours de construction</p><p class="muted">Il sera consultable ici dès que le dirigeant aura validé les premiers éléments.</p></div></div>';
+ var dm=derniereMaj();
+ var h='<div class="rhead"><div class="rhk">Système de fonctionnement</div><h1>'+esc(S.nom||'')+'</h1>'+(dm?'<p class="muted rhs">Version du '+esc(dm)+'</p>':'')+'<div class="band"><i></i><i></i><i></i></div></div>';
+ if(prev)h+='<div class="warn noprint"><strong>Aperçu de la version de l\'équipe.</strong> Seul ce qui est validé apparaît ici. '+(rsVide()?'Rien n\'est validé pour l\'instant : l\'équipe verra le message « en cours de construction ».':'')+'</div>'+(inv||'');
  h+='<nav class="rtabs noprint" aria-label="Rubriques">'+RS_TABS.map(function(t){return '<button type="button" data-act="rtab" data-t="'+t[0]+'"'+(RS.tab===t[0]?' class="on" aria-current="true"':'')+'>'+t[1]+'</button>'}).join('')+'<button type="button" class="pdf" data-act="fprint">Exporter en PDF</button></nav>';
- RS_TABS.forEach(function(t){h+='<section class="rs'+(RS.tab===t[0]?' on':'')+'" aria-label="'+t[1]+'"><h2 class="ptitle">'+t[1]+'</h2>'+body[t[0]]()+'</section>'});
- return h}
+ RS_TABS.forEach(function(t){h+='<section class="rs rs-'+t[0]+(RS.tab===t[0]?' on':'')+'" aria-label="'+t[1]+'"><h2 class="ptitle">'+t[1]+'</h2>'+body[t[0]]()+'</section>'});
+ return h+'<footer class="pfoot">'+esc(S.nom||'')+' · Système de fonctionnement'+(dm?' · version du '+esc(dm):'')+'</footer>'}
 window.addEventListener('beforeprint',function(){document.querySelectorAll('details').forEach(function(d){d.open=true})});
-function restitHtml(prev){return withVisible(function(){return restitInner(prev)})}
+/* éléments non validés : ce que l'équipe ne voit pas encore */
+function invListe(){var o=[];var add=function(g,x,l){if(x&&x.statut!=='valide')o.push({g:g,id:x.id,l:l,s:x.statut||'propose'})};
+ var e=S.O.entreprise;if(e)add('Le cap',e,'Cap de l\'entreprise');
+ list('pole').forEach(function(p){add('Pôles',p,p.nom)});
+ list('livrable').filter(function(l){return l.nom}).forEach(function(l){add('Livrables',l,l.nom+' (pôle '+poleNom(l.pole)+')')});
+ list('regle').forEach(function(r){var c=S.O[r.cible];if(c&&r.niveau)add('Règles de décision',r,(c.nom||'')+' : règle de décision')});
+ rituelsRetenus().forEach(function(r){add('Rendez-vous réguliers',r,r.nom)});
+ if(S.O.pub_comm)add('Communication',S.O.pub_comm,'Comment nous communiquons');
+ list('tension').filter(function(t){return t.init&&t.ret!=='non'}).forEach(function(t){add('Quand ça coince',t,(t.titre||'Procédure')+' (pôle '+poleNom(t.pole)+')')});
+ relRetenus().forEach(function(r){add('Principes de relation',r,r.txt)});
+ return o}
+function invHtml(){var o=invListe();if(!o.length)return '<div class="note noprint">Tout est validé : l\'équipe voit l\'ensemble de ce qui est renseigné.</div>';
+ var rev=o.filter(function(x){return x.s==='revoir'}).length;var g={};o.forEach(function(x){(g[x.g]=g[x.g]||[]).push(x)});
+ return '<div class="warn noprint"><strong>'+o.length+' élément'+(o.length>1?'s ne sont':' n\'est')+' pas validé'+(o.length>1?'s':'')+', donc invisible'+(o.length>1?'s':'')+' pour l\'équipe.</strong>'+(rev?' Dont '+rev+' à revoir : modifié'+(rev>1?'s':'')+' depuis la validation.':'')+
+  '<details style="margin-top:8px"><summary>Voir la liste</summary>'+Object.keys(g).map(function(k){return '<p class="small" style="margin:8px 0 2px"><strong>'+esc(k)+'</strong></p><ul class="rl">'+g[k].map(function(x){return '<li>'+esc(x.l||'')+' <span class="muted small">· '+(L_STAT[x.s]||'Proposé')+'</span></li>'}).join('')+'</ul>'}).join('')+'</details>'+
+  '<div style="margin-top:10px"><button type="button" class="primary" data-act="vall" data-ids="'+o.map(function(x){return x.id}).join(',')+'" data-back="resti">Tout valider ('+o.length+')</button></div></div>'}
+function restitHtml(prev){var inv=prev?invHtml():'';return withVisible(function(){return restitInner(prev,inv)})}
 function lecteurHtml(){return restitHtml(false)}
 
 render();
