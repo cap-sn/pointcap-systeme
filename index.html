@@ -89,7 +89,7 @@ table.t{width:100%;border-collapse:collapse;font-size:14.5px;display:block;overf
 @supports not (background:color-mix(in srgb,red 50%,blue)){#pcf{background:var(--bg)}}
 #pcf .brandlogo{height:26px;width:auto;margin:0;opacity:.65}
 body{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}.toast{bottom:calc(52px + env(safe-area-inset-bottom,0px))!important}
-body.on-login #pcf{display:none}body.on-login{padding-bottom:0}
+body.pgprint #pgdoc{position:static!important}body.on-login #pcf{display:none}body.on-login{padding-bottom:0}
 @media print{#pcf{display:none}}
 #splash{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:var(--bg);opacity:1;transition:opacity .25s}#splash.out{opacity:0;pointer-events:none}
 .sp-in{display:flex;flex-direction:column;align-items:center;gap:20px;padding:24px}.sp-logo{position:relative;width:132px;height:132px;display:flex;align-items:center;justify-content:center}
@@ -557,7 +557,7 @@ document.addEventListener('click',function(ev){var b=ev.target.closest('[data-ac
  else if(a==='fiche'){S.view='fiche';S.fiche=b.dataset.id;S.fVue='';render();window.scrollTo(0,0)}
  else if(a==='fichehome'){S.view='home';render();window.scrollTo(0,0)}
  else if(a==='fvue'){S.fVue=S.fVue==='titulaire'?'':'titulaire';render()}
- else if(a==='fprint'){try{window.print()}catch(x){toast('Utiliser Ctrl+P (ou Cmd+P) pour exporter en PDF.')}}
+ else if(a==='fprint'){pdfExport()}
  else if(a==='fprop'){var tx=document.getElementById('fptxt').value.trim();if(!tx){toast('Écrire la proposition.');return}put('prop_fiche',{poste:S.fiche,section:document.getElementById('fpsec').value,txt:tx,statut:'propose'});if(S.role!=='lecteur'&&S.view!=='resti')jlog('Proposition de correction sur la fiche « '+posteNom(S.fiche)+' »');toast('Proposition envoyée. Le dirigeant la recevra pour validation.');S.fVue=(S.role==='lecteur'||S.view==='resti')?'titulaire':'';render()}
  else if(a==='fpstat'){var px=S.O[b.dataset.id];px.statut=b.dataset.v;save(px.id,true);jlog((L_PST[px.statut]||px.statut)+' : proposition de correction sur la fiche « '+posteNom(px.poste)+' »');render()}
  else if(a==='vstat'){var r=S.O[b.dataset.id];if(!r)return;r.statut=b.dataset.v;save(r.id,true);jlog((L_STAT[r.statut]||r.statut)+' : '+valNom(r));render()}
@@ -1593,6 +1593,64 @@ function rsCarte(){var D=fxData();FXD=D;var ids=Object.keys(D.P);
   '<div class="fxbox noprint">'+fxSvg(M,lvl,RS.sel,false)+'</div><div class="noprint">'+fxLegend(co)+'</div>'+fxDetail(M,lvl,RS.sel)+
   '<div class="fxprint"><div class="fxbox">'+fxSvg(fxBuild('ent',FX_ALL),'ent',null,true)+'</div>'+fxLegend(true)+'</div></div>';
  return h}
+
+/* ---------- export PDF : page de garde, sommaire paginé, pied de page numéroté (pagination par paged.js, chargé à la demande) ---------- */
+var PG_URL='https://cdn.jsdelivr.net/npm/pagedjs@0.4.3/dist/paged.polyfill.min.js',PG={host:null,stash:null,style:null};
+function pgLoad(){window.PagedConfig={auto:false};return window.Paged&&window.Paged.Previewer?Promise.resolve():new Promise(function(ok,ko){var s=document.createElement('script');s.src=PG_URL;s.onload=ok;s.onerror=function(){ko(new Error('chargement'))};document.head.appendChild(s)})}
+function pgPrintCss(){var out='';Array.prototype.forEach.call(document.styleSheets,function(ss){try{Array.prototype.forEach.call(ss.cssRules,function(r){if(r.type===CSSRule.MEDIA_RULE&&/(^|\W)print(\W|$)/.test(r.media.mediaText)&&!/screen/.test(r.media.mediaText)){Array.prototype.forEach.call(r.cssRules,function(x){out+=x.cssText+'\n'})}})}catch(e){}});return out}
+function pgCss(nom,v){var n=String(nom||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"');var F='Montserrat,Inter,Arial,sans-serif',B='Inter,Arial,sans-serif';
+ var cover=(v==='B')?
+ '.pgcover{page:cover;height:296mm;box-sizing:border-box;position:relative;break-after:page;background:#fff}\n'+
+ '.pgcover .top{height:150mm;background:#1E2B37;box-sizing:border-box;padding:0 24mm;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:20mm;border-bottom:3mm solid #C98A4B}\n'+
+ '.pgcover .k{font:600 9.5pt '+F+';letter-spacing:.18em;text-transform:uppercase;color:#D9A56B;margin:0 0 7mm}\n'+
+ '.pgcover h1{font:700 34pt/1.15 '+F+';color:#F4F1EA;margin:0}\n'+
+ '.pgcover .mid{padding:16mm 24mm 0}.pgcover .d{font:600 12pt '+B+';color:#1E2B37;margin:0 0 4mm}.pgcover .s{font:400 10.5pt/1.6 '+B+';color:#5B666F;margin:0;max-width:120mm}\n':
+ '.pgcover{page:cover;height:296mm;box-sizing:border-box;position:relative;padding:0 26mm;display:flex;flex-direction:column;justify-content:center;border-left:9mm solid #3B5B4C;break-after:page;background:#fff}\n'+
+ '.pgcover .k{font:600 10pt '+F+';letter-spacing:.18em;text-transform:uppercase;color:#B0702B;margin:0 0 8mm}\n'+
+ '.pgcover h1{font:700 36pt/1.12 '+F+';color:#1E2B37;margin:0 0 10mm}\n'+
+ '.pgcover .r{width:34mm;height:2.5px;background:#C98A4B;margin:0 0 10mm}\n'+
+ '.pgcover .d{font:600 12pt '+B+';color:#5B666F;margin:0}\n';
+ return pgPrintCss().replace(/@page[^{]*\{[^{}]*\}/g,'')+
+ '@page{size:A4;margin:16mm 14mm 26mm 14mm;@bottom-left{content:"'+n+' · Système de fonctionnement interne";font:500 8pt '+B+';color:#5B666F;vertical-align:middle;width:100mm;white-space:nowrap}@bottom-center{content:element(pglogo);vertical-align:middle;width:34mm;text-align:center}@bottom-right{content:"Page " counter(page) " sur " counter(pages);font:500 8pt '+B+';color:#5B666F;vertical-align:middle;width:48mm;text-align:right;white-space:nowrap}}\n'+
+ '@page cover{margin:0;@bottom-left{content:none}@bottom-center{content:none}@bottom-right{content:none}}\n'+
+ '.pglogo{position:running(pglogo);height:12mm;width:auto;opacity:.6}\n'+
+ cover+
+ '.pgcover .lgf{position:absolute;left:0;right:0;bottom:16mm;text-align:center}.pgcover .lgf img{display:inline-block!important;height:16mm;width:auto;margin:0;opacity:.75}\n'+
+ '.pgtoc{padding-top:2mm}\n'+
+ '.pgtoc h2,.rs>.ptitle{font:700 22pt/1.2 '+F+';color:#1E2B37;margin:0 0 8mm;padding:1mm 0 1mm 4.5mm;border-left:2.2mm solid #C98A4B;letter-spacing:-.005em}\n'+
+ '.pgtoc ol{list-style:none;margin:0;padding:0}.pgtoc li{margin:0 0 3.2mm}.pgtoc li.s{font:600 12.5pt '+F+';margin-top:5.5mm;color:#1E2B37}.pgtoc li.p{font:400 10.5pt '+B+';padding-left:8mm;color:#1E2B37}\n'+
+ '.pgtoc a{display:flex;align-items:baseline;gap:3mm;color:inherit;text-decoration:none}.pgtoc a::before{content:"";order:1;flex:1;border-bottom:1px dotted #9AA3A9;transform:translateY(-1mm)}.pgtoc a::after{order:2;content:target-counter(attr(href url),page);color:#5B666F;font-variant-numeric:tabular-nums}\n'+
+ '.rs-cap{break-before:page!important}#pcf,.pfoot{display:none!important}\n'}
+function pgBuild(){
+ var secs=Array.prototype.slice.call(document.querySelectorAll('section.rs'));if(!secs.length)return Promise.reject(new Error('vide'));
+ var nom=S.nom||'',dm=derniereMaj();var tocRows='';var clones=secs.map(function(s){var c=s.cloneNode(true);
+  Array.prototype.forEach.call(c.querySelectorAll('.noprint,.chips,.rtabs'),function(e){e.remove()});Array.prototype.forEach.call(c.querySelectorAll('details'),function(e){e.setAttribute('open','')});return c});
+ clones.forEach(function(c){var key=(c.className.match(/rs-(\w+)/)||[])[1];var t=(RS_TABS.filter(function(x){return x[0]===key})[0]||[0,''])[1];c.id='pgs-'+key;
+  tocRows+='<li class="s"><a href="#pgs-'+key+'">'+esc(t)+'</a></li>';
+  if(key==='poles')Array.prototype.forEach.call(c.querySelectorAll('article.pp'),function(a,j){var h=a.querySelector('h3');a.id='pgp-'+j;tocRows+='<li class="p"><a href="#pgp-'+j+'">'+esc(h?h.textContent:'Pôle')+'</a></li>'})});
+ var parts=logoHtml().split('<img');var tag=function(k){return parts[k]?'<img'+parts[k].split('>')[0]+'>':''};var logoD=tag(1);
+ var v=window.PG_COVER||'A';
+ var cov=(v==='B')?'<section class="pgcover"><div class="top"><p class="k">Système de fonctionnement interne</p><h1>'+esc(nom)+'</h1></div><div class="mid"><p class="d">'+(dm?'Version du '+esc(dm):'')+'</p><p class="s">Le cap, les flux, les pôles, les règles de décision, les fiches de poste et le fonctionnement de l’entreprise.</p></div><div class="lgf">'+logoD+'</div></section>':
+  '<section class="pgcover"><p class="k">Système de fonctionnement interne</p><h1>'+esc(nom)+'</h1><span class="r"></span><p class="d">'+(dm?'Version du '+esc(dm):'')+'</p><div class="lgf">'+logoD+'</div></section>';
+ var tmp=document.createElement('div');tmp.appendChild(document.createElement('div'));
+ var html=cov+'<section class="pgtoc"><h2>Sommaire</h2><ol>'+tocRows+'</ol></section>'+logoD.replace('<img','<img class="pglogo"')+clones.map(function(c){return c.outerHTML}).join('');
+ /* la pagination se fait dans un cadre de largeur fixe (A4) : les mises en page « mobile » ne s'appliquent donc jamais à l'export */
+ var fr=document.createElement('iframe');fr.setAttribute('aria-hidden','true');fr.setAttribute('title','Préparation du PDF');fr.style.cssText='position:fixed;left:-12000px;top:0;width:900px;height:1200px;border:0';document.body.appendChild(fr);PG.host=fr;
+ var head=Array.prototype.map.call(document.querySelectorAll('head style,head link[rel=stylesheet]'),function(e){return e.outerHTML}).join('');
+ var d=fr.contentDocument;d.open();d.write('<!doctype html><html lang="fr" data-theme="light"><head><meta charset="utf-8"><title>'+esc(nom)+' · Système de fonctionnement interne</title>'+head+'</head><body></body></html>');d.close();
+ var w=fr.contentWindow;w.PagedConfig={auto:false};
+ var css=pgCss(nom,v);
+ return new Promise(function(ok,ko){var s=d.createElement('script');s.src=PG_URL;s.onload=ok;s.onerror=function(){ko(new Error('chargement'))};d.head.appendChild(s)})
+ .then(function(){return d.fonts&&d.fonts.ready?d.fonts.ready:null}).then(function(){
+  var root=d.createElement('div');root.innerHTML=html;var out=d.createElement('div');out.id='pgdoc';d.body.appendChild(out);
+  return new w.Paged.Previewer().preview(root,[{'export.css':css}],out)}).then(function(){return fr})}
+function pgCleanup(){if(PG.host){try{PG.host.remove()}catch(e){}}PG.host=null;splash(false)}
+function pdfExport(){if(PG.host)return;
+ splash(true,'Préparation du PDF…',true);
+ pgBuild().then(function(fr){splash(false);var done=false,fin=function(){if(done)return;done=true;pgCleanup()};
+  try{fr.contentWindow.addEventListener('afterprint',fin,{once:true})}catch(e){}window.addEventListener('afterprint',fin,{once:true});
+  setTimeout(function(){try{fr.contentWindow.focus();fr.contentWindow.print()}catch(e){fin()}},150)})
+ .catch(function(){pgCleanup();toast('Le PDF enrichi n\'a pas pu être préparé. Impression simple à la place.');try{window.print()}catch(x){}})}
 function fxPoleMap(pid){var M=fxBuild(pid,FX_ALL);if(!M.lanes.length&&Object.keys(M.nodes).length<2)return '';return '<div class="pb fx"><h4>Le pôle en un coup d\'œil</h4><div class="fxbox">'+fxSvg(M,pid,null,true)+'</div><p class="fxmini"><span><i class="L"></i>Livrables</span><span><i class="D"></i>Décisions</span><span><i class="C"></i>Compétences</span><span><i class="I"></i>Informations</span><span class="muted">Le chiffre sur une pastille est le nombre d\'échanges regroupés.</span></p></div>'}
 /* --- les pôles --- */
 function rsPoles(){var ps=list('pole');if(!ps.length)return '<div class="note">Aucun pôle pour l\'instant.</div>';FXD=fxData();
