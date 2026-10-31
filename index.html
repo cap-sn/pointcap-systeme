@@ -85,6 +85,14 @@ table.t{width:100%;border-collapse:collapse;font-size:14.5px;display:block;overf
 .pc0{--pc:var(--t1)}.pc1{--pc:var(--t2)}.pc2{--pc:var(--t3)}.pc3{--pc:var(--t5)}.pc4{--pc:var(--t6)}.pc5{--pc:var(--t4)}
 .bar .back{border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:4px 12px;font-weight:600;margin-right:10px;white-space:nowrap}.bar .back:hover{background:var(--accent);color:var(--accent-ink)}
 .bar .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#splash{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:var(--bg);opacity:1;transition:opacity .25s}#splash.out{opacity:0;pointer-events:none}
+.sp-in{display:flex;flex-direction:column;align-items:center;gap:20px;padding:24px}.sp-logo{position:relative;width:132px;height:132px;display:flex;align-items:center;justify-content:center}
+.sp-logo .brandlogo{width:84px;height:auto;margin:0;animation:spPulse 1.8s ease-in-out infinite}
+.sp-ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--line);border-top-color:var(--warn);animation:spSpin 1.1s linear infinite}
+.sp-t{margin:0;font:500 15px var(--body);color:var(--muted)}
+@keyframes spSpin{to{transform:rotate(360deg)}}@keyframes spPulse{0%,100%{opacity:.75;transform:scale(.97)}50%{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.sp-logo .brandlogo{animation:none}.sp-ring{animation-duration:3s}}
+@media print{#splash{display:none}}
 .rhead{padding:6px 0 4px}.rhk{font:600 12px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--warn)}.rhead h1{font-size:34px;margin:2px 0 6px;color:var(--brand-blue)}.rhs{margin:0 0 10px}
 .band{display:flex;height:5px;border-radius:3px;overflow:hidden;max-width:240px}.band i{flex:1}.band i:nth-child(1){background:var(--t1)}.band i:nth-child(2){background:var(--t3)}.band i:nth-child(3){background:var(--t4)}
 .rtabs{top:var(--barh,56px)!important}.rtabs button{font-weight:500}
@@ -279,12 +287,19 @@ function mock(action,p){
  if(action==='inviter'){return {ok:true,code:'DEMO-R'+(String(p.pole).slice(-1)||'1'),mdp:'demo-demo-demo',lien:'https://pointcap-systeme.stevennawe.com',mail:false}}
  if(action==='reset'){lsSet(key,'');return {ok:true}}
  return {ok:false,erreur:'Action inconnue.'}}
+/* écran d'attente : logo animé pendant la connexion ou la reprise de session (n'apparaît qu'au-delà de 300 ms) */
+var _spT=0;
+function splash(on,txt,now){var el=document.getElementById('splash');clearTimeout(_spT);
+ if(!on){if(el){el.classList.add('out');setTimeout(function(){var e=document.getElementById('splash');if(e&&e.classList.contains('out'))e.remove()},280)}return}
+ var show=function(){var e=document.getElementById('splash');if(e)e.remove();var d=document.createElement('div');d.id='splash';d.setAttribute('role','status');d.setAttribute('aria-live','polite');
+  d.innerHTML='<div class="sp-in"><div class="sp-logo">'+logoHtml()+'<span class="sp-ring" aria-hidden="true"></span></div><p class="sp-t">'+esc(txt||'Connexion en cours…')+'</p></div>';document.body.appendChild(d)};
+ if(now)show();else _spT=setTimeout(show,300)}
 function api(action,payload){payload=payload||{};payload.token=S.token;payload.code=S.code;
- var pr;
+ var pr,sp=(action==='login'||action==='reprendre');if(sp)splash(true,action==='login'?'Connexion en cours…':'Reprise de la session…',action==='reprendre');
  if(!CFG.API_URL)pr=Promise.resolve(mock(action,payload));
  else{var body=JSON.stringify(Object.assign({action:action},payload));
   pr=fetch(CFG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body}).then(function(r){return r.json()}).catch(function(){return {ok:false,erreur:'Connexion impossible. Vos réponses ne sont pas perdues : réessayez dans un instant.',reseau:true}})}
- return pr.then(function(r){
+ return pr.then(function(r){if(sp)setTimeout(function(){splash(false)},80);return r},function(x){if(sp)splash(false);throw x}).then(function(r){
   if(r&&r.ok&&r.token&&action!=='login'&&S.token&&S.token!=='demo'){S.token=r.token;sessSave()}
   if(r&&!r.ok&&/Session expir/.test(r.erreur||'')&&S.view!=='login'&&action!=='reprendre'){sessClear();S.token='';S.view='login';render();var e=document.getElementById('lerr');if(e)e.innerHTML='<div class="err">Session expirée : reconnecte-toi. Les réponses déjà enregistrées sont conservées.</div>'}
   return r})}
@@ -1648,7 +1663,7 @@ function lecteurHtml(){return restitHtml(false)}
 
 (function boot(){var raw=lsGet(SESS_KEY),s=null;try{s=raw?JSON.parse(raw):null}catch(e){}
  if(!s||!s.token||!(s.exp>Date.now())){if(s)sessClear();render();return}
- S.code=s.code;S.token=s.token;$app.innerHTML='<main><p class="muted" style="margin-top:22vh;text-align:center">Reprise de la session…</p></main>';
+ S.code=s.code;S.token=s.token;$app.innerHTML='';
  api('reprendre',{role:s.role,pole:s.pole}).then(function(r){
   if(!r||!r.ok){if(r&&r.reseau){S.view='login';render();var e=document.getElementById('lerr');if(e)e.innerHTML='<div class="err">'+esc(r.erreur)+'</div>';return}sessClear();S.token='';S.view='login';render();return}
   S.nom=r.nom;S.O=r.objets||{};S.role=r.role||s.role;S.pole=r.pole||null;S.view='home';var p=s.pos||{};
